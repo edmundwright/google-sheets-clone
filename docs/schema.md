@@ -9,7 +9,7 @@ My current idea is to have a `cells` table referencing a `rows` table referencin
 
 - A query of the `spreadsheets` table for the entry with `id=x`.
 - A query of the `rows` table for all entries with `spreadsheet_id=x`.
-- A query of the `cells` table for all entries with `id IN [row_id1, row_id2, row_id3...]`.
+- A query of the `cells` table for all entries with `row_id IN [row_id1, row_id2, row_id3...]`.
 
 It remains to be seen how quickly this will execute with a large database containing lots of spreadsheets. So this arrangement is subject to change.
 
