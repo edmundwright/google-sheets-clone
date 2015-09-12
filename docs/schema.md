@@ -40,5 +40,5 @@ column name    | data type | details
 ---------------|-----------|-----------------------
 id             | integer   | not null, primary key
 spreadsheet_id | integer   | not null, foreign key (references spreadsheets)
-contents       | string    | not null (contains JSON array, with each element being a string or integer represenation of cell)
+contents       | string    | not null (contains JSON array, with each element being a string or integer representation of cell)
 
