@@ -1,11 +1,11 @@
-# Flux-capacitr
+# Google Sheets Clone
 
 [Heroku link][heroku]
 
 [heroku]: http://flux-capacitr.herokuapp.com
 
 ## Minimum Viable Product
-Flux-capacitr is a clone of Tumblr built on Rails and Backbone. Users can:
+Google Sheets Clone (final name TBC) is a clone of Google Sheets built on Rails and Backbone. Users can:
 
 <!-- This is a Markdown checklist. Use it to keep track of your progress! -->
 
