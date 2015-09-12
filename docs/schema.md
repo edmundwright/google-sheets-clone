@@ -9,7 +9,7 @@ Loading the spreadsheet will be quicker the fewer SQL queries are necessary. Thi
 
 But uploading individual edits will be quicker if only a small SQL update is necessary. This would favour storing the spreadsheet in a more granular fashion, with perhaps a cells table referencing a rows table referencing a spreadsheet table.
 
-So I suggest a midpoint between these two: a rows table, containing JSON arrays, referencing a spreadsheets table. This means that when a spreadsheet is downloaded, the number of queries necessary will be N+1, where N is the number of rows, and when an individual edit is uploaded the entire row will have to be updated, but not the entire spreadsheet.
+So I suggest a midpoint between these two: a rows table, containing JSON arrays, referencing a spreadsheets table. This means that when a spreadsheet is downloaded, the number of queries necessary will be roughly equal to the number of rows, and when an individual edit is uploaded the entire row will have to be updated, but not the entire spreadsheet.
 
 
 ## users
