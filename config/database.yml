@@ -78,8 +78,4 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
-production:
-  <<: *default
-  database: google-sheets-clone_production
-  username: google-sheets-clone
-  password: <%= ENV['GOOGLE-SHEETS-CLONE_DATABASE_PASSWORD'] %>
+# PRODUCTION SECTION DELETED AS APPARENTLY HEROKU DOESN"T LOOK AT IT (EW)
