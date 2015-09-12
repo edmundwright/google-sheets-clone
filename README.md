@@ -1,11 +1,11 @@
 # Google Sheets Clone
 
-[Heroku link][heroku]
+[Heroku link (not yet live)][heroku]
 
 [heroku]: http://google-sheets-clone.herokuapp.com
 
 ## Minimum Viable Product
-Google Sheets Clone (final name TBC) is a clone of Google Sheets built on Rails and Backbone. Users can:
+Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails and Backbone. Users can:
 
 <!-- This is a Markdown checklist. Use it to keep track of your progress! -->
 
@@ -13,18 +13,20 @@ Google Sheets Clone (final name TBC) is a clone of Google Sheets built on Rails 
 - [ ] Create sessions (log in)
 - [ ] Create new spreadsheets
 - [ ] See a list of their spreadsheets
+
+- [ ] Input a formula into a cell, and see it calculated immediately upon pressing enter
+- [ ] See any changes to a cell have an immediate effect on other cells that reference it
+- [ ] Click on a cell to insert a reference to it into the formula currently being edited
+- [ ] Select multiple cells by clicking and dragging
+- [ ] Select whole rows or columns by clicking their headings
+- [ ] Select multiple cells to insert a reference to them into the formula currently being edited
+
+- [ ] Have their work be autosaved to the server immediately following any change
+
 - [ ] Share a spreadsheet with other users
 - [ ] See a list of the spreadsheets shared with them
 - [ ] Make a spreadsheet public so that any other person with the link can access it
-- [ ] Have their work be autosaved to the server immediately following any change
-- [ ] Input a formula into a cell, and see it calculated immediately upon pressing enter
-- [ ] See any changes to a cell have an immediate effect on other cells that reference it
-- [ ] Click on a cell to insert a reference to it into formula currently being edited
-- [ ] Select multiple cells to insert a reference to them into formula currently being edited
-- [ ] Select multiple cells by clicking and draggin
-- [ ] Select whole rows or columns by clicking their headings
 
-- 
 ## Design Docs
 * [View Wireframes][views]
 * [DB schema][schema]
