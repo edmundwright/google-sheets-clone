@@ -42,14 +42,14 @@ sharee_id      | integer   | not null, foreign key (references `users`)
 column name    | data type | details
 ---------------|-----------|-----------------------
 id             | integer   | not null, primary key
-ord            | integer   | not null, unique in scope of spreadsheet_id (represents position of row in spreadsheet)
+ord            | integer   | not null (represents position of row in spreadsheet)
 spreadsheet_id | integer   | not null, foreign key (references `spreadsheets`)
 
 ## cells
 column name    | data type | details
 ---------------|-----------|-----------------------
 id             | integer   | not null, primary key
-ord            | integer   | not null, unique in scope of row_id (represents position of cell in row)
+ord            | integer   | not null (represents position of cell in row)
 row_id         | integer   | not null, foreign key (references `rows`)
 contents_str   | string    | may not be non-null when contents_int or contents_flo is non-null (contains contents of cell when cell contains formula or data that is not a number)
 contents_int   | integer   | may not be non-null when contents_str or contents_flo is non-null (contains contents of cell when cell contains integer)
