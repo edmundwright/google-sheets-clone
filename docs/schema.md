@@ -45,7 +45,7 @@ contents       | string    | not null (contains JSON array, with each element be
 
 ## JSON
 
-The contents column of the `rows` SQL table will contain a JSON representation of a row. For example:
+Each entry in the `contents` column of the `rows` SQL table will contain a JSON representation of a row. For example:
 
 ```
 ["=A1+B2", 5 , "Edmund", "=SUM(B2:B13)"]
