@@ -58,16 +58,22 @@ I'll start by allowing users to, while editing a formula, click on another cell 
 ### Phase 5: Selecting cells with the keyboard (~1 day)
 I'll implement selecting navigating the spreadsheet using the arrow keys, and selecting cells by holding shift or command and using the arrow keys. This will be implemented by listening to key up and key down events.
 
+[Details][phase-five]
+
 ### Phase 6: Sharing spreadsheets and making spreadsheets public (~0.5 day)
 I'll implement sharing of spreadsheets with other users, and making spreadsheets public.
+
+[Details][phase-six]
 
 ### Phase 7: Spreadsheets of varying sizes (~ 1 day)
 I'll allow users to increase and decrease the size of their spreadsheets, and to accommodate this implement scrolling.
 
-### Phase 8: Prettifying (3 days)
+[Details][phase-seven]
+
+### Phase 8: Prettifying (~3 days)
 I'll CSS it up.
 
-[Details][phase-five]
+[Details][phase-eight]
 
 ### Bonus Features (TBD)
 - [ ] Randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
@@ -80,4 +86,7 @@ I'll CSS it up.
 [phase-three]: ./docs/phases/phase3.md
 [phase-four]: ./docs/phases/phase4.md
 [phase-five]: ./docs/phases/phase5.md
+[phase-six]: ./docs/phases/phase6.md
+[phase-seven]: ./docs/phases/phase7.md
+[phase-eight]: ./docs/phases/phase8.md
 
