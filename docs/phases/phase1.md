@@ -2,13 +2,13 @@
 
 ## Rails
 ### Models
-* User
-* Spreadsheet
+* `User`
+* `Spreadsheet`
 
 ### Controllers
-* UsersController (create, new)
-* SessionsController (create, new, destroy)
-* Api::SpreadsheetsController (create, index, show, update, destroy)
+* `UsersController` (`create`, `new`)
+* `SessionsController` (`create`, `new`, `destroy`)
+* `API::SpreadsheetsController` (`create`, `index`, `show`, `update`, `destroy`)
 
 ### Views
 * application.html.erb
@@ -19,13 +19,13 @@
 
 ## Backbone
 ### Models
-* Spreadsheet
+* `Spreadsheet`
 
 ### Collections
-* Spreadsheets
+* `Spreadsheets`
 
 ### Views
-* SpreadsheetIndex (composite view containing SpreadSheetIndexItem subviews, and link to create and show new spreadsheet)
-* SpreadsheetIndexItem
-* SpreadsheetShow (composite view containing SpreadSheetTitle subview).
-* SpreadSheetTitle (for showing or editing title)
+* `SpreadsheetIndex` (composite view containing `SpreadSheetIndexItem` subviews, and link to create and show new spreadsheet)
+* `SpreadsheetIndexItem`
+* `SpreadsheetShow` (composite view containing `SpreadSheetTitle` subview).
+* `SpreadSheetTitle` (for showing or editing title)
