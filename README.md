@@ -1,11 +1,11 @@
-# Google Sheets Clone
+# Google Sheets Clone (final name TBD)
 
 [Heroku link][heroku]
 
 [heroku]: http://google-sheets-clone.herokuapp.com
 
 ## Minimum Viable Product
-Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails and Backbone. Users can:
+A clone of Google Sheets built on Rails and Backbone. Users can:
 
 - [ ] Create accounts
 - [ ] Create sessions (log in)
