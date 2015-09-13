@@ -34,8 +34,8 @@ Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails 
 
 ### Phase 1: User Authentication, Spreadsheet Creation (~1 day)
 I will implement user authentication in Rails based on the practices learned at
-App Academy. By the end of this phase, users will be able to create 'spreadsheets' (not really spreadsheets yet) using
-a simple text form in a Backbone view, view an index of their spreadsheets, and view a show page for each spreadsheet. The most important part of this phase will
+App Academy. By the end of this phase, users will be able to create spreadsheets using
+a simple text form in a Backbone view, view an index of their spreadsheets, and view a show page for each spreadsheet (at this point only displaying the spreadsheet's title). The most important part of this phase will
 be pushing the app to Heroku and ensuring that everything works before moving on
 to phase 2.
 
