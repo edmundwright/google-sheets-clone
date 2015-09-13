@@ -9,6 +9,5 @@
 
 ## Backbone
 ### Views
-* `SpreadsheetShareForm`
-* `SpreadsheetPublicForm`
-* `SpreadsheetShow` now includes `SpreadsheetShareForm` and `SpreadsheetPublicForm` subviews.
+* `SpreadsheetShare`
+* `SpreadsheetShow` now includes `SpreadsheetShare` modal subview.
