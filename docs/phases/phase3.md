@@ -1,21 +1,9 @@
-# Phase 3: Editing and Displaying Posts
-
-## Rails
-### Models
-
-### Controllers
-
-### Views
+# Phase 3: Evaluating formulae
 
 ## Backbone
-### Models
 
-### Collections
+### Utils
+* `FormulaEvaluator`
 
 ### Views
-* PostForm
-
-## Gems/Libraries
-* Filepicker
-* Markdown-js
-* Bootstrap Markdown
+* `SpreadsheetShow` now listens for sync events on itself (and thus on its `cells` collection), and re-evalutes (using `FormulaEvaluator`) all its cells, and re-renders where necessary.
