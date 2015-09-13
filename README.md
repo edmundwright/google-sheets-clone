@@ -61,6 +61,12 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 ### Phase 6: Sharing spreadsheets and making spreadsheets public (~0.5 day)
 I'll implement sharing of spreadsheets with other users, and making spreadsheets public.
 
+### Phase 7: Spreadsheets of varying sizes (~ 1 day)
+I'll allow users to increase and decrease the size of their spreadsheets, and to accommodate this implement scrolling.
+
+### Phase 8: Prettifying (3 days)
+I'll CSS it up.
+
 [Details][phase-five]
 
 ### Bonus Features (TBD)
