@@ -25,8 +25,9 @@
 * Spreadsheets
 
 ### Views
-* SpreadsheetIndex
-* SpreadsheetShow
-* SpreadSheetTitleForm
+* SpreadsheetIndex (composite view containing SpreadSheetIndexItem subviews, and link to create and show new spreadsheet)
+* SpreadsheetIndexItem
+* SpreadsheetShow (composite view containing SpreadSheetTitle subview).
+* SpreadSheetTitle (for showing or editing title)
 
 ## Gems/Libraries
