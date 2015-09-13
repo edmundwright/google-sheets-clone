@@ -1,4 +1,4 @@
-# Phase 1: User Authentication, Basic Blogs and Posts
+# Phase 1: User Authentication, Spreadsheet Creation
 
 ## Rails
 ### Models
@@ -29,5 +29,3 @@
 * SpreadsheetIndexItem
 * SpreadsheetShow (composite view containing SpreadSheetTitle subview).
 * SpreadSheetTitle (for showing or editing title)
-
-## Gems/Libraries
