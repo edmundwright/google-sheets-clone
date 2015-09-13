@@ -68,7 +68,7 @@ I'll implement sharing of spreadsheets with other users, and making spreadsheets
 
 [Details][phase-six]
 
-### Phase 7: Buttons (~1 day)
+### Phase 7: Buttons (~0.5 day)
 I'll implement buttons that can be used to insert operations into the formula currently being edited.
 
 [Details][phase-seven]
