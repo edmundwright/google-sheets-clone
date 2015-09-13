@@ -1,4 +1,4 @@
-# Phase 4: Selecting cells with the keyboard
+# Phase 5: Selecting cells with the keyboard
 
 ## Backbone
 ### Views
