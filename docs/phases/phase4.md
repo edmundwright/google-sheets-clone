@@ -1,20 +1,5 @@
-# Phase 4: User Feeds
-
-## Rails
-### Models
-
-### Controllers
-Api::PostsController (feed)
-
-### Views
-posts/feed.json.jbuilder
+# Phase 4: Selecting cells with the mouse
 
 ## Backbone
-### Models
-
-### Collections
-
 ### Views
-* FeedShow (composite view, contains PostsIndex subview)
-
-## Gems/Libraries
+* `SpreadSheetView` updated
