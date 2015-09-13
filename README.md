@@ -1,13 +1,11 @@
 # Google Sheets Clone
 
-[Heroku link (not yet live)][heroku]
+[Heroku link][heroku]
 
 [heroku]: http://google-sheets-clone.herokuapp.com
 
 ## Minimum Viable Product
 Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails and Backbone. Users can:
-
-<!-- This is a Markdown checklist. Use it to keep track of your progress! -->
 
 - [ ] Create accounts
 - [ ] Create sessions (log in)
@@ -33,46 +31,35 @@ Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails 
 
 ## Implementation Timeline
 
-### Phase 1: User Authentication, Blog Creation (~1 day)
+### Phase 1: User Authentication, Spreadsheet Creation (~1 day)
 I will implement user authentication in Rails based on the practices learned at
-App Academy. By the end of this phase, users will be able to create blogs using
-a simple text form in a Rails view. The most important part of this phase will
+App Academy. By the end of this phase, users will be able to create 'spreadsheets' (not really spreadsheets yet) using
+a simple text form in a Backbone view, view an index of their spreadsheets, and view a show page for each spreadsheet. The most important part of this phase will
 be pushing the app to Heroku and ensuring that everything works before moving on
 to phase 2.
 
 [Details][phase-one]
 
-### Phase 2: Viewing Blogs and Posts (~2 days)
-I will add API routes to serve blog and post data as JSON, then add Backbone
-models and collections that fetch data from those routes. By the end of this
-phase, users will be able to create blogs and view both blogs and posts, all
-inside a single Backbone app.
+### Phase 2: Viewing and editing spreadsheet (~1 day)
+I will produce a very simple HTML layout for presenting a spreadsheet, and write JavaScript to fetch the cells belonging to the current spreadsheet, and inject them into the HTML grid. I will then allow cells to be edited, and write the Backbone code to save the cell to the server immediately after editing. At this point in development spreadsheets will be of a fixed width and height.
 
 [Details][phase-two]
 
-### Phase 3: Editing and Displaying Posts (~2 days)
-I plan to use third-party libraries to add functionality to the `PostForm` and
-`PostShow` views in this phase. First I'll need to add a Markdown editor to the
-`PostForm`, and make sure that the Markdown is properly escaped and formatted in
-the `PostShow` view. I also plan to integrate Filepicker for file upload so
-users can add images to blog posts.
+### Phase 3: Evaluating formulae (~2 days)
+I will write JavaScript to detect that a formula is entered into a cell (by checking if it begins with '='), and evaluate that formula, rendering the result into the cell's html view. This has the potential to spiral into days of work, so I will restrict myself to evaluating the most simple formulae (those involving +, -, *, / or SUM). I will further write JavaScript that, after a cell is edited, checks for other cells that reference it and re-evaluate and render them all.
 
 [Details][phase-three]
 
-### Phase 4: User Feeds (~1-2 days)
-I'll start by adding a `feed` route that uses the `current_user`'s
-`subscribed_blogs` association to serve a list of blog posts ordered
-chronologically. On the Backbone side, I'll make a `FeedShow` view whose `posts`
-collection fetches from the new route.  Ultimately, this will be the page users
-see after logging in.
+### Phase 4: Selecting cells with the mouse (~1-2 days)
+I'll start by allowing users to, while editing a formula, click on another cell to insert a reference to the cell into that formula. I'll then move onto enabling selection of multiple cells. The first and most straightforward method of selection will be to click a row or column heading to select that entire row or column. I will then move on clicking and dragging with the mouse to select multiple cells.
 
 [Details][phase-four]
 
-### Phase 5: Searching for Blogs and Posts (~2 days)
-I'll need to add `search` routes to both the Blogs and Posts controllers. On the
-Backbone side, there will be a `SearchResults` composite view has `BlogsIndex`
-and `PostsIndex` subviews. These views will use plain old `blogs` and `posts`
-collections, but they will fetch from the new `search` routes.
+### Phase 5: Selecting cells with the keyboard (~1 day)
+I'll implement selecting navigating the spreadsheet using the arrow keys, and selecting cells by holding shift or command and using the arrow keys. This will be implemented by listening to key up and key down events.
+
+### Phase 6: Sharing spreadsheets and making spreadsheets public (~0.5 day)
+I'll implement sharing of spreadsheets with other users, and making spreadsheets public.
 
 [Details][phase-five]
 
