@@ -3,26 +3,30 @@
 ## Rails
 ### Models
 * User
-* Blog
-* Post
+* Spreadsheet
 
 ### Controllers
 * UsersController (create, new)
 * SessionsController (create, new, destroy)
-* BlogsController (create, new, show)
-* PostsController (create, new, show)
+* Api::SpreadsheetsController (create, index, show, update, destroy)
 
 ### Views
+* application.html.erb
 * users/new.html.erb
 * session/new.html.erb
-* blogs/new.html.erb
-* blogs/show.html.erb
+* spreadsheets/index.json.jbuilder
+* spreadsheets/show.json.jbuilder
 
 ## Backbone
 ### Models
+* Spreadsheet
 
 ### Collections
+* Spreadsheets
 
 ### Views
+* SpreadsheetIndex
+* SpreadsheetShow
+* SpreadSheetTitleForm
 
 ## Gems/Libraries
