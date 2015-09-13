@@ -1,4 +1,5 @@
-# Phase 7: Prettifying
+# Phase 7: Buttons
 
-## CSS
-* CSS
+## Backbone
+### Views
+* `SpreadSheetShow` updated
