@@ -44,7 +44,7 @@ to phase 2.
 [Details][phase-one]
 
 ### Phase 2: Viewing and editing spreadsheet (~1 day)
-I will produce a very simple HTML layout for presenting a spreadsheet, and write JavaScript to fetch the cells belonging to the current spreadsheet, and inject them into the HTML grid. I will then allow cells to be edited, and write the Backbone code to save the cell to the server immediately after editing.
+I will produce an HTML layout for presenting the cells of the spreadsheet, and write JavaScript to fetch the cells belonging to the current spreadsheet, and inject them into the HTML grid. I will then allow cells to be edited, and write the Backbone code to save the cell to the server immediately after editing.
 
 [Details][phase-two]
 
