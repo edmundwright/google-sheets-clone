@@ -17,6 +17,7 @@ id          | integer   | not null, primary key
 owner_id    | integer   | not null, foreign key (references `users`)
 title       | string    | not null
 public      | boolean   | not null, default: false
+public_edit | boolean   | not null, default: false
 
 ## shares
 column name    | data type | details
@@ -24,6 +25,7 @@ column name    | data type | details
 id             | integer   | not null, primary key
 spreadsheet_id | integer   | not null, foreign key (references `spreadsheets`)
 sharee_id      | integer   | not null, foreign key (references `users`)
+edit           | boolean   | not null, default: false
 
 ## cells
 column name    | data type | details
