@@ -14,8 +14,8 @@
 * application.html.erb
 * users/new.html.erb
 * session/new.html.erb
-* spreadsheets/index.json.jbuilder
-* spreadsheets/show.json.jbuilder
+* api/spreadsheets/index.json.jbuilder
+* api/spreadsheets/show.json.jbuilder
 
 ## Backbone
 ### Models
