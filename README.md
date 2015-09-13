@@ -16,6 +16,7 @@ Google Sheets Clone (final name TBD) is a clone of Google Sheets built on Rails 
 - [ ] Click on a cell to insert a reference to it into the formula currently being edited
 - [ ] Select multiple cells by clicking and dragging
 - [ ] Select whole rows or columns by clicking their headings
+- [ ] Select cells using the keyboard
 - [ ] Select multiple cells to insert a reference to them into the formula currently being edited
 - [ ] Have their work be autosaved to the server immediately following any change
 - [ ] Share a spreadsheet with other users
