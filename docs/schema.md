@@ -30,8 +30,8 @@ column name    | data type | details
 ---------------|-----------|-----------------------
 id             | integer   | not null, primary key
 spreadsheet_id | integer   | not null, foreign key (references `spreadsheets`)
-row            | integer   | not null
-column         | integer   | not null, unique within scope of `row` and `spreadsheet_id`
+row_index      | integer   | not null
+col_index      | integer   | not null, unique within scope of `row_index` and `spreadsheet_id`
 contents_str   | string    | must be null when `contents_int` or `contents_flo` is not null (contains contents of cell when cell contains formula, or data that is not a number)
 contents_int   | integer   | must be null when `contents_str` or `contents_flo` is not null (contains contents of cell when cell contains integer)
 contents_flo   | float     | must be null when `contents_int` or `contents_str` is not null (contains contents of cell when cell contains number that is non-integer)
