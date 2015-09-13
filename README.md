@@ -19,11 +19,11 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [ ] Select multiple cells by clicking and dragging
 - [ ] Select whole rows or columns by clicking their headings
 - [ ] Select cells using the keyboard
-- [ ] Click buttons to insert operations into formula currently being edited
 - [ ] Have their work be autosaved to the server immediately following any change
 - [ ] Share a spreadsheet with other users
 - [ ] See a list of the spreadsheets shared with them
 - [ ] Make a spreadsheet public so that any other person with the link can access it
+- [ ] Click buttons to insert operations into formula currently being edited
 
 ## Design Docs
 * [View Wireframes][views]
@@ -44,16 +44,16 @@ to phase 2.
 [Details][phase-one]
 
 ### Phase 2: Viewing and editing spreadsheet (~1 day)
-I will produce a very simple HTML layout for presenting a spreadsheet, and write JavaScript to fetch the cells belonging to the current spreadsheet, and inject them into the HTML grid. I will then allow cells to be edited, and write the Backbone code to save the cell to the server immediately after editing. At this point in development spreadsheets will be of a fixed width and height.
+I will produce a very simple HTML layout for presenting a spreadsheet, and write JavaScript to fetch the cells belonging to the current spreadsheet, and inject them into the HTML grid. I will then allow cells to be edited, and write the Backbone code to save the cell to the server immediately after editing.
 
 [Details][phase-two]
 
-### Phase 3: Evaluating formulae (~2 days)
+### Phase 3: Evaluating formulae (~1.5 days)
 I will write JavaScript to detect that a formula is entered into a cell (by checking if it begins with '='), and evaluate that formula, rendering the result into the cell's html view. This has the potential to spiral into days of work, so I will restrict myself to evaluating the most simple formulae (those involving +, -, *, / or SUM). I will further write JavaScript that, after a cell is edited, checks for other cells that reference it and re-evaluate and render them all.
 
 [Details][phase-three]
 
-### Phase 4: Selecting cells with the mouse (~1-2 days)
+### Phase 4: Selecting cells with the mouse (~1.5 days)
 I'll start by allowing users to, while editing a formula, click on another cell to insert a reference to the cell into that formula. I'll then move onto enabling selection of multiple cells. The first and most straightforward method of selection will be to click a row or column heading to select that entire row or column. I will then move on clicking and dragging with the mouse to select multiple cells.
 
 [Details][phase-four]
@@ -68,15 +68,10 @@ I'll implement sharing of spreadsheets with other users, and making spreadsheets
 
 [Details][phase-six]
 
-### Phase 7: Spreadsheets of varying sizes (~ 1 day)
-I'll allow users to increase and decrease the size of their spreadsheets, and to accommodate this implement scrolling.
+### Phase 7: Buttons (~1 day)
+I'll implement buttons that can be used to insert operations into the formula currently being edited.
 
 [Details][phase-seven]
-
-### Phase 8: Prettifying (~3 days)
-I'll CSS it up.
-
-[Details][phase-eight]
 
 ### Bonus Features (TBD)
 - [ ] Randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
@@ -91,5 +86,4 @@ I'll CSS it up.
 [phase-five]: ./docs/phases/phase5.md
 [phase-six]: ./docs/phases/phase6.md
 [phase-seven]: ./docs/phases/phase7.md
-[phase-eight]: ./docs/phases/phase8.md
 
