@@ -20,5 +20,5 @@
 * `Cells`
 
 ### Views
-* `SpreadsheetShow` now also containts Cell subviews.
+* `SpreadsheetShow` is now composite view containing `Cell` subviews.
 * `Cell` (for showing or editing cell)
