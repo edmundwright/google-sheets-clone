@@ -2,4 +2,4 @@
 
 ## Backbone
 ### Views
-* `SpreadSheetView` updated
+* `SpreadSheetShow` updated
