@@ -54,7 +54,7 @@ I will write JavaScript to detect that a formula is entered into a cell (by chec
 [Details][phase-three]
 
 ### Phase 4: Selecting cells with the mouse (~1.5 days)
-I'll start by allowing users to, while editing a formula, click on another cell to insert a reference to the cell into that formula. I'll then move onto enabling selection of multiple cells. The first and most straightforward method of selection will be to click a row or column heading to select that entire row or column. I will then move on clicking and dragging with the mouse to select multiple cells.
+I'll start by allowing users to, while editing a formula, click on another cell to insert a reference to the cell into that formula. I'll then move onto enabling selection of multiple cells. The first and most straightforward method of selection will be to click a row or column heading to select that entire row or column. I will then move onto clicking and dragging with the mouse to select multiple cells.
 
 [Details][phase-four]
 
