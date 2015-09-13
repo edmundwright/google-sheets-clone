@@ -6,4 +6,4 @@
 * `FormulaEvaluator`
 
 ### Views
-* `SpreadsheetShow` now listens for sync events on itself (and thus on its `cells` collection), and re-evalutes (using `FormulaEvaluator`) all its cells, and re-renders where necessary.
+* `SpreadsheetShow` now listens for sync events on its `cells` collection, and re-evalutes (using `FormulaEvaluator`) all its cells, and re-renders `Cell` subviews where necessary.
