@@ -1,22 +1,5 @@
-# Phase 5: Searching for Blogs and Posts
-
-## Rails
-### Models
-
-### Controllers
-Api::BlogsController (search)
-Api::PostsController (search)
-
-### Views
+# Phase 4: Selecting cells with the keyboard
 
 ## Backbone
-### Models
-
-### Collections
-
 ### Views
-* BlogSearchItem
-* SearchShow (composite view, contains BlogsIndex and PostsIndex subviews)
-
-## Gems/Libraries
-
+* `SpreadSheetView` updated
