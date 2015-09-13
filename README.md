@@ -19,6 +19,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [ ] Select multiple cells by clicking and dragging
 - [ ] Select whole rows or columns by clicking their headings
 - [ ] Select cells using the keyboard
+- [ ] Click buttons to insert operations into formula currently being edited
 - [ ] Have their work be autosaved to the server immediately following any change
 - [ ] Share a spreadsheet with other users
 - [ ] See a list of the spreadsheets shared with them
