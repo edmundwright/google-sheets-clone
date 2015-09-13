@@ -1,26 +1,15 @@
 # View Wireframes
 
-## New Session
-![new-session]
 
-## Feed Show (landing page)
-![feed-show]
+## Spreadsheet Index
+![spreadsheet-index]
 
-## Blog Show
-![blog-show]
+## Spreadsheet Show
+![spreadsheeet-show]
 
-## Post Show
-![post-show]
+## Spreadsheet Share (modal view)
+![spreadsheet-share]
 
-## Post Form
-![post-form]
-
-## Search Results
-![search-results]
-
-[new-session]: ./wireframes/new_session.png
-[feed-show]: ./wireframes/feed_show.png
-[blog-show]: ./wireframes/blog_show.png
-[post-show]: ./wireframes/post_show.png
-[post-form]: ./wireframes/post_form.png
-[search-results]: ./wireframes/search_results.png
+[spreadsheet-index]: ./wireframes/spreadsheet_index.jpg
+[spreadsheeet-show]: ./wireframes/spreadsheet_show.jpg
+[spreadsheet-share]: ./wireframes/spreadsheet_share.jpg
