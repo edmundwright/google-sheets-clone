@@ -3,3 +3,4 @@
 ## Backbone
 ### Views
 * `SpreadSheetShow` updated
+* `Cell` updated
