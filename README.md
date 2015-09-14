@@ -38,8 +38,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 
 ### Phase 1: User Authentication, Spreadsheet Creation (~1 day)
 I will implement user authentication in Rails based on the practices learned at
-App Academy. By the end of this phase, users will be able to create spreadsheets using
-a simple text form in a Backbone view, view an index of their spreadsheets, view a show page for each spreadsheet (at this point only displaying the spreadsheet's title), edit their spreadsheet's name, and destroy their spreadsheet. The most important part of this phase will
+App Academy. By the end of this phase, users will be able to create spreadsheets, view an index of their spreadsheets, view a show page for each spreadsheet (at this point only displaying the spreadsheet's title), edit their spreadsheet's name, and destroy their spreadsheet, all in Backbone views. The most important part of this phase will
 be pushing the app to Heroku and ensuring that everything works before moving on
 to phase 2.
 
