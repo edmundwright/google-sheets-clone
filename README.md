@@ -71,7 +71,7 @@ I'll implement sharing of spreadsheets with other users, and making spreadsheets
 [Details][phase-six]
 
 ### Phase 7: Formatting cells (~1 day)
-I'll implement buttons that can be used to format cells with custom background color, text colour, and number format.
+I'll implement buttons that can be used to format cells with custom background colours, text colours, and number formats.
 
 [Details][phase-seven]
 
