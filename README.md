@@ -24,7 +24,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [ ] See a list of the spreadsheets shared with them
 - [ ] Make a spreadsheet public so that any other person with the link can access it
 - [ ] Click buttons to insert operations into formula currently being edited
-- [ ] Format cells with custom background and/or text colour
+- [ ] Format cells with custom background and/or text colour, and different accounting formats.
 
 
 ## Design Docs
