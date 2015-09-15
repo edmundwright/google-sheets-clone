@@ -8,16 +8,29 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   render: function () {
     this.$el.html(this.template());
 
-    this.collection.each(function (model) {
+    var timePeriod = null;
+    var $ul = null;
+
+    this.collection.each(function(model) {
+      var modelTimePeriod = model.timePeriod();
+
+      if (timePeriod === null || timePeriod !== modelTimePeriod) {
+        timePeriod = modelTimePeriod;
+        var $h2 = $("<h2>");
+        $h2.text(timePeriod);
+        $ul = $("<ul>")
+        this.$el.append($h2).append($ul)
+      }
 
       this.addSubview(
-        "ul.spreadsheets",
+        $ul,
         new GoogleSheetsClone.Views.SpreadsheetIndexItem({
-          model: model
+          model: model,
+          today: (timePeriod === "Today")
         })
       );
     }.bind(this))
-    debugger
+
     return this;
   }
 });

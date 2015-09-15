@@ -1,5 +1,5 @@
 <a href="#spreadsheets/<%= spreadsheet.id %>">
   <%= spreadsheet.escape("title") %>
   <%= spreadsheet.owner.escape("name") %>
-  <%= spreadsheet.escape("updated_at") %>
+  <%= spreadsheet.updatedAtString() %>
 </a>

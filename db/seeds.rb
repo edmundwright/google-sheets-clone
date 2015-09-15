@@ -11,7 +11,11 @@ edmund_id = User.find_by(email: "edmund@edmund.io").id
 Spreadsheet.create(owner_id: edmund_id, title: "My first spreadsheet")
 Spreadsheet.create(owner_id: edmund_id, title: "Another spreadsheet")
 Spreadsheet.create(owner_id: edmund_id, title: "Fruit")
-Spreadsheet.create(owner_id: edmund_id, title: "Elephants")
+Spreadsheet.create(owner_id: edmund_id, title: "Elephants", updated_at: "2013-09-14T14:19:31.285Z")
+Spreadsheet.create(owner_id: edmund_id, title: "Tightrope walkers", updated_at: "2015-06-14T14:19:31.285Z")
+Spreadsheet.create(owner_id: edmund_id, title: "Mountain walkers", updated_at: "2015-09-02T14:19:31.285Z")
+Spreadsheet.create(owner_id: edmund_id, title: "Unicyclists", updated_at: "2015-09-03T14:19:31.285Z")
+Spreadsheet.create(owner_id: edmund_id, title: "Venereal diseases", updated_at: "2015-09-14T14:19:31.285Z")
 
 User.create(email: "jill@edmund.io", name: "Jill Fake", password: "password")
 jill_id = User.find_by(email: "jill@edmund.io").id
