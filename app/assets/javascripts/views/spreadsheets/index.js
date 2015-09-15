@@ -1,4 +1,4 @@
-GoogleSheetsClone.Views.SpreadsheetsIndex = Backbone.View.extend({
+GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   template: JST["spreadsheets/index"],
 
   initialize: function () {
@@ -6,11 +6,13 @@ GoogleSheetsClone.Views.SpreadsheetsIndex = Backbone.View.extend({
   },
 
   render: function () {
-    var content = this.template({
-      spreadsheets: this.collection
-    });
+    this.$el.html(this.template());
 
-    this.$el.html(content);
+    this.collection.each(function (model) {
+      this.addSubview("ul.spreadsheets", new GoogleSheetsClone.Views.SpreadsheetIndexItem({
+        model: model
+      }));
+    })
 
     return this;
   }
