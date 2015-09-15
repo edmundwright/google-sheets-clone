@@ -1,5 +1,7 @@
 <a href="#spreadsheets/<%= spreadsheet.id %>">
-  <%= spreadsheet.escape("title") %>
-  <%= spreadsheet.owner.escape("name") %>
-  <%= spreadsheet.updatedAtString() %>
+  <ul class="spreadsheet-attributes group">
+    <li class="title"><%= spreadsheet.escape("title") %></li>
+    <li class="owner"><%= spreadsheet.owner.escape("name") %></li>
+    <li class="updated-at"><%= spreadsheet.updatedAtString() %></li>
+  </ul>
 </a>

@@ -13,7 +13,6 @@ ul.spreadsheets > li {
   border-bottom: 1px solid rgb(196, 196, 196);
 }
 
-
 ul.spreadsheets > li:hover {
   background: #f1faf6;
 }
@@ -25,4 +24,26 @@ h2.time-period {
 
 div.spreadsheets-container {
   margin-bottom: 100px;
+}
+
+ul.spreadsheet-attributes {
+  width: 840px;
+}
+
+ul.spreadsheet-attributes > li {
+  display: block;
+}
+
+ul.spreadsheet-attributes > li.title {
+  float: left;
+  width: 450px;
+}
+
+ul.spreadsheet-attributes > li.owner {
+  float: left;
+}
+
+ul.spreadsheet-attributes > li.updated-at {
+  float: right;
+  width: 100px;
 }
