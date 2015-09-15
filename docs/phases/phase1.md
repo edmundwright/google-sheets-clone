@@ -26,7 +26,6 @@
 
 ### Collections
 * `Spreadsheets`
-* `Users`
 
 ### Views
 * `SpreadsheetIndex` (composite view containing `SpreadSheetIndexItem` subviews, and link to create and show new spreadsheet)
