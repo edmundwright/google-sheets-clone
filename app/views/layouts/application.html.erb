@@ -9,7 +9,7 @@
 <body>
 
 <% if logged_in? %>
-  <%= current_user.name %>
+  <a href="<%= edit_user_url(current_user) %>"><%= current_user.name %></a>
   <form action="<%= session_url %>" method="post">
     <%= hidden_auth_token %>
     <input type="hidden" name="_method" value="delete">

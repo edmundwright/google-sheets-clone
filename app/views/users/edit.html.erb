@@ -1,0 +1,41 @@
+<h1>Update your account details</h1>
+
+<ul class="errors">
+<% flash[:errors].try(:each) do |error| %>
+  <li><%= error %></li>
+<% end %>
+</ul>
+
+
+<h2>Update your email address or name</h2>
+<form action="<%= user_url(@user) %>" method="post">
+  <%= hidden_auth_token %>
+
+  <input type="hidden" name="_method" value="patch">
+
+  <label for="user_email">Update your email address:</label>
+  <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>">
+
+  <label for="user_name">Update your name:</label>
+  <input id="user_name" type="text" name="user[name]" value="<%= @user.name %>">
+
+  <button>Update</button>
+</form>
+
+<h2>Choose a new password</h2>
+<form action="<%= user_url(@user) %>" method="post">
+  <%= hidden_auth_token %>
+
+  <input type="hidden" name="_method" value="patch">
+
+  <label for="user_password">Choose a new password:</label>
+  <input id="user_password" type="password" name="user[password]">
+
+  <label for="user_password_confirmation">Confirm new password:</label>
+  <input id="user_password_confirmation" type="password" name="user[password_confirmation]">
+
+  <button>Change password</button>
+</form>
+
+<h2>Delete account</h2>
+<a href="<%= confirm_delete_user_url(@user) %>">Delete your account</a>

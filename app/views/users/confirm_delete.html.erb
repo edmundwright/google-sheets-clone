@@ -1,0 +1,14 @@
+<h1>Confirm deletion of account</h1>
+
+Are you sure you wish to delete your account? This action cannot be undone.
+
+<form action="<%= user_url(@user) %>" method="post">
+  <%= hidden_auth_token %>
+
+  <input type="hidden" name="_method" value="delete">
+
+  <label for="user_email">To confirm, please enter your email address below:</label>
+  <input id="user_email" type="text" name="user[email]">
+
+  <button>DELETE ACCOUNT</button>
+</form>
