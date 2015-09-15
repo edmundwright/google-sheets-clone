@@ -6,20 +6,20 @@ class UsersController < ApplicationController
     else
       filled_out_fields = {}
     end
-    
+
     @user = User.new({email: "", name: ""}.merge(filled_out_fields))
   end
 
   def create
-    @user = User.new(user_params)
+    user = User.new(user_params)
 
-    if @user.save
+    if user.save
       redirect_to :root
     else
       session[:filled_out_fields] = user_params.delete_if do |key, _|
         key == :password
       end
-      flash[:errors] = @user.errors.full_messages
+      flash[:errors] = user.errors.full_messages
       redirect_to new_user_url
     end
   end
