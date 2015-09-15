@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   def new
-    filled_out_fields = session[:filled_out_fields] || {email: "", name: ""}
-    @user = User.new(filled_out_fields)
+    filled_out_fields = session[:filled_out_fields] || {}
+    @user = User.new({email: "", name: ""}.merge(filled_out_fields))
   end
 
   def create
