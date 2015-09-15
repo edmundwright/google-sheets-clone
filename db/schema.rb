@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915005713) do
+ActiveRecord::Schema.define(version: 20150915130756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "spreadsheets", force: :cascade do |t|
+    t.integer  "owner_id",   null: false
+    t.string   "title",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "spreadsheets", ["owner_id"], name: "index_spreadsheets_on_owner_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",           null: false
