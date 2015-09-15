@@ -17,8 +17,10 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
       if (timePeriod === null || timePeriod !== modelTimePeriod) {
         timePeriod = modelTimePeriod;
         var $h2 = $("<h2>");
+        $h2.addClass("time-period");
         $h2.text(timePeriod);
-        $ul = $("<ul>")
+        $ul = $("<ul>");
+        $ul.addClass("spreadsheets");
         this.$el.append($h2).append($ul)
       }
 

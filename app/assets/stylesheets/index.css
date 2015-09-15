@@ -1,0 +1,18 @@
+ul.spreadsheets {
+  width: 900px;
+  background: white;
+  margin: 20px auto 0 auto;
+  border-left: 1px solid rgb(196, 196, 196);
+  border-top: 1px solid rgb(196, 196, 196);
+}
+
+ul.spreadsheets > li {
+  padding: 20px;
+  border-right: 1px solid rgb(196, 196, 196);
+  border-bottom: 1px solid rgb(196, 196, 196);
+}
+
+h2.time-period {
+  width: 900px;
+  margin: 20px auto 0 auto;
+}

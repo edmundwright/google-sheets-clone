@@ -1,0 +1,41 @@
+.sub-header {
+  width: 100%;
+  background: rgb(57, 66, 66);
+  color: white;
+  text-align: center;
+}
+
+.sub-header h1.welcome {
+  padding: 20px;
+  font-size: 52px;
+}
+
+.sub-header .create {
+  cursor: pointer;
+  width: 900px;
+  margin: auto;
+}
+.sub-header .create h1 {
+  display: block;
+  float: left;
+  height: 50px;
+  font-size: 50px;
+  line-height: 50px;
+  vertical-align: middle;
+  padding: 75px 0;
+}
+
+.sub-header .create img.plus {
+
+  display: block;
+  float: left;
+  background: white;
+  padding:34px 54px;
+  height: 40px;
+  margin: 40px 40px 40px 0;
+  border: 3px solid white;
+}
+
+.sub-header .create:hover img.plus {
+  border: 3px solid rgb(15, 157, 88);
+}

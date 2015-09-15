@@ -1,0 +1,20 @@
+<nav class="header group">
+  <img src="<%= image_path('cells-logo.png') %>">
+
+  <h1><a href="<%= root_url %>">cells</a></h1>
+
+  <% if logged_in? %>
+    <form action="<%= session_url %>" method="post">
+      <%= hidden_auth_token %>
+      <input type="hidden" name="_method" value="delete">
+      <button class="session-link">Log out</button>
+    </form>
+
+    <a class="session-link" href="<%= edit_user_url(current_user) %>">
+      <%= current_user.name %>
+    </a>
+  <% else %>
+    <a href="<%= new_session_url %>" class="session-link">Log in</a>
+    <a href="<%= new_user_url %>" class="session-link">Sign up</a>
+  <% end %>
+</nav>

@@ -1,0 +1,35 @@
+nav.header {
+  background: white;
+  position: fixed;
+  width: 100%;
+  color: #756E6E;
+}
+
+nav.header img {
+  height: 50px;
+  padding: 5px;
+  display: block;
+  float: left;
+  background: rgb(15, 157, 88);
+}
+
+nav.header h1 {
+  padding: 5px 5px 5px 20px;
+  font-size: 50px;
+  line-height: 50px;
+  display: block;
+  float: left;
+}
+
+nav.header .session-link {
+  cursor: pointer;
+  font-size: 20px;
+  display: block;
+  float: right;
+  line-height: 50px;
+  padding: 5px 20px;
+}
+
+nav.header .session-link:hover, nav.header a:hover {
+  color: black;
+}
