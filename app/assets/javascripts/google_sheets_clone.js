@@ -4,6 +4,10 @@ window.GoogleSheetsClone = {
   Views: {},
   Routers: {},
   initialize: function() {
+    new GoogleSheetsClone.Routers.Router({
+      $rootEl: $("main")
+    });
+    Backbone.history.start();
   }
 };
 
