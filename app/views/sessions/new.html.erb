@@ -1,6 +1,6 @@
-<section class="sub-header">
-  <h1 class="welcome">Welcome to Cells</h1>
-</section>
+<%= render 'layouts/welcome' %>
+
+<h1>Log in</h1>
 
 <ul class="errors">
 <% flash[:errors].try(:each) do |error| %>
