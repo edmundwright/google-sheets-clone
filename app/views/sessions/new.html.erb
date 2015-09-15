@@ -1,0 +1,19 @@
+<h1>Log in</h1>
+
+<ul class="errors">
+<% flash[:errors].try(:each) do |error| %>
+  <li><%= error %></li>
+<% end %>
+</ul>
+
+<form action="<%= session_url %>" method="post">
+  <%= hidden_auth_token %>
+
+  <label for="user_email">Your email address:</label>
+  <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>">
+
+  <label for="user_password">Your password:</label>
+  <input id="user_password" type="password" name="user[password]">
+
+  <button>Log in!</button>
+</form>

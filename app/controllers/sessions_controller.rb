@@ -11,13 +11,16 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by_credentials(params[:email], params[:password])
+    user = User.find_by_credentials(
+      params[:user][:email],
+      params[:user][:password]
+    )
 
     if user
       redirect_to :root
     else
       flash[:errors] = ["Incorrect email address or password."]
-      session[:filled_out_email] = params[:email]
+      session[:filled_out_email] = params[:user][:email]
       redirect_to new_session_url
     end
   end
