@@ -6,7 +6,7 @@
 * `Spreadsheet`
 
 ### Controllers
-* `UsersController` (`create`, `new`)
+* `UsersController` (`create`, `new`, `edit`, `destroy`)
 * `SessionsController` (`create`, `new`, `destroy`)
 * `API::SpreadsheetsController` (`create`, `index`, `show`, `update`, `destroy`)
 

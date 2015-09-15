@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   validates :email, :name, :password_digest, :session_token, presence: true
-  validates :email, :session_token, uniquness: true
+  validates :email, :session_token, uniqueness: true
   validates :password, length: { minimum: 6, allow_nil: true }
 
   def self.random_token
@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
     user = find_by(email: email)
     user && user.password_matches?(password) ? user : nil
   end
+
+  after_initialize :ensure_session_token
 
   attr_reader :password
 
