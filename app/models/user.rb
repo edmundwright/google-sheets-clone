@@ -4,6 +4,10 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :password, confirmation: true
 
+  has_many :spreadsheets,
+    class_name: "Spreadsheet",
+    foreign_key: :owner_id
+
   def self.random_token
     SecureRandom.urlsafe_base64
   end
