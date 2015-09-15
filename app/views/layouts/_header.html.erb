@@ -1,7 +1,7 @@
 <nav class="header group">
-  <img src="<%= image_path('cells-logo.png') %>">
+  <a href="<%= root_url %>"><img src="<%= image_path('cells-logo.png') %>">
 
-  <h1><a href="<%= root_url %>">cells</a></h1>
+  <h1>cells</h1></a>
 
   <% if logged_in? %>
     <form action="<%= session_url %>" method="post">

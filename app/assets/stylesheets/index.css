@@ -7,12 +7,22 @@ ul.spreadsheets {
 }
 
 ul.spreadsheets > li {
+  cursor: pointer;
   padding: 20px;
   border-right: 1px solid rgb(196, 196, 196);
   border-bottom: 1px solid rgb(196, 196, 196);
 }
 
+
+ul.spreadsheets > li:hover {
+  background: #f1faf6;
+}
+
 h2.time-period {
   width: 900px;
   margin: 20px auto 0 auto;
+}
+
+div.spreadsheets-container {
+  margin-bottom: 100px;
 }
