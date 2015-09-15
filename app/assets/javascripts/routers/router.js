@@ -9,11 +9,11 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
   },
 
   index: function () {
-    var spreadsheets = new GoogleSheetsClone.Collections.Spreadsheets();
-    spreadsheet.fetch();
+    var collection = new GoogleSheetsClone.Collections.Spreadsheets();
+    collection.fetch();
 
     var view = new GoogleSheetsClone.Views.SpreadsheetIndex({
-      spreadsheets: spreadsheets
+      collection: collection
     });
 
     this._swapView(view);
