@@ -16,13 +16,17 @@
 * session/new.html.erb
 * api/spreadsheets/index.json.jbuilder
 * api/spreadsheets/show.json.jbuilder
+* api/spreadsheets/\_spreadsheet.json.jbuilder
+* api/users/\_user.json.jbuilder
 
 ## Backbone
 ### Models
 * `Spreadsheet`
+* `User`
 
 ### Collections
 * `Spreadsheets`
+* `Users`
 
 ### Views
 * `SpreadsheetIndex` (composite view containing `SpreadSheetIndexItem` subviews, and link to create and show new spreadsheet)
