@@ -7,25 +7,14 @@
 ## Minimum Viable Product
 A clone of Google Sheets built on Rails and Backbone. Users can:
 
-- [ ] Create accounts
-- [ ] Create sessions (log in)
+- [ ] Create accounts, log in, log out, add a user profile photo
 - [ ] Create new spreadsheets
 - [ ] See a list of their spreadsheets
 - [ ] Input a formula into a cell, and see it calculated immediately upon pressing enter
 - [ ] See any changes to a cell have an immediate effect on other cells that reference it
-- [ ] Select a cell to insert a reference to it into the formula currently being edited
-- [ ] Select multiple cells to insert a reference to them into the formula currently being edited
-- [ ] Select a cell by clicking on it
-- [ ] Select multiple cells by clicking and dragging
-- [ ] Select whole rows or columns by clicking their headings
-- [ ] Select cells using the keyboard
+- [ ] Select a cell with the mouse or keyboard to insert a reference to it into the formula currently being edited
+- [ ] Select multiple cells with the mouse or keyboard to insert a reference to them into the formula currently being edited
 - [ ] Have their work be autosaved to the server immediately following any change
-- [ ] Share a spreadsheet with other users
-- [ ] See a list of the spreadsheets shared with them
-- [ ] Make a spreadsheet public so that any other person with the link can access it
-- [ ] Click buttons to insert operations into formula currently being edited
-- [ ] Format cells with custom background and/or text colour, and different number formats.
-
 
 ## Design Docs
 * [View Wireframes][views]
@@ -64,18 +53,11 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 
 [Details][phase-five]
 
-### Phase 6: Sharing spreadsheets and making spreadsheets public (~0.5 day)
-I'll implement sharing of spreadsheets with other users, and making spreadsheets public.
-
-[Details][phase-six]
-
-### Phase 7: Formatting cells (~1 day)
-I'll implement buttons that can be used to format cells with custom background colours, text colours, and number formats.
-
-[Details][phase-seven]
-
 ### Bonus Features (TBD)
-- [ ] Randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
+- [ ] Share a spreadsheet with other users
+- [ ] Make a spreadsheet public so that any other person with the link can access it
+- [ ] Format cells with custom background and/or text colour, and different number formats.
+- [ ] Access spreadsheets through randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
 - [ ] Drag to resize rows and columns
 - [ ] Edit a spreadsheet simultaneously with another user, seeing their edits appear live
 
@@ -85,6 +67,4 @@ I'll implement buttons that can be used to format cells with custom background c
 [phase-three]: ./docs/phases/phase3.md
 [phase-four]: ./docs/phases/phase4.md
 [phase-five]: ./docs/phases/phase5.md
-[phase-six]: ./docs/phases/phase6.md
-[phase-seven]: ./docs/phases/phase7.md
 
