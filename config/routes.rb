@@ -6,4 +6,8 @@ Rails.application.routes.draw do
   end
 
   resource :session, only: [:new, :create, :destroy]
+
+  namespace :api, defaults: { format: :json } do
+    resources :spreadsheets, only: [:create, :show, :index, :update, :destroy]
+  end
 end

@@ -1,11 +1,11 @@
-class API::SpreadsheetsController < ApplicationController
+class Api::SpreadsheetsController < ApplicationController
   def create
     @spreadsheet = current_user.spreadsheets.new(spreadsheet_params)
 
     if spreadsheet.save
       render :show
     else
-      render json: @spreadsheet.errors.full_messages
+      render json: @spreadsheet.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -20,10 +20,10 @@ class API::SpreadsheetsController < ApplicationController
   def update
     @spreadsheet = current_user.spreadsheets.find(params[:id])
 
-    if spreadsheet.update(spreadsheet_params)
+    if @spreadsheet.update(spreadsheet_params)
       render :show
     else
-      render json: @spreadsheet.errors.full_messages
+      render json: @spreadsheet.errors.full_messages, status: :unprocessable_entity
     end
   end
 
