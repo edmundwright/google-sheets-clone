@@ -8,6 +8,20 @@
 </head>
 <body>
 
+<% if logged_in? %>
+  <%= current_user.name %>
+  <form action="<%= session_url %>" method="post">
+    <%= hidden_auth_token %>
+    <input type="hidden" name="_method" value="delete">
+    <button>Log out</button>
+  </form>
+<% else %>
+  <a href="<%= new_session_url %>">Log in</a>
+  <a href="<%= new_user_url %>">Sign up</a>
+<% end %>
+
+<%= flash[:notice] %>
+
 <%= yield %>
 
 </body>

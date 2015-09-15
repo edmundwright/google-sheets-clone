@@ -17,6 +17,8 @@ class SessionsController < ApplicationController
     )
 
     if user
+      log_in_user!(user)
+      flash[:notice] = "Welcome back!"
       redirect_to :root
     else
       flash[:errors] = ["Incorrect email address or password."]
@@ -26,5 +28,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    log_out!
+    redirect_to new_session_url
   end
 end

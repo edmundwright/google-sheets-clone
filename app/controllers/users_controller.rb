@@ -14,6 +14,8 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     if user.save
+      log_in_user!(user)
+      flash[:notice] = "Welcome to the site!"
       redirect_to :root
     else
       session[:filled_out_fields] = user_params.delete_if do |key, _|
