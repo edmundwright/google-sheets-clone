@@ -9,10 +9,13 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     this.$el.html(this.template());
 
     this.collection.each(function (model) {
-      this.addSubview("ul.spreadsheets", new GoogleSheetsClone.Views.SpreadsheetIndexItem({
-        model: model
-      }));
-    })
+      this.addSubview(
+        "ul.spreadsheets",
+        new GoogleSheetsClone.Views.SpreadsheetIndexItem({
+          model: model
+        })
+      );
+    }.bind(this))
 
     return this;
   }
