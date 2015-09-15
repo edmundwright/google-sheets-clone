@@ -22,6 +22,7 @@
 ## Backbone
 ### Models
 * `Spreadsheet`
+* `User`
 
 ### Collections
 * `Spreadsheets`
