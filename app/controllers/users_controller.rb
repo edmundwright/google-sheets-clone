@@ -1,4 +1,11 @@
 class UsersController < ApplicationController
+  skip_before_action :ensure_logged_in, except: [
+    :edit,
+    :update,
+    :confirm_delete,
+    :destroy
+  ]
+
   def new
     if session[:filled_out_fields]
       filled_out_fields = session[:filled_out_fields]
@@ -27,35 +34,31 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
+    @user = current_user
   end
 
   def update
-    user = User.find(params[:id])
-    
-    if user.update(user_params.delete_if { |k, v| k == :password })
+    if current_user.update(user_params.delete_if { |k, v| k == :password })
       flash[:notice] = "Your account details have been updated."
       redirect_to :root
     else
-      flash[:errors] = user.errors.full_messages
-      redirect_to edit_user_url
+      flash[:errors] = current_user.errors.full_messages
+      redirect_to edit_user_url(current_user)
     end
   end
 
   def confirm_delete
-    @user = User.find(params[:id])
+    @user = current_user
   end
 
   def destroy
-    user = User.find(params[:id])
-
-    if user.email == user_params[:email]
-      user.destroy!
+    if current_user.email == user_params[:email]
+      current_user.destroy!
       flash[:notice] = "Your account has been deleted."
       redirect_to new_user_url
     else
       flash[:errors] = ["The email address you entered does not match the account's email address. Account was not deleted."]
-      redirect_to edit_user_url(user)
+      redirect_to edit_user_url(current_user)
     end
   end
 

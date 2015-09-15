@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_before_action :ensure_logged_in, except: :destroy
+
   def new
     if session[:filled_out_email]
       filled_out_email = session[:filled_out_email]
