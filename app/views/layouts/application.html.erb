@@ -8,18 +8,24 @@
 </head>
 <body>
 
-<% if logged_in? %>
-  <a href="<%= edit_user_url(current_user) %>"><%= current_user.name %></a>
-  <form action="<%= session_url %>" method="post">
-    <%= hidden_auth_token %>
-    <input type="hidden" name="_method" value="delete">
-    <button>Log out</button>
-  </form>
-<% else %>
-  <a href="<%= new_session_url %>">Log in</a>
-  <a href="<%= new_user_url %>">Sign up</a>
-<% end %>
+<nav>
+  <img src="<%= image_path('cells-logo.png') %>">
 
+  <h1>cells</h1>
+
+  <% if logged_in? %>
+    <a href="<%= edit_user_url(current_user) %>"><%= current_user.name %></a>
+    <form action="<%= session_url %>" method="post">
+      <%= hidden_auth_token %>
+      <input type="hidden" name="_method" value="delete">
+      <button>Log out</button>
+    </form>
+  <% else %>
+    <a href="<%= new_session_url %>">Log in</a>
+    <a href="<%= new_user_url %>">Sign up</a>
+  <% end %>
+
+</nav>
 <%= flash[:notice] %>
 
 <%= yield %>
