@@ -19,9 +19,23 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
     this._swapView(view);
   },
 
+  show: function (id) {
+    var model = new GoogleSheetsClone.Models.Spreadsheet({
+      id: id
+    });
+    model.fetch();
+
+    var view = new GoogleSheetsClone.Views.SpreadsheetShow({
+      model: model
+    });
+
+    this._swapView(view);
+  },
+
   _swapView: function (newView) {
     this._currentView && this._currentView.remove();
     this._currentView = newView;
+    debugger
     this.$rootEl.html(newView.render().$el);
   }
 });

@@ -1,3 +1,5 @@
-<%= spreadsheet.escape("title") %>
-<%= spreadsheet.owner.escape("name") %>
-<%= spreadsheet.escape("updated_at") %>
+<a href="#spreadsheets/<%= spreadsheet.id %>">
+  <%= spreadsheet.escape("title") %>
+  <%= spreadsheet.owner.escape("name") %>
+  <%= spreadsheet.escape("updated_at") %>
+</a>
