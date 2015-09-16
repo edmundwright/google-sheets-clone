@@ -29,12 +29,40 @@ div#formula-bar input {
   outline: none;
 }
 
-div#column-bar {
+div#upper-bar {
   position: fixed;
   top: 97px;
   height: 35px;
   width: 100%;
   border-bottom: 1px solid #c0c0c0;
+}
+
+ul#row-headers {
+  position: fixed;
+  top: 133px;
+  width: 59px;
+  border-right: 1px solid #c0c0c0;
+}
+
+li.row-header {
+  display: block;
+  width: 59px;
+  border-bottom: 1px solid #c0c0c0;
+  height: 19px;
+  text-align: center;
+  font-size: 19px;
+  padding: 8px 0 8px 0;
+}
+
+li.column-header {
+  display: block;
+  float: left;
+  text-align: center;
+  border-right: 1px solid #c0c0c0;
+  height: 19px;
+  width: 175px;
+  font-size: 19px;
+  padding: 8px 0 8px 0;
 }
 
 div#select-all {
