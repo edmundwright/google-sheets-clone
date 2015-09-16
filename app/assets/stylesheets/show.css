@@ -59,20 +59,39 @@ ul#column-headers {
 }
 
 li.column-header, li.cell {
-  cursor: default;
   display: block;
   float: left;
-  text-align: center;
   border-right: 1px solid #c0c0c0;
   border-bottom: 1px solid #c0c0c0;
-  height: 19px;
-  width: 175px;
   font-size: 19px;
+  width: 175px;
+}
+
+li.column-header {
+  cursor: default;
+  height: 19px;
   padding: 8px 0 8px 0;
+  text-align: center;
+}
+
+li.cell {
+  height: 35px;
+}
+
+li.cell input {
+  cursor: default;
+  outline: none;
+  width: 165px;
+  height: 35px;
+  padding: 0 5px 0 5px;
+}
+
+li.cell input.selected-cell-input {
+  cursor: text;
 }
 
 div.selected-cell-border {
-  top: -31px;
+  top: -35px;
   left: -1px;
   position: relative;
   display: block;

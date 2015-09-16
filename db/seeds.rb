@@ -28,8 +28,7 @@ Spreadsheet.all.each do |spreadsheet|
       Cell.create(
         spreadsheet_id: spreadsheet.id,
         row_index: row_index,
-        col_index: col_index,
-        contents_str: "r: #{row_index} c: #{col_index}"
+        col_index: col_index
       )
     end
   end

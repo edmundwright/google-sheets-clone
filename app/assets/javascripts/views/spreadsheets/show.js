@@ -7,18 +7,41 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
   },
 
   events: {
-    "click .cell": "selectCell"
+    "click .cell": "clickCell",
+    "submit form.cell-form": "submitCellForm"
   },
 
-  selectCell: function (e) {
-    this.$("div.selected-cell-border").remove();
+  submitCellForm: function (e) {
+    e.preventDefault();
+    var newContents = $(e.currentTarget).serializeJSON().contents;
+    this.selectedModel.save({ contents_str: newContents }, {
+      success: function () {
+        if (this.selectedModel.get("row_index") !== this.model.get("height")-1) {
+          var $liBelow = this.$("li.cell:nth-child(" + (this.$selectedCellLi.index() + this.model.get("width") + 1) + ")");
+          debugger
+          this.selectCell($liBelow);
+        }
+      }.bind(this)
+    })
+  },
 
-    var $cellLi = $(e.currentTarget);
+  clickCell: function (e) {
+    this.selectCell($(e.currentTarget));
+  },
+
+  selectCell: function ($cellLi) {
+    this.$("div.selected-cell-border").remove();
+    this.$(".cell-input").removeClass("selected-cell-input");
+
+    this.$selectedCellLi = $cellLi;
     var $border = $("<div>");
     $border.addClass("selected-cell-border");
-    $cellLi.append($border)
+    this.$selectedCellLi.append($border)
 
-    var model = this.model.cells().get($cellLi.data("cell-id"))
+    this.$selectedCellLi.find("input").addClass("selected-cell-input").focus();
+
+    this.selectedModel = this.model.cells()
+      .get(this.$selectedCellLi.data("cell-id"))
   },
 
   scroll: function () {
@@ -76,8 +99,16 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
       }
       var $li = $("<li>");
       $li.data("cell-id", cell.id);
+      var $form = $("<form>");
+      $form.addClass("cell-form");
+      var $input = $("<input>");
+      $input.addClass("cell-input");
+      $input.attr("type", "text");
+      $input.attr("name", "contents");
+      $input.val(contents)
+      $form.append($input)
+      $li.append($form)
       $li.addClass("cell");
-      $li.text(contents)
       $ul.append($li);
     })
   }
