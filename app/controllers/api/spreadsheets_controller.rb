@@ -5,7 +5,8 @@ class Api::SpreadsheetsController < ApplicationController
     if @spreadsheet.save
       render :show
     else
-      render json: @spreadsheet.errors.full_messages, status: :unprocessable_entity
+      render json: @spreadsheet.errors.full_messages,
+        status: :unprocessable_entity
     end
   end
 

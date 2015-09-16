@@ -8,6 +8,10 @@ class User < ActiveRecord::Base
     class_name: "Spreadsheet",
     foreign_key: :owner_id
 
+  has_many :cells,
+    through: :spreadsheets,
+    source: :cells
+
   def self.random_token
     SecureRandom.urlsafe_base64
   end
