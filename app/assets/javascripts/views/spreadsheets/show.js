@@ -6,6 +6,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
   },
 
   render: function () {
+    debugger
     this.$el.html(this.template({
       spreadsheet: this.model
     }));

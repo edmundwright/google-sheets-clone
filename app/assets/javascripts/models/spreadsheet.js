@@ -7,7 +7,22 @@ GoogleSheetsClone.Models.Spreadsheet = Backbone.Model.extend ({
       delete response.owner;
     }
 
+    if (response.cells) {
+      this.cells().set(response.cells);
+      delete response.cells;
+    }
+
     return response;
+  },
+
+  cells: function () {
+    if (!this._cells) {
+      this._cells = new GoogleSheetsClone.Collections.Cells([], {
+        spreadsheet: this
+      });
+    }
+
+    return this._cells;
   },
 
   timePeriod: function () {
