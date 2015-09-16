@@ -1,4 +1,4 @@
-# Google Sheets Clone (final name TBD)
+# Cells (provisional name)
 
 [Heroku link][heroku]
 
@@ -67,4 +67,3 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 [phase-three]: ./docs/phases/phase3.md
 [phase-four]: ./docs/phases/phase4.md
 [phase-five]: ./docs/phases/phase5.md
-
