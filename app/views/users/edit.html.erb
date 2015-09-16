@@ -1,6 +1,10 @@
 <section class="form">
   <h1>Update your account details</h1>
 
+  <% if flash[:notice] %>
+    <div class="flash"><%= flash[:notice] %></div>
+  <% end %>
+
   <ul class="errors">
   <% flash[:errors].try(:each) do |error| %>
     <li><%= error %></li>

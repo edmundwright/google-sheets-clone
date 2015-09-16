@@ -52,6 +52,10 @@ section.form a {
   margin: 30px;
 }
 
+section.form a:hover {
+  text-decoration: underline;
+}
+
 section.form .delete-account {
   display: block;
   margin: 20px auto;
@@ -60,5 +64,12 @@ section.form .delete-account {
   border-radius: 5px;
   width: 150px;
   padding: 10px;
+}
 
+
+div.flash {
+  background: rgb(15, 157, 88);
+  color: white;
+  margin: 10px;
+  text-align: center;
 }

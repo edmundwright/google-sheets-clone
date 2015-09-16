@@ -1,5 +1,9 @@
 <%= render 'layouts/welcome' %>
 
+<% if flash[:notice] %>
+  <div class="flash"><%= flash[:notice] %></div>
+<% end %>
+
 <section class="form">
   <h1>Sign up!</h1>
 

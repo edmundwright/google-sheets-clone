@@ -22,7 +22,6 @@ class UsersController < ApplicationController
 
     if user.save
       log_in_user!(user)
-      flash[:notice] = "Welcome to the site!"
       redirect_to :root
     else
       session[:filled_out_fields] = user_params.delete_if do |key, _|
@@ -41,11 +40,10 @@ class UsersController < ApplicationController
     user = current_user
     if user.update(user_params.delete_if { |k, v| k == :password })
       flash[:notice] = "Your account details have been updated."
-      redirect_to :root
     else
       flash[:errors] = user.errors.full_messages
-      redirect_to edit_user_url(user)
     end
+    redirect_to edit_user_url(user)
   end
 
   def confirm_delete

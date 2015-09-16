@@ -20,7 +20,6 @@ class SessionsController < ApplicationController
 
     if user
       log_in_user!(user)
-      flash[:notice] = "Welcome back!"
       redirect_to :root
     else
       flash[:errors] = ["Incorrect email address or password."]
