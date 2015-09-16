@@ -1,27 +1,29 @@
 <%= render 'layouts/welcome' %>
 
-<h1>Sign up!</h1>
+<section class="form">
+  <h1>Sign up!</h1>
 
-<ul class="errors">
-<% flash[:errors].try(:each) do |error| %>
-  <li><%= error %></li>
-<% end %>
-</ul>
+  <ul class="errors">
+  <% flash[:errors].try(:each) do |error| %>
+    <li><%= error %></li>
+  <% end %>
+  </ul>
 
-<form action="<%= users_url %>" method="post">
-  <%= hidden_auth_token %>
+  <form action="<%= users_url %>" method="post">
+    <%= hidden_auth_token %>
 
-  <label for="user_email">Your email address:</label>
-  <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>">
+    <label for="user_email">Your email address</label>
+    <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>" autofocus>
 
-  <label for="user_name">Your full name:</label>
-  <input id="user_name" type="text" name="user[name]" value="<%= @user.name %>">
+    <label for="user_name">Your full name</label>
+    <input id="user_name" type="text" name="user[name]" value="<%= @user.name %>">
 
-  <label for="user_password">Choose a password:</label>
-  <input id="user_password" type="password" name="user[password]">
+    <label for="user_password">Choose a password</label>
+    <input id="user_password" type="password" name="user[password]">
 
-  <label for="user_password_confirmation">Confirm password:</label>
-  <input id="user_password_confirmation" type="password" name="user[password_confirmation]">
+    <label for="user_password_confirmation">Confirm password</label>
+    <input id="user_password_confirmation" type="password" name="user[password_confirmation]">
 
-  <button>Sign up!</button>
-</form>
+    <button>Sign up!</button>
+  </form>
+</section>

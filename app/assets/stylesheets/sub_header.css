@@ -29,14 +29,14 @@
   display: block;
   float: left;
   background: white;
-  padding:34px 54px;
+  padding:35px 55px;
   height: 40px;
   margin: 40px 70px 40px 0;
-  border: 3px solid white;
+  border: 5px solid white;
 }
 
 .sub-header .create:hover img.plus {
-  border: 3px solid rgb(15, 157, 88);
+  border: 5px solid rgb(15, 157, 88);
 }
 
 .sub-header .create:hover h1 {

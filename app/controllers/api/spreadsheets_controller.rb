@@ -2,7 +2,7 @@ class Api::SpreadsheetsController < ApplicationController
   def create
     @spreadsheet = current_user.spreadsheets.new(spreadsheet_params)
 
-    if spreadsheet.save
+    if @spreadsheet.save
       render :show
     else
       render json: @spreadsheet.errors.full_messages, status: :unprocessable_entity
@@ -36,6 +36,6 @@ class Api::SpreadsheetsController < ApplicationController
   private
 
   def spreadsheet_params
-    params.require(:spreadsheet).require(:title)
+    params.require(:spreadsheet).permit(:title)
   end
 end

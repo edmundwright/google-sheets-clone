@@ -1,23 +1,27 @@
 <%= render 'layouts/welcome' %>
 
-<h1>Log in</h1>
+<section class="form">
+  <h1>Log in</h1>
 
-<br>Temporary measure for testing: email is 'edmund@edmund.io', password is 'password'.<br><br>
+  <br>Temporary measure for testing: email is 'edmund@edmund.io', password is 'password'.<br><br>
 
-<ul class="errors">
-<% flash[:errors].try(:each) do |error| %>
-  <li><%= error %></li>
-<% end %>
-</ul>
+  <ul class="errors">
+  <% flash[:errors].try(:each) do |error| %>
+    <li><%= error %></li>
+  <% end %>
+  </ul>
 
-<form action="<%= session_url %>" method="post">
-  <%= hidden_auth_token %>
+  <form action="<%= session_url %>" method="post">
+    <%= hidden_auth_token %>
 
-  <label for="user_email">Your email address:</label>
-  <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>">
+    <label for="user_email">Your email address</label>
+    <input id="user_email" type="text" name="user[email]" value="<%= @user.email %>" autofocus>
 
-  <label for="user_password">Your password:</label>
-  <input id="user_password" type="password" name="user[password]">
+    <label for="user_password">Your password</label>
+    <input id="user_password" type="password" name="user[password]">
 
-  <button>Log in!</button>
-</form>
+    <button>Log in!</button>
+  </form>
+
+  <a href="<%= new_user_url %>">No account? Sign up.</a>
+</section>

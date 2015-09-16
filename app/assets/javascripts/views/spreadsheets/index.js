@@ -5,6 +5,10 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     this.listenTo(this.collection, "sync", this.render);
   },
 
+  events: {
+    "click .create": "create"
+  },
+
   render: function () {
     this.$el.html(this.template());
 
@@ -33,5 +37,17 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     }.bind(this))
 
     return this;
+  },
+
+  create: function () {
+    var model = new GoogleSheetsClone.Models.Spreadsheet();
+
+    model.save({
+      "spreadsheet": { "title": "Untitled spreadsheet" }
+    }, {
+      success: function () {
+        Backbone.history.navigate("spreadsheets/" + model.id, { trigger: true });
+      }
+    })
   }
 });

@@ -38,12 +38,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.update(user_params.delete_if { |k, v| k == :password })
+    user = current_user
+    if user.update(user_params.delete_if { |k, v| k == :password })
       flash[:notice] = "Your account details have been updated."
       redirect_to :root
     else
-      flash[:errors] = current_user.errors.full_messages
-      redirect_to edit_user_url(current_user)
+      flash[:errors] = user.errors.full_messages
+      redirect_to edit_user_url(user)
     end
   end
 

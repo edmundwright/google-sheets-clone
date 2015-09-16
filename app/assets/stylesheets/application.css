@@ -16,6 +16,7 @@
  *= require header
  *= require main
  *= require index
+ *= require form
  *= require sub_header
  *= require_tree .
  */
