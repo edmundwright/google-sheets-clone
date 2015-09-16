@@ -8,7 +8,6 @@ ul.spreadsheets {
 
 ul.spreadsheets > li {
   cursor: pointer;
-  padding: 20px;
   border-right: 1px solid rgb(196, 196, 196);
   border-bottom: 1px solid rgb(196, 196, 196);
 }
@@ -18,6 +17,7 @@ ul.spreadsheets > li:hover {
 }
 
 h2.time-period {
+  display: block;
   width: 900px;
   margin: 20px auto 0 auto;
 }
@@ -27,11 +27,29 @@ div.spreadsheets-container {
 }
 
 ul.spreadsheet-attributes {
-  width: 840px;
+  width: 900px;
 }
 
 ul.spreadsheet-attributes > li {
   display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 15px;
+  vertical-align: middle;
+  height: 21px;
+  line-height: 21px;
+}
+
+ul.spreadsheet-attributes > li.logo {
+  float: left;
+}
+
+ul.spreadsheet-attributes > li.logo img {
+  display: block;
+  height: 15px;
+  width: 15px;
+  padding: 3px;
+  background: rgb(15, 157, 88);
 }
 
 ul.spreadsheet-attributes > li.title {
@@ -41,9 +59,9 @@ ul.spreadsheet-attributes > li.title {
 
 ul.spreadsheet-attributes > li.owner {
   float: left;
+  width: 170px;
 }
 
 ul.spreadsheet-attributes > li.updated-at {
   float: right;
-  width: 100px;
 }
