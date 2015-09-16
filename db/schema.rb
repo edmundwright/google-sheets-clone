@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915130756) do
+ActiveRecord::Schema.define(version: 20150916141818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cells", force: :cascade do |t|
+    t.integer  "spreadsheet_id", null: false
+    t.integer  "row_index",      null: false
+    t.integer  "col_index",      null: false
+    t.string   "contents_str"
+    t.integer  "contents_int"
+    t.float    "contents_flo"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cells", ["spreadsheet_id", "row_index", "col_index"], name: "index_cells_on_spreadsheet_id_and_row_index_and_col_index", unique: true, using: :btree
+  add_index "cells", ["spreadsheet_id"], name: "index_cells_on_spreadsheet_id", using: :btree
 
   create_table "spreadsheets", force: :cascade do |t|
     t.integer  "owner_id",   null: false
