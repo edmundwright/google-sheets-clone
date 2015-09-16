@@ -59,6 +59,7 @@ ul#column-headers {
 }
 
 li.column-header, li.cell {
+  cursor: default;
   display: block;
   float: left;
   text-align: center;
@@ -68,6 +69,16 @@ li.column-header, li.cell {
   width: 175px;
   font-size: 19px;
   padding: 8px 0 8px 0;
+}
+
+div.selected-cell-border {
+  top: -31px;
+  left: -1px;
+  position: relative;
+  display: block;
+  border: 3px solid #4285f4;
+  height: 31px;
+  width: 171px;
 }
 
 div#select-all {

@@ -6,8 +6,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
     $(window).scroll(this.scroll);
   },
 
+  events: {
+    "click .cell": "selectCell"
+  },
+
+  selectCell: function (e) {
+    this.$("div.selected-cell-border").remove();
+
+    var $cellLi = $(e.currentTarget);
+    var $border = $("<div>");
+    $border.addClass("selected-cell-border");
+    $cellLi.append($border)
+
+    var model = this.model.cells().get($cellLi.data("cell-id"))
+  },
+
   scroll: function () {
-    console.log("hi");
     this.$("ul#row-headers").css("left", $(this).scrollLeft());
     this.$("ul#column-headers").css("top", $(this).scrollTop() + 37);
   },
@@ -61,6 +75,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
         contents = "";
       }
       var $li = $("<li>");
+      $li.data("cell-id", cell.id);
       $li.addClass("cell");
       $li.text(contents)
       $ul.append($li);
