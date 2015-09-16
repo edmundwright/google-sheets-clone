@@ -3,12 +3,23 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
 
   initialize: function () {
     this.listenTo(this.model, "sync", this.render);
+    $(window).scroll(this.scroll);
+  },
+
+  scroll: function () {
+    console.log("hi");
+    this.$("ul#row-headers").css("left", $(this).scrollLeft());
+    this.$("ul#column-headers").css("top", $(this).scrollTop() + 37);
   },
 
   render: function () {
     this.$el.html(this.template({
       spreadsheet: this.model
     }));
+
+    var widthString = "" + (this.model.get("width") * 176) + "px";
+
+    this.$("ul#column-headers").css("width", widthString);
 
     this.renderCells();
 

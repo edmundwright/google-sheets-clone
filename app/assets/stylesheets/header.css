@@ -1,4 +1,5 @@
 nav.header {
+  z-index: 2;
   background: white;
   position: fixed;
   width: 100%;

@@ -1,4 +1,4 @@
-json.extract! spreadsheet, :id, :title, :updated_at
+json.extract! spreadsheet, :id, :title, :width, :height, :updated_at
 
 json.owner do
   json.partial! 'api/users/user', user: spreadsheet.owner
