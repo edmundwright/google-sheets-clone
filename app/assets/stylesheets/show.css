@@ -1,0 +1,29 @@
+div#formula-bar {
+  border-top: 1px solid rgb(238, 238, 238);
+  position: fixed;
+  width: 100%;
+}
+
+div.formula-bar-container {
+  border-top: 5px solid white;
+  border-bottom: 5px solid white;
+}
+
+div#formula-bar img {
+  width: 60px;
+  display: block;
+  float: left;
+  height: 25px;
+  background: white;
+}
+
+div#formula-bar input {
+  background: white;
+  width: calc(100% - 60px - 1px - 5px);
+  display: block;
+  float: left;
+  height: 25px;
+  border-left: 1px solid rgb(238, 238, 238);
+  padding-left: 5px;
+  outline: none;
+}
