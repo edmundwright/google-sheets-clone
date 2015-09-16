@@ -6,6 +6,10 @@ class Cell < ActiveRecord::Base
 
   belongs_to :spreadsheet
 
+  has_one :owner,
+    through: :spreadsheet,
+    source: :owner
+
   def only_one_content_type
     if (contents_str && contents_int) ||
       (contents_str && contents_flo) ||
