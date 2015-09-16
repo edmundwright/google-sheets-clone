@@ -9,6 +9,16 @@
 User.create(email: "edmund@edmund.io", name: "Edmund Wright", password: "password")
 edmund_id = User.find_by(email: "edmund@edmund.io").id
 Spreadsheet.create(owner_id: edmund_id, title: "My first spreadsheet")
+my_first_id = Spreadsheet.find_by(title: "My first spreadsheet").id
+(0...26).each do |row_index|
+  (0...26).each do |col_index|
+    Cell.create(
+      spreadsheet_id: my_first_id,
+      row_index: row_index,
+      col_index: col_index
+    )
+  end
+end
 Spreadsheet.create(owner_id: edmund_id, title: "Another spreadsheet")
 Spreadsheet.create(owner_id: edmund_id, title: "Fruit")
 Spreadsheet.create(owner_id: edmund_id, title: "Elephants", updated_at: "2013-09-14T14:19:31.285Z")
