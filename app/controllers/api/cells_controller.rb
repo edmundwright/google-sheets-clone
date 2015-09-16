@@ -1,6 +1,7 @@
-class CellsController < ApplicationController
+class Api::CellsController < ApplicationController
   def show
-    @cell = current_user.cells.find(params[:id])
+    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    @cell = spreadsheet.cells.find(params[:id])
   end
 
   def create
@@ -9,26 +10,28 @@ class CellsController < ApplicationController
     @cell = spreadsheet.cells.new(cell_params)
 
     if cell.save
-      render: :show
+      render :show
     else
       render json: @cell.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def update
-    @cell = current_user.cells.find(params[:id])
+    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    @cell = spreadsheet.cells.find(params[:id])
 
     if @cell.update(cell_params)
-      render: :show
+      render :show
     else
       render json: @cell.errors.full_messages, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @cell = current_user.cells.find(params[:id])
+    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    @cell = spreadsheet.cells.find(params[:id])
     @cell.destroy!
-    render: :show
+    render :show
   end
 
   private

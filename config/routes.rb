@@ -9,9 +9,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do
-      resources :cells, only: [:create]
+      resources :cells, only: [:create, :show, :update, :destroy]
     end
-
-    resources :cells, only: [:show, :update, :destroy]
   end
 end
