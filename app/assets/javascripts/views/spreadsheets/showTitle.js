@@ -25,8 +25,8 @@ GoogleSheetsClone.Views.SpreadsheetShowTitle = Backbone.View.extend({
   edit: function() {
     this.editing = true;
     this.render();
-    $("input").focus();
-    $("input").select();
+    $("input.title").focus();
+    $("input.title").select();
   },
 
   render: function () {

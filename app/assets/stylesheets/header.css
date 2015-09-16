@@ -35,6 +35,11 @@ nav.header h1.title {
   padding: 5px 0;
 }
 
+nav.header h1.title:hover {
+  padding: 5px 0;
+  background: rgb(238, 238, 238);
+}
+
 nav.header .untitled {
   font-style: italic;
 }
