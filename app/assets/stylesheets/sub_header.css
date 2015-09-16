@@ -31,10 +31,14 @@
   background: white;
   padding:34px 54px;
   height: 40px;
-  margin: 40px 40px 40px 0;
+  margin: 40px 70px 40px 0;
   border: 3px solid white;
 }
 
 .sub-header .create:hover img.plus {
   border: 3px solid rgb(15, 157, 88);
+}
+
+.sub-header .create:hover h1 {
+  color: rgb(15, 157, 88);
 }
