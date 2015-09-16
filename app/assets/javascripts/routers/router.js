@@ -1,6 +1,7 @@
 GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
   initialize: function (options) {
-    this.$rootEl = options.$rootEl
+    this.$rootEl = options.$rootEl,
+    this.$title = options.$title
   },
 
   routes: {
@@ -17,6 +18,7 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
     });
 
     this._swapView(view);
+    this.$title.empty();
   },
 
   show: function (id) {
@@ -29,7 +31,12 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
       model: model
     });
 
+    var titleView = new GoogleSheetsClone.Views.SpreadsheetShowTitle({
+      model: model
+    });
+
     this._swapView(view);
+    this.$title.html(titleView.render().$el);
   },
 
   _swapView: function (newView) {

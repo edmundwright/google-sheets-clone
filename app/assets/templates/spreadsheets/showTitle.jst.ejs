@@ -1,0 +1,12 @@
+<h1 class="colon">:</h1>
+
+<% if (editing) { %>
+  <form>
+    <input class="title"
+      type="text"
+      name="spreadsheet[title]"
+      value="<%= spreadsheet.escape("title") %>">
+  </form>
+<% } else { %>
+  <h1 class="title"><%= spreadsheet.escape("title") %></h1>
+<% } %>

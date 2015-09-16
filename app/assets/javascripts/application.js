@@ -15,6 +15,7 @@
 //= require underscore
 //= require backbone
 //= require composite_view
+//= require jquery.serializejson
 //= require google_sheets_clone
 //= require_tree ../templates
 //= require_tree ./models

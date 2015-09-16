@@ -14,11 +14,29 @@ nav.header img {
 }
 
 nav.header h1 {
-  padding: 5px 5px 5px 20px;
+  padding: 5px 0px 5px 20px;
   font-size: 50px;
   line-height: 50px;
   display: block;
   float: left;
+}
+
+nav.header h1.colon {
+  padding: 5px 20px 5px 20px;
+}
+
+nav.header input.title {
+  display: block;
+  float: left;
+  font-size: 50px;
+}
+
+nav.header h1.title {
+  padding: 5px 0;
+}
+
+nav.header .untitled {
+  font-style: italic;
 }
 
 nav.header .session-link {
