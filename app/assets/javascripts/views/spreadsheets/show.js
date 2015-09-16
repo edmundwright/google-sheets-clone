@@ -18,37 +18,52 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
     }));
 
     var widthString = "" + (this.model.get("width") * 176) + "px";
-
     this.$("ul#column-headers").css("width", widthString);
+    this.$("ul#cells").css("width", widthString);
 
+    this.renderColumnHeaders();
+    this.renderRowHeaders();
     this.renderCells();
 
     return this;
   },
 
-  renderCells: function () {
-    var currentRow = 1;
+  renderColumnHeaders: function () {
+    var $ul = this.$("ul#column-headers");
 
-    var $rowHeader = $("<li>");
-    $rowHeader.addClass("row-header");
-    $rowHeader.text(1);
-    this.$("ul#row-headers").append($rowHeader);
+    for(var col = 0; col < this.model.get("width"); col++) {
+      var $li = $("<li>");
+      $li.addClass("column-header");
+      $li.text(col + 1);
+      $ul.append($li);
+    }
+  },
+
+  renderRowHeaders: function () {
+    var $ul = this.$("ul#row-headers");
+
+    for(var row = 0; row < this.model.get("height"); row++) {
+      var $li = $("<li>");
+      $li.addClass("row-header");
+      $li.text(row + 1);
+      $ul.append($li);
+    }
+  },
+
+  renderCells: function () {
+    var $ul = this.$("ul#cells");
 
     this.model.cells().each(function (cell) {
-      if (cell.get("row_index") === currentRow) {
-        if (currentRow === 1) {
-          var $colHeader = $("<li>");
-          $colHeader.addClass("column-header");
-          $colHeader.text(cell.get("col_index"));
-          this.$("ul#column-headers").append($colHeader);
-        }
-      } else {
-        currentRow += 1;
-        var $rowHeader = $("<li>");
-        $rowHeader.addClass("row-header");
-        $rowHeader.text(currentRow);
-        this.$("ul#row-headers").append($rowHeader);
+      var contents = cell.get("contents_str") ||
+                     cell.get("contents_int") ||
+                     cell.get("contents_flo");
+      if (contents === null) {
+        contents = "";
       }
-    }.bind(this));
+      var $li = $("<li>");
+      $li.addClass("cell");
+      $li.text(contents)
+      $ul.append($li);
+    })
   }
 });

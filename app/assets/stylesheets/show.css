@@ -3,7 +3,7 @@ div#formula-bar {
   border-bottom: 1px solid #c0c0c0;
   position: fixed;
   width: 100%;
-  z-index: 1;
+  z-index: 3;
 }
 
 div.formula-bar-container {
@@ -18,7 +18,6 @@ div#formula-bar img {
   float: left;
   height: 25px;
   background: white;
-  z-index: 2;
 }
 
 div#formula-bar input {
@@ -33,10 +32,12 @@ div#formula-bar input {
 }
 
 ul#row-headers {
+  background: rgb(238, 238, 238);
   position: relative;
   top: 37px;
   width: 59px;
   border-right: 1px solid #c0c0c0;
+  z-index: 2;
 }
 
 li.row-header {
@@ -50,12 +51,14 @@ li.row-header {
 }
 
 ul#column-headers {
+  background: rgb(238, 238, 238);
   position: relative;
   left: 60px;
   top: 37px;
+  z-index: 2;
 }
 
-li.column-header {
+li.column-header, li.cell {
   display: block;
   float: left;
   text-align: center;
@@ -77,5 +80,14 @@ div#select-all {
   display: block;
   float: left;
   height: 31px;
-  z-index: 2;
+  z-index: 3;
+}
+
+ul#cells {
+  background: white;
+  position: absolute;
+  top: 133px;
+  left: 60px;
+  width: 59px;
+  z-index: 1;
 }

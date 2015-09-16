@@ -23,12 +23,13 @@ Spreadsheet.create(owner_id: jill_id, title: "Jill's goals")
 Spreadsheet.create(owner_id: jill_id, title: "Jill's lunch places")
 
 Spreadsheet.all.each do |spreadsheet|
-  (1..26).each do |row_index|
-    (1..26).each do |col_index|
+  (0...26).each do |row_index|
+    (0...26).each do |col_index|
       Cell.create(
         spreadsheet_id: spreadsheet.id,
         row_index: row_index,
         col_index: col_index,
+        contents_str: "r: #{row_index} c: #{col_index}"
       )
     end
   end
