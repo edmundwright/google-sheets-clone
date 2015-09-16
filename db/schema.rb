@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916141818) do
+ActiveRecord::Schema.define(version: 20150916174849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,10 +31,12 @@ ActiveRecord::Schema.define(version: 20150916141818) do
   add_index "cells", ["spreadsheet_id"], name: "index_cells_on_spreadsheet_id", using: :btree
 
   create_table "spreadsheets", force: :cascade do |t|
-    t.integer  "owner_id",   null: false
-    t.string   "title",      null: false
+    t.integer  "owner_id",                null: false
+    t.string   "title",                   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "width",      default: 26, null: false
+    t.integer  "height",     default: 26, null: false
   end
 
   add_index "spreadsheets", ["owner_id"], name: "index_spreadsheets_on_owner_id", using: :btree
