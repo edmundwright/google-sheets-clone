@@ -10,36 +10,58 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.row = options.row;
     this.col = options.col;
     this.spreadsheet = options.spreadsheet;
-    this.gettingInput = false;
-    this.$el.on("beginEditing", this.beginEditing.bind(this));
+    this.$selectedCellBorder = options.$selectedCellBorder;
+    this.editing = false;
+    this.selected = false;
+    this.$el.on("select", this.select.bind(this));
     this.$el.on("unselect", this.unselect.bind(this));
+    this.$el.on("beginEditing", this.beginEditing.bind(this));
+    this.$el.on("finishEditing", this.finishEditing.bind(this));
   },
 
-  beginEditing: function () {
-    if (!this.gettingInput) {
-      this.gettingInput = true;
-      this.render();
-      this.$("input").val(this.$("input").val());
-      this.$("input").focus();
-    }
+  select: function () {
+    this.selected = true;
+    this.render();
   },
 
   unselect: function () {
-    if (this.gettingInput) {
-      if (!this.model) {
-        this.model = new GoogleSheetsClone.Models.Cell({
-          row_index: this.row,
-          col_index: this.col,
-          spreadsheet_id: this.spreadsheet.id
-        });
-      }
-
-      var newContents = this.$("input").val();
-      this.model.save({ contents_str: newContents });
-
-      this.gettingInput = false;
-      this.render();
+    if (this.editing) {
+      this.finishEditing();
     }
+    this.selected = false;
+    this.render();
+  },
+
+  beginEditing: function (e, replace) {
+    this.editing = true;
+    this.render();
+    if (replace) {
+      this.$("input").val("")
+    } else {
+      this.$("input").val(this.$("input").val());
+    }
+    this.$("input").focus();
+  },
+
+  finishEditing: function () {
+    if (!this.model) {
+      this.model = new GoogleSheetsClone.Models.Cell({
+        row_index: this.row,
+        col_index: this.col,
+        spreadsheet_id: this.spreadsheet.id
+      });
+    }
+
+    var newContents = this.$("input").val();
+
+    if (newContents === "") {
+      this.model.destroy();
+    } else {
+      this.model.save({ contents_str: newContents });
+    }
+
+    this.editing = false;
+    this.render();
   },
 
   render: function () {
@@ -53,8 +75,12 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
     this.$el.html(this.template({
       contents: contents,
-      gettingInput: this.gettingInput
+      editing: this.editing
     }));
+
+    if (this.selected) {
+      this.$el.append(this.$selectedCellBorder)
+    }
 
     return this;
   }

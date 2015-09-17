@@ -21,6 +21,7 @@ div#formula-bar img {
 }
 
 div#formula-bar input {
+  font-size: 19px;
   background: white;
   width: calc(100% - 60px - 1px - 5px);
   display: block;
