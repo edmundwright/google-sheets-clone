@@ -3,6 +3,20 @@ class Api::SpreadsheetsController < ApplicationController
     @spreadsheet = current_user.spreadsheets.new(spreadsheet_params)
 
     if @spreadsheet.save
+      (0...26).each do |row_index|
+        (0...26).each do |col_index|
+          cell = @spreadsheet.cells.new(
+            row_index: row_index,
+            col_index: col_index
+          )
+
+          unless cell.save
+            render json: cell.errors.full_messages,
+              status: :unprocessable_entity
+          end
+        end
+      end
+
       render :show
     else
       render json: @spreadsheet.errors.full_messages,

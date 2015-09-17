@@ -1,9 +1,11 @@
-GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
+GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
     this.listenTo(this.model, "sync", this.render);
     $(window).scroll(this.scroll);
+    this.selectedCell = null;
+    this.selectedModel = null;
   },
 
   events: {
@@ -13,12 +15,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
 
   submitCellForm: function (e) {
     e.preventDefault();
-    var newContents = $(e.currentTarget).serializeJSON().contents;
+    var newContents = $(e.currentTarget).serializeJSON().cell.contents;
     this.selectedModel.save({ contents_str: newContents }, {
       success: function () {
         if (this.selectedModel.get("row_index") !== this.model.get("height")-1) {
           var $liBelow = this.$("li.cell:nth-child(" + (this.$selectedCellLi.index() + this.model.get("width") + 1) + ")");
-          debugger
           this.selectCell($liBelow);
         }
       }.bind(this)
@@ -30,13 +31,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
   },
 
   selectCell: function ($cellLi) {
-    this.$("div.selected-cell-border").remove();
     this.$(".cell-input").removeClass("selected-cell-input");
 
     this.$selectedCellLi = $cellLi;
-    var $border = $("<div>");
-    $border.addClass("selected-cell-border");
-    this.$selectedCellLi.append($border)
+
+    this.$selectedCellLi.append(this.selectedCellBorder);
 
     this.$selectedCellLi.find("input").addClass("selected-cell-input").focus();
 
@@ -57,6 +56,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
     var widthString = "" + (this.model.get("width") * 176) + "px";
     this.$("ul#column-headers").css("width", widthString);
     this.$("ul#cells").css("width", widthString);
+
+    this.selectedCellBorder = $("<div>");
+    this.selectedCellBorder.addClass("selected-cell-border");
 
     this.renderColumnHeaders();
     this.renderRowHeaders();
@@ -88,28 +90,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.View.extend({
   },
 
   renderCells: function () {
-    var $ul = this.$("ul#cells");
+    var $ul = this.$("ul#cells")
 
     this.model.cells().each(function (cell) {
-      var contents = cell.get("contents_str") ||
-                     cell.get("contents_int") ||
-                     cell.get("contents_flo");
-      if (contents === null) {
-        contents = "";
-      }
-      var $li = $("<li>");
-      $li.data("cell-id", cell.id);
-      var $form = $("<form>");
-      $form.addClass("cell-form");
-      var $input = $("<input>");
-      $input.addClass("cell-input");
-      $input.attr("type", "text");
-      $input.attr("name", "contents");
-      $input.val(contents)
-      $form.append($input)
-      $li.append($form)
-      $li.addClass("cell");
-      $ul.append($li);
-    })
+      this.addSubview($ul, new GoogleSheetsClone.Views.Cell({
+        model: cell
+      }))
+    }.bind(this))
   }
 });
