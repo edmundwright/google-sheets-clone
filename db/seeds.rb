@@ -8,9 +8,15 @@
 
 User.create(email: "edmund@edmund.io", name: "Edmund Wright", password: "password")
 edmund_id = User.find_by(email: "edmund@edmund.io").id
-Spreadsheet.create(owner_id: edmund_id, title: "My first spreadsheet")
-Spreadsheet.create(owner_id: edmund_id, title: "Another spreadsheet")
-Spreadsheet.create(owner_id: edmund_id, title: "Fruit")
+s = Spreadsheet.create(owner_id: edmund_id, title: "My first spreadsheet")
+s.cells.create(row_index: 0, col_index: 0, contents_str: "Top left!")
+s.cells.create(row_index: 25, col_index: 25, contents_str: "Bottom right!")
+s = Spreadsheet.create(owner_id: edmund_id, title: "Fruit")
+["Banana", "Kiwi", "Melon", "Apple", "Orange", "Run out of fruit"].each_with_index do |item, index|
+  s.cells.create(row_index: index, col_index: 0, contents_str: item)
+end
+s.cells.create(row_index: 0, col_index: 0, contents_str: "Top left!")
+s.cells.create(row_index: 25, col_index: 25, contents_str: "Bottom right!")
 Spreadsheet.create(owner_id: edmund_id, title: "Elephants", updated_at: "2013-09-14T14:19:31.285Z")
 Spreadsheet.create(owner_id: edmund_id, title: "Tightrope walkers", updated_at: "2015-06-14T14:19:31.285Z")
 Spreadsheet.create(owner_id: edmund_id, title: "Mountain walkers", updated_at: "2015-09-02T14:19:31.285Z")
