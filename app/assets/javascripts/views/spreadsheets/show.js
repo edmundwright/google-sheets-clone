@@ -164,7 +164,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     for(var col = 0; col < this.model.get("width"); col++) {
       var $li = $("<li>");
       $li.addClass("column-header");
-      $li.text(col + 1);
+      $li.text(GoogleSheetsClone.columnName(col));
       $ul.append($li);
     }
   },
