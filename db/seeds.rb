@@ -21,15 +21,3 @@ User.create(email: "jill@edmund.io", name: "Jill Fake", password: "password")
 jill_id = User.find_by(email: "jill@edmund.io").id
 Spreadsheet.create(owner_id: jill_id, title: "Jill's goals")
 Spreadsheet.create(owner_id: jill_id, title: "Jill's lunch places")
-
-Spreadsheet.all.each do |spreadsheet|
-  (0...26).each do |row_index|
-    (0...26).each do |col_index|
-      Cell.create(
-        spreadsheet_id: spreadsheet.id,
-        row_index: row_index,
-        col_index: col_index
-      )
-    end
-  end
-end
