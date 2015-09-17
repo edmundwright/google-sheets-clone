@@ -6,7 +6,8 @@ window.GoogleSheetsClone = {
   initialize: function() {
     new GoogleSheetsClone.Routers.Router({
       $rootEl: $("div#for-backbone"),
-      $title: $("div#title-area")
+      $title: $("div#title-area"),
+      $statusArea: $("div#status-area")
     });
     Backbone.history.start();
   }

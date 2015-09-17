@@ -6,6 +6,8 @@
 
   <div id="title-area"></div>
 
+  <div id="status-area"></div>
+
   <% if logged_in? %>
     <form action="<%= session_url %>" method="post">
       <%= hidden_auth_token %>

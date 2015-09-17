@@ -88,7 +88,12 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       this.model.destroy();
       this.model = null;
     } else {
-      this.model.save({ contents_str: newContents });
+      GoogleSheetsClone.statusAreaView.displaySaving();
+      this.model.save({ contents_str: newContents }, {
+        success: function () {
+          GoogleSheetsClone.statusAreaView.finishSaving();
+        }
+      });
     }
 
     this.editing = false;
