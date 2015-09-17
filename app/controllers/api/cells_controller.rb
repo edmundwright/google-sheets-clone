@@ -9,7 +9,8 @@ class Api::CellsController < ApplicationController
 
     @cell = spreadsheet.cells.new(cell_params)
 
-    if cell.save
+    if @cell.save
+      spreadsheet.touch
       render :show
     else
       render json: @cell.errors.full_messages, status: :unprocessable_entity
@@ -21,6 +22,7 @@ class Api::CellsController < ApplicationController
     @cell = spreadsheet.cells.find(params[:id])
 
     if @cell.update(cell_params)
+      spreadsheet.touch
       render :show
     else
       render json: @cell.errors.full_messages, status: :unprocessable_entity
@@ -31,6 +33,7 @@ class Api::CellsController < ApplicationController
     spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
     @cell.destroy!
+    spreadsheet.touch
     render :show
   end
 
