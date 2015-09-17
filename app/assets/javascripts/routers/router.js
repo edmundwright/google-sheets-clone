@@ -31,12 +31,12 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
       model: model
     });
 
-    var titleView = new GoogleSheetsClone.Views.SpreadsheetShowTitle({
+    GoogleSheetsClone.titleView = new GoogleSheetsClone.Views.SpreadsheetShowTitle({
       model: model
     });
 
     this._swapView(view);
-    this.$title.html(titleView.render().$el);
+    this.$title.html(GoogleSheetsClone.titleView.render().$el);
   },
 
   _swapView: function (newView) {
