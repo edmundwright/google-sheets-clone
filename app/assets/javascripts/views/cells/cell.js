@@ -35,6 +35,23 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   select: function () {
     this.selected = true;
     this.render();
+    this.scrollIfOutOfWindow();
+  },
+
+  scrollIfOutOfWindow: function () {
+    var $body = $("body");
+
+    if (this.$el.offset().top + 37 > $body.scrollTop() + $(window).height()) {
+      $body.scrollTop(this.$el.offset().top + 37 - $(window).height());
+    } else if (this.$el.offset().top < $body.scrollTop() + 135) {
+      $body.scrollTop(this.$el.offset().top - 135);
+    }
+
+    if (this.$el.offset().left + 176 > $body.scrollLeft() + $(window).width()) {
+      $body.scrollLeft(this.$el.offset().left + 176 - $(window).width());
+    } else if (this.$el.offset().left < $body.scrollLeft() + 60) {
+      $body.scrollLeft(this.$el.offset().left - 60);
+    }
   },
 
   unselect: function () {
