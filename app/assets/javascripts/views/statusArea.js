@@ -5,6 +5,13 @@ GoogleSheetsClone.Views.StatusArea = Backbone.View.extend({
     this.message = "";
   },
 
+  displayError: function (error) {
+    this.message = error;
+    this.$el.addClass("error");
+    this.render();
+    setTimeout(this.removeMessage.bind(this), 5000);
+  },
+
   displaySaving: function () {
     this.timeStartedSaving = Date.now();
     this.message = "Saving";
@@ -16,7 +23,7 @@ GoogleSheetsClone.Views.StatusArea = Backbone.View.extend({
     var timeNow = Date.now();
     if (timeNow > this.timeStartedSaving + 1000) {
       this.timeFinishedSaving = timeNow;
-      setTimeout(this.removeSaved.bind(this), 5000);
+      setTimeout(this.removeMessage.bind(this), 5000);
       this.$el.removeClass("saving");
       this.message = "Saved";
       this.render();
@@ -25,7 +32,8 @@ GoogleSheetsClone.Views.StatusArea = Backbone.View.extend({
     }
   },
 
-  removeSaved: function () {
+  removeMessage: function () {
+    this.$el.removeClass("saving").removeClass("error");
     this.message = "";
     this.render();
   },

@@ -82,6 +82,8 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   },
 
   finishEditing: function () {
+    var newContents = this.$("input").val();
+
     if (!this.model) {
       this.model = new GoogleSheetsClone.Models.Cell({
         row_index: this.row,
@@ -90,8 +92,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       });
     }
 
-    var newContents = this.$("input").val();
-
     if (newContents === "") {
       this.model.destroy();
       this.model = null;
@@ -99,11 +99,11 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       GoogleSheetsClone.statusAreaView.displaySaving();
 
       if (isNaN(newContents)) {
-        var attrs = { contents_str: newContents };
+        var attrs = { contents_str: newContents, contents_int: null, contents_flo: null };
       } else if (newContents % 1 === 0) {
-        var attrs = { contents_int: newContents };
+        var attrs = { contents_int: newContents, contents_str: null, contents_flo: null  };
       } else {
-        var attrs = { contents_flo: newContents };
+        var attrs = { contents_flo: newContents, contents_int: null, contents_str: null  };
       }
 
       this.model.save(attrs, {
@@ -126,8 +126,15 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       var contents = "";
     }
 
+    if (typeof contents ==="string" && contents[0] === "=") {
+      var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1));
+    } else {
+      var evaluatedContents = contents;
+    }
+
     this.$el.html(this.template({
       contents: contents,
+      evaluatedContents: evaluatedContents,
       editing: this.editing
     }));
 

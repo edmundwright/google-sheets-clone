@@ -1,5 +1,5 @@
 <% if(editing) { %>
   <input type="text" class="cell-contents input" name="cell[contents]" value="<%= contents %>">
 <% } else { %>
-  <div class="cell-contents"><%= contents %></div>
+  <div class="cell-contents" data-contents="<%= contents %>"><%= evaluatedContents %></div>
 <% } %>

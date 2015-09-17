@@ -95,12 +95,23 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (!GoogleSheetsClone.titleView.editing) {
       if (e.keyCode === 13) {
         if (this.editingSelected) {
-          this.editingSelected = false;
-          this.$selectedLi.trigger("finishEditing");
-          this.$(".formula-bar-input").blur();
-          if (this.liBelow()) {
-            this.selectCell(this.liBelow());
+          try {
+            var contents = this.$(".formula-bar-input").val();
+            if (contents[0] && contents[0] === "=") {
+              GoogleSheetsClone.evaluate(contents.slice(1));
+            }
+            this.$selectedLi.trigger("finishEditing");
+            this.editingSelected = false;
+            this.$(".formula-bar-input").blur();
+            if (this.liBelow()) {
+              this.selectCell(this.liBelow());
+            }
+          } catch (e) {
+            if (e === "formulaNotWellFormed") {
+              GoogleSheetsClone.statusAreaView.displayError("Your formula is not well formed. Please try correcting it.")
+            }
           }
+
         } else {
           this.editingSelected = true;
           this.$selectedLi.trigger("beginEditing");
@@ -134,7 +145,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.$selectedLi = $newLi;
       this.$selectedLi.focus();
       this.$selectedLi.trigger("select");
-      this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").text());
+      this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").data("contents"));
     }
   },
 
@@ -185,7 +196,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   renderCells: function () {
-    debugger
     var $ul = this.$("ul#cells")
 
     var cellIdx = 0;

@@ -73,7 +73,7 @@
           return Math.pow(leftHandSide, rightHandSide);
       }
     } else {
-      return "INVALID-FORMULA!";
+      throw "formulaNotWellFormed";
     }
   };
 
@@ -90,6 +90,6 @@
       }
     }
 
-    return "INVALID-FORMULA!";
+    throw "formulaNotWellFormed";
   };
 })();

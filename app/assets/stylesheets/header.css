@@ -35,7 +35,6 @@ nav.header input.title {
 nav.header #status-area > div {
   font-style: normal;
   display: block;
-  width: 50px;
   float: left;
   line-height: 20px;
   font-size: 20px;
@@ -46,6 +45,10 @@ nav.header #status-area > div {
 
 nav.header #status-area > div.saving {
   font-style: italic;
+}
+
+nav.header #status-area > div.error {
+  color: red;
 }
 
 nav.header h1.title {
