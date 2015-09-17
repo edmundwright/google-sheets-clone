@@ -5,13 +5,32 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.listenTo(this.model, "sync", this.render);
     $(window).scroll(this.scroll);
     this.selectedCell = null;
-    this.selectedModel = null;
+    this.$selectedLi = null;
   },
 
   events: {
     "click .cell": "clickCell",
     "dblclick .cell": "dblClickCell",
     "submit form.cell-form": "submitCellForm"
+  },
+
+  clickCell: function (e) {
+    this.selectCell($(e.currentTarget));
+  },
+
+  dblClickCell: function (e) {
+    this.$selectedLi.trigger("beginEditing");
+  },
+
+  // This method is profoundly delicate, don't mess it up!
+  selectCell: function ($newLi) {
+    if ((!this.$selectedLi) || this.$selectedLi.index() !== $newLi.index()) {
+      if (this.$selectedLi) {
+        this.$selectedLi.trigger("unselect");
+      }
+      this.$selectedLi = $newLi;
+      this.$selectedLi.append(this.$selectedCellBorder);
+    }
   },
 
   submitCellForm: function (e) {
@@ -25,23 +44,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         }
       }.bind(this)
     })
-  },
-
-  clickCell: function (e) {
-    this.selectCell($(e.currentTarget));
-  },
-
-  selectCell: function ($cellLi) {
-    this.$(".cell-input").removeClass("selected-cell-input");
-
-    this.$selectedCellLi = $cellLi;
-
-    this.$selectedCellLi.append(this.selectedCellBorder);
-
-    this.$selectedCellLi.find("input").addClass("selected-cell-input").focus();
-
-    this.selectedModel = this.model.cells()
-      .get(this.$selectedCellLi.data("cell-id"))
   },
 
   scroll: function () {
@@ -58,8 +60,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.$("ul#column-headers").css("width", widthString);
     this.$("ul#cells").css("width", widthString);
 
-    this.selectedCellBorder = $("<div>");
-    this.selectedCellBorder.addClass("selected-cell-border");
+    this.$selectedCellBorder = $("<div>");
+    this.$selectedCellBorder.addClass("selected-cell-border");
 
     this.renderColumnHeaders();
     this.renderRowHeaders();
@@ -93,20 +95,23 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   renderCells: function () {
     var $ul = this.$("ul#cells")
 
-    var cellModelIdx = 0;
+    var cellIdx = 0;
 
     for(var row = 0; row < this.model.get("height"); row++) {
       for(var col = 0; col < this.model.get("width"); col++) {
-        var cellModel = this.model.cells().at(cellModelIdx)
+        var cell = this.model.cells().at(cellIdx)
 
-        if (cellModel && cellModel.get("row_index") === row && cellModel.get("col_index") === col) {
-          cellModelIdx++;
+        if (cell && cell.get("row_index") === row && cell.get("col_index") === col) {
+          cellIdx++;
         } else {
-          cellModel = null;
+          cell = null;
         }
 
         this.addSubview($ul, new GoogleSheetsClone.Views.Cell({
-          model: cellModel
+          model: cell,
+          row: row,
+          col: col,
+          spreadsheet: this.model
         }))
       }
     }

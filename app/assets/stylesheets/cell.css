@@ -9,8 +9,13 @@ li.cell {
 }
 
 li.cell .cell-contents {
+  cursor: default;
   outline: none;
   width: 165px;
   height: 19px;
   padding: 8px 5px 8px 5px;
+}
+
+li.cell .cell-contents.input {
+  cursor: text;
 }
