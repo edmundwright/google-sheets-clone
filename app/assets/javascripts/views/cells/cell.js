@@ -3,6 +3,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
   initialize: function () {
     this.$el.data("cell-id", (this.model ? this.model.id : null));
+    this.gettingInput = false;
   },
 
   tagName: "li",
@@ -19,7 +20,8 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     this.$el.html(this.template({
-      contents: contents
+      contents: contents,
+      gettingInput: this.gettingInput
     }));
 
     return this;

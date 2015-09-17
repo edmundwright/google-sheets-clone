@@ -10,6 +10,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   events: {
     "click .cell": "clickCell",
+    "dblclick .cell": "dblClickCell",
     "submit form.cell-form": "submitCellForm"
   },
 
@@ -97,7 +98,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     for(var row = 0; row < this.model.get("height"); row++) {
       for(var col = 0; col < this.model.get("width"); col++) {
         var cellModel = this.model.cells().at(cellModelIdx)
-        
+
         if (cellModel && cellModel.get("row_index") === row && cellModel.get("col_index") === col) {
           cellModelIdx++;
         } else {

@@ -58,7 +58,7 @@ ul#column-headers {
   z-index: 2;
 }
 
-li.column-header, li.cell {
+li.column-header {
   display: block;
   float: left;
   border-right: 1px solid #c0c0c0;
@@ -72,22 +72,6 @@ li.column-header {
   height: 19px;
   padding: 8px 0 8px 0;
   text-align: center;
-}
-
-li.cell {
-  height: 35px;
-}
-
-li.cell input {
-  cursor: default;
-  outline: none;
-  width: 165px;
-  height: 35px;
-  padding: 0 5px 0 5px;
-}
-
-li.cell input.selected-cell-input {
-  cursor: text;
 }
 
 div.selected-cell-border {

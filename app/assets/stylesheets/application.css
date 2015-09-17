@@ -17,6 +17,7 @@
  *= require main
  *= require index
  *= require show
+ *= require cell
  *= require form
  *= require sub_header
  *= require_tree .

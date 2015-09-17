@@ -1,3 +1,7 @@
-<form class="cell-form">
-  <input type="text" class="cell-input" name="cell[contents]" value="<%= contents %>">
-</form>
+<% if(gettingInput) { %>
+  <form class="cell-form">
+    <input type="text" class="cell-contents input" name="cell[contents]" value="<%= contents %>">
+  </form>
+<% } else { %>
+  <div class="cell-contents"><%= contents %></div>
+<% } %>

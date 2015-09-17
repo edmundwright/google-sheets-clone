@@ -1,0 +1,16 @@
+li.cell {
+  height: 35px;
+  display: block;
+  float: left;
+  border-right: 1px solid #c0c0c0;
+  border-bottom: 1px solid #c0c0c0;
+  font-size: 19px;
+  width: 175px;
+}
+
+li.cell .cell-contents {
+  outline: none;
+  width: 165px;
+  height: 19px;
+  padding: 8px 5px 8px 5px;
+}
