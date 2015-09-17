@@ -97,7 +97,16 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       this.model = null;
     } else {
       GoogleSheetsClone.statusAreaView.displaySaving();
-      this.model.save({ contents_str: newContents }, {
+
+      if (isNaN(newContents)) {
+        var attrs = { contents_str: newContents };
+      } else if (newContents % 1 === 0) {
+        var attrs = { contents_int: newContents };
+      } else {
+        var attrs = { contents_flo: newContents };
+      }
+
+      this.model.save(attrs, {
         success: function () {
           GoogleSheetsClone.statusAreaView.finishSaving();
         }
