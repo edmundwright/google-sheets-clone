@@ -36,6 +36,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       e.preventDefault();
       this.$(".formula-bar-input").val("");
       this.$selectedLi.trigger("delete");
+    } else if (e.keyCode === 27 && this.editingSelected) {
+      e.preventDefault();
+      this.editingSelected = false;
+      this.$selectedLi.trigger("cancelEditing");
+      this.$(".formula-bar-input").blur();
+      this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").text());
     }
   },
 
@@ -84,10 +90,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       if (this.editingSelected) {
         this.editingSelected = false;
         this.$selectedLi.trigger("finishEditing");
-        var firstPosOfLastRow = (this.model.get("height") * this.model.get("width")) - this.model.get("height");
-        if (this.$selectedLi.index() < firstPosOfLastRow) {
-          var $liBelow = this.$("li.cell:nth-child(" + (this.$selectedLi.index() + this.model.get("width") + 1) + ")");
-          this.selectCell($liBelow);
+        this.$(".formula-bar-input").blur();
+        if (this.liBelow()) {
+          this.selectCell(this.liBelow());
         }
       } else {
         this.editingSelected = true;

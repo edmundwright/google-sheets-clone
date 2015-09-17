@@ -18,6 +18,12 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("beginEditing", this.beginEditing.bind(this));
     this.$el.on("finishEditing", this.finishEditing.bind(this));
     this.$el.on("delete", this.destroyModel.bind(this));
+    this.$el.on("cancelEditing", this.cancelEditing.bind(this));
+  },
+
+  cancelEditing: function () {
+    this.editing = false;
+    this.render();
   },
 
   destroyModel: function () {
