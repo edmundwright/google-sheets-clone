@@ -1,11 +1,15 @@
 (function () {
   var evaluate = GoogleSheetsClone.evaluate = function (formula) {
-    var newFormula = formula.slice(0);
+    var newFormula = formula;
     var oldFormula = "";
 
     while (oldFormula != newFormula) {
-      var oldFormula = newFormula.slice(0);
+      var oldFormula = newFormula;
       newFormula = evaluateOnePart(newFormula);
+    }
+
+    if (!isNaN(newFormula)) {
+      newFormula = Number(newFormula);
     }
 
     return newFormula;
@@ -20,15 +24,25 @@
           break;
         case "(":
           return parseBrackets(formula, i)
-        // case "+":
-        //   return GoogleSheetsClone.evaluate(formula.slice(0, i)) + GoogleSheetsClone.evaluate(formula.slice(i + 1));
-        //   break;
+        case "+":
+          return parseAddition(formula, i);
         default:
           newFormula += formula[i];
       }
     }
 
     return newFormula
+  };
+
+  var parseAddition = function (formula, plusPos) {
+    debugger
+    var leftHandSide = GoogleSheetsClone.evaluate(formula.slice(0, plusPos));
+    var rightHandSide = GoogleSheetsClone.evaluate(formula.slice(plusPos + 1));
+    if (typeof leftHandSide === "number" && typeof rightHandSide === "number") {
+      return leftHandSide + rightHandSide;
+    } else {
+      return "INVALID-FORMULA!";
+    }
   };
 
   var parseBrackets = function (formula, openingBracketPos) {
