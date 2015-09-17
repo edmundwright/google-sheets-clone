@@ -20,7 +20,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   keyDown: function (e) {
-
     if (e.keyCode === 37 && this.liLeft()) {
       e.preventDefault();
       this.selectCell(this.liLeft());
@@ -33,6 +32,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     } else if (e.keyCode === 40 && this.liBelow()) {
       e.preventDefault();
       this.selectCell(this.liBelow());
+    } else if (e.keyCode === 8 && !this.editingSelected) {
+      e.preventDefault();
+      this.$(".formula-bar-input").val("");
+      this.$selectedLi.trigger("delete");
     }
   },
 

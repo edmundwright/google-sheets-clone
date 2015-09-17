@@ -17,6 +17,13 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("unselect", this.unselect.bind(this));
     this.$el.on("beginEditing", this.beginEditing.bind(this));
     this.$el.on("finishEditing", this.finishEditing.bind(this));
+    this.$el.on("delete", this.destroyModel.bind(this));
+  },
+
+  destroyModel: function () {
+    this.model.destroy();
+    this.model = null;
+    this.render();
   },
 
   select: function () {
@@ -56,6 +63,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
     if (newContents === "") {
       this.model.destroy();
+      this.model = null;
     } else {
       this.model.save({ contents_str: newContents });
     }
