@@ -8,13 +8,13 @@
 A clone of Google Sheets built on Rails and Backbone. Users can:
 
 - [ ] Create accounts, log in, log out, add a user profile photo
-- [ ] Create new spreadsheets
-- [ ] See a list of their spreadsheets
+- [x] Create new spreadsheets
+- [x] See a list of their spreadsheets
 - [ ] Input a formula into a cell, and see it calculated immediately upon pressing enter
 - [ ] See any changes to a cell have an immediate effect on other cells that reference it
 - [ ] Select a cell with the mouse or keyboard to insert a reference to it into the formula currently being edited
 - [ ] Select multiple cells with the mouse or keyboard to insert a reference to them into the formula currently being edited
-- [ ] Have their work be autosaved to the server immediately following any change
+- [x] Have their work be autosaved to the server immediately following any change
 
 ## Design Docs
 * [View Wireframes][views]
