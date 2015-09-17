@@ -43,7 +43,11 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     var model = new GoogleSheetsClone.Models.Spreadsheet();
 
     model.save({
-      "spreadsheet": { "title": "Untitled spreadsheet" }
+      "spreadsheet": {
+        "title": "Untitled spreadsheet",
+        "width": 26,
+        "height": 26
+      }
     }, {
       success: function () {
         Backbone.history.navigate("spreadsheets/" + model.id, { trigger: true });
