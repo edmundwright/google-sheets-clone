@@ -2,7 +2,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
-    this.listenTo(this.model, "sync", this.render);
+    this.model.fetch({
+      success: function () {
+        this.render();
+      }.bind(this)
+    });
     $(document).on("keypress", this.keyPress.bind(this));
     $(document).on("keydown", this.keyDown.bind(this));
     $(window).scroll(this.scroll);
@@ -181,6 +185,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   renderCells: function () {
+    debugger
     var $ul = this.$("ul#cells")
 
     var cellIdx = 0;

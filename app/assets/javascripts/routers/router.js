@@ -27,7 +27,6 @@ GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
     var model = new GoogleSheetsClone.Models.Spreadsheet({
       id: id
     });
-    model.fetch();
 
     var view = new GoogleSheetsClone.Views.SpreadsheetShow({
       model: model
