@@ -6,10 +6,10 @@ li.cell {
   border-bottom: 1px solid #c0c0c0;
   font-size: 19px;
   width: 175px;
-  overflow: hidden;
 }
 
 li.cell .cell-contents {
+  overflow: hidden;
   cursor: default;
   outline: none;
   width: 165px;
