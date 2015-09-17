@@ -92,10 +92,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   renderCells: function () {
     var $ul = this.$("ul#cells")
 
-    this.model.cells().each(function (cell) {
-      this.addSubview($ul, new GoogleSheetsClone.Views.Cell({
-        model: cell
-      }))
-    }.bind(this))
+    var cellModelIdx = 0;
+
+    for(var row = 0; row < this.model.get("height"); row++) {
+      for(var col = 0; col < this.model.get("width"); col++) {
+        var cellModel = this.model.cells().at(cellModelIdx)
+        
+        if (cellModel && cellModel.get("row_index") === row && cellModel.get("col_index") === col) {
+          cellModelIdx++;
+        } else {
+          cellModel = null;
+        }
+
+        this.addSubview($ul, new GoogleSheetsClone.Views.Cell({
+          model: cellModel
+        }))
+      }
+    }
   }
 });

@@ -2,7 +2,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   template: JST["cells/cell"],
 
   initialize: function () {
-    this.$el.data("cell-id", this.model.id);
+    this.$el.data("cell-id", (this.model ? this.model.id : null));
   },
 
   tagName: "li",
@@ -10,12 +10,12 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   className: "cell",
 
   render: function () {
-    var contents = this.model.get("contents_str") ||
-                   this.model.get("contents_int") ||
-                   this.model.get("contents_flo");
-
-    if (contents === null) {
-      contents = "";
+    if (this.model) {
+      var contents = this.model.get("contents_str") ||
+                     this.model.get("contents_int") ||
+                     this.model.get("contents_flo");
+    } else {
+      var contents = "";
     }
 
     this.$el.html(this.template({
