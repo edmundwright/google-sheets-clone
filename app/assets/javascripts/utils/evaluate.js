@@ -3,7 +3,7 @@
     var newFormula = formula;
     var oldFormula = "";
 
-    while (oldFormula != newFormula) {
+    while (oldFormula != newFormula && isNaN(newFormula)) {
       var oldFormula = newFormula;
       newFormula = evaluateOnePart(newFormula);
     }
@@ -23,9 +23,20 @@
         case " ":
           break;
         case "(":
-          return parseBrackets(formula, i)
+          return evaluateBrackets(formula, i)
         case "+":
-          return parseAddition(formula, i);
+          return evaluateSimpleOperation(formula, i, "+");
+        case "-":
+          if (i !== 0) {
+            return evaluateSimpleOperation(formula, i, "-");
+          } else {
+            newFormula += formula[i];
+            break;
+          }
+        case "*":
+          return evaluateSimpleOperation(formula, i, "*");
+        case "/":
+          return evaluateSimpleOperation(formula, i, "/");
         default:
           newFormula += formula[i];
       }
@@ -34,18 +45,26 @@
     return newFormula
   };
 
-  var parseAddition = function (formula, plusPos) {
-    debugger
-    var leftHandSide = GoogleSheetsClone.evaluate(formula.slice(0, plusPos));
-    var rightHandSide = GoogleSheetsClone.evaluate(formula.slice(plusPos + 1));
+  var evaluateSimpleOperation = function (formula, operatorPos, operator) {
+    var leftHandSide = GoogleSheetsClone.evaluate(formula.slice(0, operatorPos));
+    var rightHandSide = GoogleSheetsClone.evaluate(formula.slice(operatorPos + 1));
     if (typeof leftHandSide === "number" && typeof rightHandSide === "number") {
-      return leftHandSide + rightHandSide;
+      switch (operator) {
+        case "+":
+          return leftHandSide + rightHandSide;
+        case "-":
+          return leftHandSide - rightHandSide;
+        case "*":
+          return leftHandSide * rightHandSide;
+        case "/":
+          return leftHandSide / rightHandSide;
+      }
     } else {
       return "INVALID-FORMULA!";
     }
   };
 
-  var parseBrackets = function (formula, openingBracketPos) {
+  var evaluateBrackets = function (formula, openingBracketPos) {
     for(var i = openingBracketPos + 1; i < formula.length; i++) {
       switch (formula[i]) {
         case "(":
