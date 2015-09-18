@@ -130,11 +130,11 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1), this.spreadsheet.cells());
       } catch (error) {
         if (error === "formulaNotWellFormed") {
-          var evaluatedContents = "!BAD FORMULA"
+          var evaluatedContents = "! BAD FORMULA"
         } else if (error === "badReference") {
-          var evaluatedContents = "!BAD REFERENCE"
+          var evaluatedContents = "! BAD REF"
         } else {
-          var evaluatedContents = "!SOME ERROR"
+          var evaluatedContents = "! SOME ERROR"
         }
       }
     } else {
