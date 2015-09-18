@@ -127,7 +127,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
     if (this.$selectedLi.index() === $(e.currentTarget).index() & this.editingSelected) {
       this.$selectedLi.find("input").focus();
-    } else if (!contents[0] || contents[0] !== "=") {
+    } else if (!this.editingSelected || !contents[0] || contents[0] !== "=") {
       this.selectCell($(e.currentTarget));
     }
   },
