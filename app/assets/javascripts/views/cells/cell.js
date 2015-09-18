@@ -125,7 +125,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     if (typeof contents ==="string" && contents[0] === "=") {
-      var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1));
+      var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1), this.spreadsheet.cells());
     } else {
       var evaluatedContents = contents;
     }

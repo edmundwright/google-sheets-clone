@@ -116,7 +116,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (this.editing()) {
       try {
         if (this.editingFormula()) {
-          GoogleSheetsClone.evaluate(this.currentInput().slice(1));
+          GoogleSheetsClone.evaluate(this.currentInput().slice(1), this.model.cells());
         }
         this.finishEditing();
         var neighbourBelow = this.neighbourInDirection(40);
