@@ -107,9 +107,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
               this.selectCell(this.liBelow());
             }
           } catch (e) {
-            if (e === "formulaNotWellFormed") {
-              GoogleSheetsClone.statusAreaView.displayError("Your formula is not well formed. Please try correcting it.")
-            }
+            console.log("Formula no good")
           }
 
         } else {
