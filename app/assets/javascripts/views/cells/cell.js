@@ -6,7 +6,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   className: "cell",
 
   initialize: function (options) {
-    // this.$el.data("cell-id", (this.model ? this.model.id : null));
     this.row = options.row;
     this.col = options.col;
     this.spreadsheet = options.spreadsheet;
@@ -63,22 +62,21 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   },
 
   unselect: function () {
-    if (this.editing) {
-      this.finishEditing();
-    }
     this.selected = false;
     this.render();
   },
 
-  beginEditing: function (e, replace) {
+  beginEditing: function (e, options) {
     this.editing = true;
     this.render();
-    if (replace) {
+    if (options.replace) {
       this.$("input").val("")
     } else {
       this.$("input").val(this.$("input").val());
     }
-    this.$("input").focus();
+    if (options.focus) {
+      this.$("input").focus();
+    }
   },
 
   finishEditing: function () {

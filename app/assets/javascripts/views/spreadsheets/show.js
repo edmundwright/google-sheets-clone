@@ -10,7 +10,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     $(document).on("keypress", this.keyPress.bind(this));
     $(document).on("keydown", this.keyDown.bind(this));
     $(window).scroll(this.scroll);
-    this.editingSelected = false;
     this.$selectedLi = null;
   },
 
@@ -19,44 +18,179 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     "click .cell": "clickCell",
     "dblclick .cell": "dblClickCell",
     "input .cell-contents.input": "updateFormulaBar",
-    "input .formula-bar-input": "updateSelectedLi",
-    "keyDown": "keyDown"
+    "input .formula-bar-input": "updateSelectedLi"
+  },
+
+  editing: function () {
+    return this.editingCell() || this.editingFormulaBar();
+  },
+
+  editingCell: function () {
+    return !!this.currentInputField &&
+      this.currentInputField === ".cell-contents.input";
+  },
+
+  editingFormulaBar: function () {
+    return !!this.currentInputField &&
+      this.currentInputField === ".formula-bar-input";
+  },
+
+  editingFormula: function () {
+    if (!this.editing()) {
+      return false;
+    }
+    var firstCharacterOfInput = this.currentInput()[0];
+    return (!!firstCharacterOfInput && firstCharacterOfInput === "=");
+  },
+
+  currentInput: function () {
+    return this.$(this.currentInputField).val();
   },
 
   keyDown: function (e) {
     if (!GoogleSheetsClone.titleView.editing)  {
-      if (e.keyCode === 37 && this.liLeft()) {
-        e.preventDefault();
-        this.selectCell(this.liLeft());
-      } else if (e.keyCode === 38 && this.liAbove()) {
-        e.preventDefault();
-        this.selectCell(this.liAbove());
-      } else if (e.keyCode === 39 && this.liRight()) {
-        e.preventDefault();
-        this.selectCell(this.liRight());
-      } else if (e.keyCode === 40 && this.liBelow()) {
-        e.preventDefault();
-        this.selectCell(this.liBelow());
-      } else if ((e.keyCode === 8 || e.keyCode === 46) && !this.editingSelected) {
-        e.preventDefault();
-        this.$(".formula-bar-input").val("");
-        this.$selectedLi.trigger("delete");
-      } else if (e.keyCode === 27 && this.editingSelected) {
-        e.preventDefault();
-        this.editingSelected = false;
-        this.$selectedLi.trigger("cancelEditing");
-        this.$(".formula-bar-input").blur();
-        this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").text());
+      switch (e.keyCode) {
+        case 37:
+          this.handleArrowKey(e);
+          break;
+        case 38:
+          this.handleArrowKey(e);
+          break;
+        case 39:
+          this.handleArrowKey(e);
+          break;
+        case 40:
+          this.handleArrowKey(e);
+          break;
+        case 8:
+          this.handleDeleteKey(e)
+          break;
+        case 46:
+          this.handleDeleteKey(e)
+          break;
+        case 27:
+          this.handleEscape(e)
+          break;
       }
     }
   },
 
-  clickFormulaBar: function (e) {
-    if (!this.editingSelected) {
-      this.editingSelected = true;
-      this.$selectedLi.trigger("beginEditing");
+  keyPress: function (e) {
+    if (!GoogleSheetsClone.titleView.editing) {
+      if (e.keyCode === 13) {
+        this.handleEnter(e);
+      } else if (!this.editing()) {
+        this.beginEditingCell(true);
+      }
     }
+  },
+
+  beginEditing: function (replace, focus) {
+    this.$selectedLi.trigger("beginEditing", {replace: replace, focus: focus});
+  },
+
+  beginEditingCell: function (replace) {
+    this.currentInputField = ".cell-contents.input";
+    this.beginEditing(replace, true);
+  },
+
+  beginEditingFormulaBar: function () {
+    this.currentInputField = ".formula-bar-input";
+    this.beginEditing(false, false);
+  },
+
+  finishEditing: function () {
+    this.currentInputField = null;
+    this.$selectedLi.trigger("finishEditing");
+    this.$(".formula-bar-input").blur();
+  },
+
+  cancelEditing: function () {
+    this.currentInputField = null;
+    this.$selectedLi.trigger("cancelEditing");
+    this.$(".formula-bar-input").blur();
+    this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").text());
+  },
+
+  handleEnter: function (e) {
+    if (this.editing()) {
+      try {
+        if (this.editingFormula()) {
+          GoogleSheetsClone.evaluate(this.currentInput().slice(1));
+        }
+        this.finishEditing();
+        var neighbourBelow = this.neighbourInDirection(40);
+        if (neighbourBelow) {
+          this.selectCell(neighbourBelow);
+        }
+      } catch (error) {
+        console.log("Formula not well formed")
+      }
+    } else {
+      this.beginEditingCell();
+    }
+  },
+
+  handleDeleteKey: function (e) {
+    if (!this.editing()) {
+      e.preventDefault();
+      this.$(".formula-bar-input").val("");
+      this.$selectedLi.trigger("delete");
+    }
+  },
+
+  handleEscape: function (e) {
+    if (this.editing()) {
+      e.preventDefault();
+      this.cancelEditing();
+    }
+  },
+
+  handleArrowKey: function (e) {
+    if (!this.editingFormula() && !this.editingFormulaBar()) {
+      e.preventDefault();
+      var neighbour = this.neighbourInDirection(e.keyCode)
+      if (neighbour) {
+        if (this.editing()) {
+          this.finishEditing();
+        }
+        this.selectCell(neighbour);
+      }
+    }
+  },
+
+  neighbourInDirection: function (keyCode) {
+    switch (keyCode) {
+      case 37:
+        if (this.$selectedLi.index() % this.model.get("width") !== 0) {
+          return this.$("li.cell:nth-child(" + this.$selectedLi.index() + ")");
+        }
+        return null;
+      case 38:
+        if (this.$selectedLi.index() >= this.model.get("width")) {
+          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() - this.model.get("width") + 1) + ")")
+        }
+        return null;
+      case 39:
+        if ((this.$selectedLi.index() + 1) % this.model.get("width") !== 0) {
+          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + 2) + ")")
+        }
+        return null;
+      case 40:
+        if (this.$selectedLi.index() < (this.model.get("height") * this.model.get("width")) - this.model.get("height")) {
+          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + this.model.get("width") + 1) + ")")
+        }
+        return null;
+    }
+  },
+
+  clickFormulaBar: function (e) {
     $(e.currentTarget).focus();
+    if (this.editing()) {
+      this.currentInputField = ".formula-bar-input";
+    } else {
+      this.beginEditingFormulaBar();
+    }
   },
 
   updateFormulaBar: function (e) {
@@ -67,76 +201,25 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.$selectedLi.find(".cell-contents").val($(e.currentTarget).val());
   },
 
-  liAbove: function () {
-    if (this.$selectedLi.index() >= this.model.get("width")) {
-      return this.$("li.cell:nth-child(" + (this.$selectedLi.index() - this.model.get("width") + 1) + ")")
-    }
-  },
-
-  liBelow: function () {
-    if (this.$selectedLi.index() < (this.model.get("height") * this.model.get("width")) - this.model.get("height")) {
-      return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + this.model.get("width") + 1) + ")")
-    }
-  },
-
-  liLeft: function () {
-    if (this.$selectedLi.index() % this.model.get("width") !== 0) {
-      return this.$("li.cell:nth-child(" + this.$selectedLi.index() + ")")
-    }
-  },
-
-  liRight: function () {
-    if ((this.$selectedLi.index() + 1) % this.model.get("width") !== 0) {
-      return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + 2) + ")")
-    }
-  },
-
-  keyPress: function (e) {
-    if (!GoogleSheetsClone.titleView.editing) {
-      if (e.keyCode === 13) {
-        if (this.editingSelected) {
-          try {
-            var contents = this.$(".formula-bar-input").val();
-            if (contents[0] && contents[0] === "=") {
-              GoogleSheetsClone.evaluate(contents.slice(1));
-            }
-            this.$selectedLi.trigger("finishEditing");
-            this.editingSelected = false;
-            this.$(".formula-bar-input").blur();
-            if (this.liBelow()) {
-              this.selectCell(this.liBelow());
-            }
-          } catch (e) {
-            console.log("Formula no good")
-          }
-
-        } else {
-          this.editingSelected = true;
-          this.$selectedLi.trigger("beginEditing");
-        }
-      } else if (!this.editingSelected) {
-        this.editingSelected = true;
-        this.$selectedLi.trigger("beginEditing", true);
-      }
-    }
-  },
-
   clickCell: function (e) {
     e.preventDefault();
-    var contents = this.$(".formula-bar-input").val();
-
-    if (this.$selectedLi.index() === $(e.currentTarget).index() & this.editingSelected) {
+    if (this.$selectedLi.index() === $(e.currentTarget).index() & this.editing()) {
+      this.currentInputField = ".cell-contents.input";
       this.$selectedLi.find("input").focus();
-    } else if (!this.editingSelected || !contents[0] || contents[0] !== "=") {
+    } else if (!this.editing()) {
       this.selectCell($(e.currentTarget));
+    } else if (!this.editingFormula()) {
+      this.finishEditing();
+      this.selectCell($(e.currentTarget));
+    } else {
+      this.$selectedLi.find("input").focus();
     }
   },
 
   dblClickCell: function (e) {
     e.preventDefault();
-    if (!this.editingSelected) {
-      this.editingSelected = true;
-      this.$selectedLi.trigger("beginEditing");
+    if (!this.editing()) {
+      this.beginEditingCell();
     }
   },
 
@@ -147,7 +230,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.$selectedLi.trigger("unselect");
       }
       this.$(".formula-bar-input").blur();
-      this.editingSelected = false;
       this.$selectedLi = $newLi;
       this.$selectedLi.focus();
       this.$selectedLi.trigger("select");
