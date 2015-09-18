@@ -115,24 +115,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   handleEnter: function (e) {
     if (this.editing()) {
-      try {
-        if (this.editingFormula()) {
-          GoogleSheetsClone.evaluate(this.currentInput().slice(1), this.model.cells());
-        }
-        this.finishEditing();
-        var neighbourBelow = this.neighbourInDirection(40);
-        if (neighbourBelow) {
-          this.selectCell(neighbourBelow);
-        }
-      } catch (error) {
-        if (error === "formulaNotWellFormed") {
-          console.log("Formula not well formed");
-        } else if (error === "badReference") {
-          console.log("Bad reference");
-        } else {
-          console.log("Unknown error evaluating or saving cell");
-        }
+      this.finishEditing();
+      var neighbourBelow = this.neighbourInDirection(40);
+      if (neighbourBelow) {
+        this.selectCell(neighbourBelow);
       }
+      // try {
+      //
+      // } catch (error) {
+      //   if (error === "formulaNotWellFormed") {
+      //     console.log("Formula not well formed");
+      //   } else if (error === "badReference") {
+      //     console.log("Bad reference");
+      //   } else {
+      //     console.log("Unknown error evaluating or saving cell");
+      //   }
+      // }
     } else {
       this.beginEditingCell();
     }
@@ -219,7 +217,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.finishEditing();
       this.selectCell($(e.currentTarget));
     } else {
-
+      this.$(currentInputField).val()
       this.$selectedLi.find("input").focus();
     }
   },
