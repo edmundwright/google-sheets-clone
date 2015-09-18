@@ -115,7 +115,7 @@
     return cells.map(function (cell) {
       if (!cell) {
         return 0;
-      } else if (cell.get("contents_str") && cell.get("contents_str") === "=") {
+      } else if (cell.get("contents_str") && cell.get("contents_str")[0] === "=") {
         return evaluate(cell.get("contents_str").slice(1));
       } else if (cell.get("contents_str")) {
         throw "badReference";
