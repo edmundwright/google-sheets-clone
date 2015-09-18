@@ -125,7 +125,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           this.selectCell(neighbourBelow);
         }
       } catch (error) {
-        console.log("Formula not well formed")
+        if (error === "formulaNotWellFormed") {
+          console.log("Formula not well formed");
+        } else if (error === "badReference") {
+          console.log("Bad reference");
+        } else {
+          console.log("Unknown error evaluating or saving cell");
+        }
       }
     } else {
       this.beginEditingCell();
@@ -213,7 +219,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.finishEditing();
       this.selectCell($(e.currentTarget));
     } else {
-      
+
       this.$selectedLi.find("input").focus();
     }
   },

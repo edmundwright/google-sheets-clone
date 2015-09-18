@@ -115,8 +115,10 @@
     return cells.map(function (cell) {
       if (!cell) {
         return 0;
-      } else if (cell.get("contents_str")) {
+      } else if (cell.get("contents_str") && cell.get("contents_str") === "=") {
         return evaluate(cell.get("contents_str").slice(1));
+      } else if (cell.get("contents_str")) {
+        throw "badReference";
       } else {
         return cell.contents();
       }
@@ -133,6 +135,10 @@
       } else {
         break;
       }
+    }
+
+    if (lastRowNameIndex === undefined) {
+      throw "formulaNotWellFormed";
     }
 
     var colName = "";
@@ -152,8 +158,10 @@
 
     if (!cell) {
       var evaluatedCellContents = "";
-    } else if (cell.get("contents_str")) {
+    } else if (cell.get("contents_str") && cell.get("contents_str")[0] === "=") {
       var evaluatedCellContents = evaluate(cell.get("contents_str").slice(1));
+    } else if (cell.get("contents_str")) {
+      throw "badReference";
     } else {
       var evaluatedCellContents = cell.contents();
     }

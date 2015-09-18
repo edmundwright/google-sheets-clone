@@ -126,7 +126,17 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     if (typeof contents ==="string" && contents[0] === "=") {
-      var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1), this.spreadsheet.cells());
+      try {
+        var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1), this.spreadsheet.cells());
+      } catch (error) {
+        if (error === "formulaNotWellFormed") {
+          var evaluatedContents = "!BAD FORMULA"
+        } else if (error === "badReference") {
+          var evaluatedContents = "!BAD REFERENCE"
+        } else {
+          var evaluatedContents = "!SOME ERROR"
+        }
+      }
     } else {
       var evaluatedContents = contents;
     }
