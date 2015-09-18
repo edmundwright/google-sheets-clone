@@ -124,10 +124,18 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   clickCell: function (e) {
-    this.selectCell($(e.currentTarget));
+    e.preventDefault();
+    var contents = this.$(".formula-bar-input").val();
+
+    if (this.$selectedLi.index() === $(e.currentTarget).index() & this.editingSelected) {
+      this.$selectedLi.find("input").focus();
+    } else if (!contents[0] || contents[0] !== "=") {
+      this.selectCell($(e.currentTarget));
+    }
   },
 
   dblClickCell: function (e) {
+    e.preventDefault();
     if (!this.editingSelected) {
       this.editingSelected = true;
       this.$selectedLi.trigger("beginEditing");
