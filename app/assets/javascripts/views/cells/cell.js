@@ -88,6 +88,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         col_index: this.col,
         spreadsheet_id: this.spreadsheet.id
       });
+      this.spreadsheet.cells().add(this.model);
     }
 
     if (newContents === "") {
