@@ -28,12 +28,13 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.render();
   },
 
-  destroyModel: function () {
+  destroyModel: function (e, callback) {
     if (this.model) {
       GoogleSheetsClone.statusAreaView.displaySaving();
       this.model.destroy({
         success: function () {
           GoogleSheetsClone.statusAreaView.finishSaving();
+          callback();
         }
       });
       this.model = null;

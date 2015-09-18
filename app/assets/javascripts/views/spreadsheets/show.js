@@ -140,7 +140,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (!this.editing()) {
       e.preventDefault();
       this.$(".formula-bar-input").val("");
-      this.$selectedLi.trigger("delete");
+      this.$selectedLi.trigger("delete", this.renderAllCells.bind(this));
     }
   },
 
@@ -225,7 +225,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   refToCell: function ($cellLi) {
-    var rowIndex = this.$cellLi.index() % this.model
+    var rowIndex = this.$cellLi.index() / this.model.get("height");
+    var colIndex = this.$cellLi.index() % this.model.get("height");
+    return "" + GoogleSheetsClone.columnName(colIndex) + (rowIndex + 1);
   },
 
   dblClickCell: function (e) {
