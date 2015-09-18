@@ -198,12 +198,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
   },
 
-  updateFormulaBar: function (e) {
-    this.$(".formula-bar-input").val($(e.currentTarget).val());
+  updateFormulaBar: function () {
+    this.$(".formula-bar-input").val(this.$(".cell-contents.input").val());
   },
 
-  updateSelectedLi: function (e) {
-    this.$selectedLi.find(".cell-contents").val($(e.currentTarget).val());
+  updateSelectedLi: function () {
+    this.$selectedLi.find(".cell-contents").val(this.$(".formula-bar-input").val());
   },
 
   clickCell: function (e) {
@@ -217,16 +217,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.finishEditing();
       this.selectCell($(e.currentTarget));
     } else {
-      // this.$(currentInputField).val(
-      //   "" + this.$(currentInputField).val() + refToCell($(e.currentTarget))
-      // )
+      this.refToCell($(e.currentTarget));
+      this.$(this.currentInputField).val(
+        "" + this.$(this.currentInputField).val() + this.refToCell($(e.currentTarget))
+      )
+      if (this.currentInputField  === ".cell-contents.input") {
+        this.updateFormulaBar();
+      } else {
+        this.updateSelectedLi();
+      }
       this.$selectedLi.find("input").focus();
     }
   },
 
   refToCell: function ($cellLi) {
-    var rowIndex = this.$cellLi.index() / this.model.get("height");
-    var colIndex = this.$cellLi.index() % this.model.get("height");
+    var rowIndex = Math.floor($cellLi.index() / this.model.get("height"));
+    var colIndex = $cellLi.index() % this.model.get("height");
     return "" + GoogleSheetsClone.columnName(colIndex) + (rowIndex + 1);
   },
 
