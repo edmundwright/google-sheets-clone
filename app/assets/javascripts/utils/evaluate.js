@@ -1,5 +1,5 @@
 (function () {
-  var evaluate = GoogleSheetsClone.evaluate = function (formula, cells) {
+  var evaluate = GoogleSheetsClone.evaluate = function (formula) {
     if ((typeof formula === "number") || (typeof formula === "object")) {
       return formula;
     }
@@ -23,20 +23,28 @@
     var newFormula = "";
 
     for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i].match(/[a-z]/i)) {
-        return evaluateLetter(formula, i)
+      if (formula.slice(i - 2, i + 1).toUpperCase() === "SUM") {
+        return evaluateSum(formula, i);
       }
     }
 
     for(var i = formula.length - 1; i >= 0; i--) {
       if (formula[i] === ",") {
-        return evaluateComma(formula)
+        return evaluateComma(formula);
+      } else if (formula[i] === ":") {
+        return evaluateColon(formula);
+      }
+    }
+
+    for(var i = formula.length - 1; i >= 0; i--) {
+      if (formula[i].match(/[a-z]/i)) {
+        return evaluateReference(formula, i);
       }
     }
 
     for(var i = formula.length - 1; i >= 0; i--) {
       if (formula[i] === ")") {
-        return evaluateBrackets(formula, i)
+        return evaluateBrackets(formula, i);
       }
     }
 
@@ -73,28 +81,108 @@
     return formula.split(",").map(evaluate);
   };
 
-  var evaluateLetter = function (formula, letterPos) {
-    if (formula.slice(letterPos - 2, letterPos + 2).toUpperCase() === "SUM(") {
-      for(var i = letterPos + 2; i < formula.length; i++) {
-        if (formula[i] === ")") {
-          break;
-        }
-      }
-
-      var toSum = evaluate(formula.slice(letterPos + 2, i));
-
-      if (typeof toSum === "object") {
-        var sum = toSum.reduce(function(x, y) {
-          return x + y;
-        });
-      } else {
-        var sum = toSum;
-      }
-
-      return formula.slice(0, letterPos - 2) +
-        sum +
-        formula.slice(i + 1);
+  var evaluateColon = function (formula) {
+    var firstAndLast = formula.split(":");
+    if (firstAndLast.length !== 2) {
+      throw "formulaNotWellFormed";
     }
+    var first = firstAndLast[0];
+    var last = firstAndLast[1];
+
+    for (var i = 0; i < first.length; i++) {
+      if (first[i].match(/[0-9]/)) {
+        break;
+      }
+    }
+    var firstColIndex = GoogleSheetsClone.columnIndex(first.slice(0, i));
+    var firstRowIndex = parseInt(first.slice(i)) - 1;
+
+    for (var i = 0; i < last.length; i++) {
+      if (last[i].match(/[0-9]/)) {
+        break;
+      }
+    }
+    var lastColIndex = GoogleSheetsClone.columnIndex(last.slice(0, i));
+    var lastRowIndex = parseInt(last.slice(i)) - 1;
+
+    var cells = [];
+    for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
+      for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {
+        cells.push(GoogleSheetsClone.cells.findByPos(rowIndex, colIndex));
+      }
+    }
+
+    return cells.map(function (cell) {
+      if (!cell) {
+        return 0;
+      } else if (cell.get("contents_str")) {
+        return evaluate(cell.get("contents_str").slice(1));
+      } else {
+        return cell.contents();
+      }
+    })
+  };
+
+  var evaluateReference = function (formula, letterPos) {
+    var rowName = "";
+    var lastRowNameIndex;
+    for (var i = letterPos + 1; i < formula.length; i++) {
+      if (formula[i].match(/[0-9]/)) {
+        rowName += formula[i];
+        lastRowNameIndex = i
+      } else {
+        break;
+      }
+    }
+
+    var colName = "";
+    var firstColNameIndex;
+    for (var i = letterPos; i >= 0; i--) {
+      if (formula[i].match(/[a-z]/i)) {
+        colName = formula[i] + colName;
+        firstColNameIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    var colIndex = GoogleSheetsClone.columnIndex(colName);
+    var rowIndex = parseInt(rowName) - 1;
+    var cell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex);
+
+    if (!cell) {
+      var evaluatedCellContents = "";
+    } else if (cell.get("contents_str")) {
+      var evaluatedCellContents = evaluate(cell.get("contents_str").slice(1));
+    } else {
+      var evaluatedCellContents = cell.contents();
+    }
+
+    return formula.slice(0, firstColNameIndex) +
+      evaluatedCellContents +
+      formula.slice(lastRowNameIndex + 1);
+  };
+
+  var evaluateSum = function (formula, mPos) {
+    for(var i = mPos + 2; i < formula.length; i++) {
+      if (formula[i] === ")") {
+        break;
+      }
+    }
+
+    var toSum = evaluate(formula.slice(mPos + 2, i));
+
+    if (typeof toSum === "object") {
+      var sum = toSum.reduce(function(x, y) {
+        return x + y;
+      });
+    } else {
+      var sum = toSum;
+    }
+
+    return formula.slice(0, mPos - 2) +
+      sum +
+      formula.slice(i + 1);
   };
 
   var evaluateSimpleOperation = function (formula, operatorPos, operator) {

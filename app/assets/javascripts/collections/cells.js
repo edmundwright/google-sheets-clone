@@ -11,5 +11,19 @@ GoogleSheetsClone.Collections.Cells = Backbone.Collection.extend({
     } else {
       return 1;
     }
+  },
+
+  findByPos: function (rowIndex, colIndex) {
+    var result = null;
+
+    this.each(function (model) {
+      if (model.get("row_index") === rowIndex &&
+          model.get("col_index") === colIndex) {
+        result = model;
+        return;
+      }
+    })
+
+    return result;
   }
 });

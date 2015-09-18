@@ -4,6 +4,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   initialize: function () {
     this.model.fetch({
       success: function () {
+        GoogleSheetsClone.cells = this.model.cells();
         this.render();
       }.bind(this)
     });
