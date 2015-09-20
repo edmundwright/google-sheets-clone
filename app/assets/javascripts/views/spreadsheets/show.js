@@ -85,6 +85,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.handleEnter(e);
       } else if (!this.editing()) {
         this.beginEditingCell(true);
+      } else if (this.inserting) {
+        this.finishInserting();
       }
     }
   },
@@ -118,6 +120,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   handleEnter: function (e) {
     if (this.editing()) {
+      if (this.inserting) {
+        this.finishInserting();
+      }
       this.finishEditing();
       var neighbourBelow = this.neighbourInDirection(40);
       if (neighbourBelow) {
@@ -133,11 +138,16 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       e.preventDefault();
       this.$(".formula-bar-input").val("");
       this.$selectedLi.trigger("delete", this.renderAllCells.bind(this));
+    } else if (this.inserting) {
+      this.finishInserting();
     }
   },
 
   handleEscape: function (e) {
     if (this.editing()) {
+      if (this.inserting) {
+        this.finishInserting();
+      }
       e.preventDefault();
       this.cancelEditing();
     }
@@ -153,6 +163,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         }
         this.selectCell(neighbour);
       }
+    } else if (this.editingFormula() && !this.editingFormulaBar()) {
+
     }
   },
 
@@ -225,34 +237,67 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   mouseDownCell: function (e) {
     e.preventDefault();
     if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
-      if (e.ctrlKey || e.metaKey) {
-        this.insertRef(",");
-      }
-      this.$firstDraggedOverLi = this.$lastDraggedOverLi = $(e.currentTarget);
+      this.$firstLiForInsertion = this.$lastLiForInsertion = $(e.currentTarget);
       this.dragging = true;
-      this.renderDragging();
+      this.updateInsertedRef(e);
+      this.renderSelectionForInsertion();
     }
   },
 
-  renderDragging: function () {
-    var firstCol = this.cellCol(this.$firstDraggedOverLi);
-    var lastCol = this.cellCol(this.$lastDraggedOverLi);
-    var firstRow = this.cellRow(this.$firstDraggedOverLi);
-    var lastRow = this.cellRow(this.$lastDraggedOverLi);
+  updateInsertedRef: function (e) {
+    if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
+      var newInsertedRef = this.refToCell(this.$firstLiForInsertion);
+    } else {
+      var newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
+    }
 
-    this.$(".cell").removeClass("dragged-over");
+    if (!this.inserting) {
+      this.inserting = true;
+      this.caretPosition = this.$(this.currentInputField).caret();
+      this.currentInputField = ".formula-bar-input";
+      var input = this.$(this.currentInputField);
+      if (e.ctrlKey || e.metaKey) {
+        input.val(input.val().slice(0, this.caretPosition) + "," + input.val().slice(this.caretPosition));
+        this.caretPosition += 1;
+      }
+      var afterInsertedRef = input.val().slice(this.caretPosition);
+
+    } else {
+      var input = this.$(this.currentInputField);
+      var afterInsertedRef = input.val().slice(this.caretPosition + this.currentInsertedRef.length)
+    }
+
+    input.val(input.val().slice(0, this.caretPosition) + newInsertedRef + afterInsertedRef);
+    input.caret(this.caretPosition + newInsertedRef.length);
+    this.updateSelectedLi();
+    this.currentInsertedRef = newInsertedRef;
+  },
+
+  renderSelectionForInsertion: function () {
+    var firstCol = this.cellCol(this.$firstLiForInsertion);
+    var lastCol = this.cellCol(this.$lastLiForInsertion);
+    var firstRow = this.cellRow(this.$firstLiForInsertion);
+    var lastRow = this.cellRow(this.$lastLiForInsertion);
+
+    this.$(".cell").removeClass("selected-for-insertion");
 
     for (var col = Math.min(firstCol, lastCol); col <= Math.max(firstCol, lastCol); col++) {
       for (var row = Math.min(firstRow, lastRow); row <= Math.max(firstRow, lastRow); row++) {
-        this.cellLiAtPos(row, col).addClass("dragged-over");
+        this.cellLiAtPos(row, col).addClass("selected-for-insertion");
       }
     }
+  },
+
+  finishInserting: function () {
+    this.$(".cell").removeClass("selected-for-insertion");
+    this.inserting = false;
   },
 
   mouseOverCell: function (e) {
     if (this.dragging) {
-      this.$lastDraggedOverLi = $(e.currentTarget);
-      this.renderDragging();
+      this.$lastLiForInsertion = $(e.currentTarget);
+      this.updateInsertedRef();
+      this.renderSelectionForInsertion();
     }
   },
 
@@ -260,12 +305,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (this.dragging) {
       e.preventDefault();
       this.dragging = false;
-      this.$(".cell").removeClass("dragged-over");
-      if (this.$firstDraggedOverLi.index() === this.$lastDraggedOverLi.index()) {
-        this.insertRef(this.refToCell(this.$firstDraggedOverLi));
-      } else {
-        this.insertRef(this.refToRange(this.$firstDraggedOverLi, this.$lastDraggedOverLi));
-      }
+      this.updateInsertedRef();
     }
   },
 
