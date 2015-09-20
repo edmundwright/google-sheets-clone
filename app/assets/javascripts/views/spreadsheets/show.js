@@ -10,6 +10,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     });
     $(document).on("keypress", this.keyPress.bind(this));
     $(document).on("keydown", this.keyDown.bind(this));
+    $(document).on("mouseup", this.mouseUp.bind(this));
     $(window).scroll(this.scroll);
     this.$selectedLi = null;
   },
@@ -19,7 +20,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     "click .cell": "clickCell",
     "dblclick .cell": "dblClickCell",
     "mousedown .cell": "mouseDownCell",
-    "mouseup .cell": "mouseUpCell",
+    "mouseover .cell": "mouseOverCell",
     "input .cell-contents.input": "updateFormulaBar",
     "input .formula-bar-input": "updateSelectedLi"
   },
@@ -207,8 +208,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     } else if (!this.editingFormula()) {
       this.finishEditing();
       this.selectCell($(e.currentTarget));
-    } else {
-      this.insertRef(this.refToCell($(e.currentTarget)));
     }
   },
 
@@ -226,18 +225,47 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   mouseDownCell: function (e) {
     e.preventDefault();
     if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
-      this.$firstSelectedLi = $(e.currentTarget);
-      this.selectingForInsertion = true;
+      if (e.ctrlKey || e.metaKey) {
+        this.insertRef(",");
+      }
+      this.$firstDraggedOverLi = this.$lastDraggedOverLi = $(e.currentTarget);
+      this.dragging = true;
+      this.renderDragging();
     }
   },
 
-  mouseUpCell: function (e) {
-    e.preventDefault();
-    if (this.$selectedLi.index() !== $(e.currentTarget).index() &&
-        this.editingFormula() &&
-        this.$firstSelectedLi.index() !== $(e.currentTarget).index()) {
-      this.insertRef(this.refToRange(this.$firstSelectedLi, $(e.currentTarget)));
-      this.selectingForInsertion = false;
+  renderDragging: function () {
+    var firstCol = this.cellCol(this.$firstDraggedOverLi);
+    var lastCol = this.cellCol(this.$lastDraggedOverLi);
+    var firstRow = this.cellRow(this.$firstDraggedOverLi);
+    var lastRow = this.cellRow(this.$lastDraggedOverLi);
+
+    this.$(".cell").removeClass("dragged-over");
+
+    for (var col = Math.min(firstCol, lastCol); col <= Math.max(firstCol, lastCol); col++) {
+      for (var row = Math.min(firstRow, lastRow); row <= Math.max(firstRow, lastRow); row++) {
+        this.cellLiAtPos(row, col).addClass("dragged-over");
+      }
+    }
+  },
+
+  mouseOverCell: function (e) {
+    if (this.dragging) {
+      this.$lastDraggedOverLi = $(e.currentTarget);
+      this.renderDragging();
+    }
+  },
+
+  mouseUp: function (e) {
+    if (this.dragging) {
+      e.preventDefault();
+      this.dragging = false;
+      this.$(".cell").removeClass("dragged-over");
+      if (this.$firstDraggedOverLi.index() === this.$lastDraggedOverLi.index()) {
+        this.insertRef(this.refToCell(this.$firstDraggedOverLi));
+      } else {
+        this.insertRef(this.refToRange(this.$firstDraggedOverLi, this.$lastDraggedOverLi));
+      }
     }
   },
 
@@ -268,6 +296,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   cellCol: function ($cellLi) {
     return $cellLi.index() % this.model.get("height");
+  },
+
+  cellLiAtPos: function (row, col) {
+    return this.$("li.cell:nth-child(" + ((row * this.model.get("width")) + col + 1) + ")");
   },
 
   dblClickCell: function (e) {

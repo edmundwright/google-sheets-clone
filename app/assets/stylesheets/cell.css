@@ -20,3 +20,7 @@ li.cell .cell-contents {
 li.cell .cell-contents.input {
   cursor: text;
 }
+
+li.cell.dragged-over {
+  background: rgb(255,245,232);	
+}
