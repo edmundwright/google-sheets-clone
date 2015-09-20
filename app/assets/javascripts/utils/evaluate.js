@@ -78,7 +78,18 @@
   };
 
   var evaluateComma = function (formula) {
-    return formula.split(",").map(evaluate);
+    var result = [];
+    
+    formula.split(",").forEach(function (el) {
+      var evaluatedEl = evaluate(el);
+      if (Array.isArray(evaluatedEl)) {
+        result = result.concat(evaluatedEl);
+      } else {
+        result.push(evaluatedEl);
+      }
+    })
+
+    return result;
   };
 
   var evaluateColon = function (formula) {
