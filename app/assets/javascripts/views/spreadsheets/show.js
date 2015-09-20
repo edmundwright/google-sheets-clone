@@ -18,6 +18,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     "click .formula-bar-input": "clickFormulaBar",
     "click .cell": "clickCell",
     "dblclick .cell": "dblClickCell",
+    "mousedown .cell": "mouseDownCell",
+    "mouseup .cell": "mouseUpCell",
     "input .cell-contents.input": "updateFormulaBar",
     "input .formula-bar-input": "updateSelectedLi"
   },
@@ -120,17 +122,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       if (neighbourBelow) {
         this.selectCell(neighbourBelow);
       }
-      // try {
-      //
-      // } catch (error) {
-      //   if (error === "formulaNotWellFormed") {
-      //     console.log("Formula not well formed");
-      //   } else if (error === "badReference") {
-      //     console.log("Bad reference");
-      //   } else {
-      //     console.log("Unknown error evaluating or saving cell");
-      //   }
-      // }
     } else {
       this.beginEditingCell();
     }
@@ -217,23 +208,66 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.finishEditing();
       this.selectCell($(e.currentTarget));
     } else {
-      this.refToCell($(e.currentTarget));
-      this.$(this.currentInputField).val(
-        "" + this.$(this.currentInputField).val() + this.refToCell($(e.currentTarget))
-      )
-      if (this.currentInputField  === ".cell-contents.input") {
-        this.updateFormulaBar();
-      } else {
-        this.updateSelectedLi();
-      }
-      this.$selectedLi.find("input").focus();
+      this.insertRef(this.refToCell($(e.currentTarget)));
+    }
+  },
+
+  insertRef: function (ref) {
+    // Deeply unsatsifactory. JQuery refuses to play nicely when I try to set caret in the cell input field.
+    var caretPosition = this.$(this.currentInputField).caret();
+    this.currentInputField = ".formula-bar-input";
+    var input = this.$(".formula-bar-input");
+    input.focus();
+    input.caret(caretPosition);
+    input.caret(ref);
+    this.updateSelectedLi();
+  },
+
+  mouseDownCell: function (e) {
+    e.preventDefault();
+    if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
+      this.$firstSelectedLi = $(e.currentTarget);
+      this.selectingForInsertion = true;
+    }
+  },
+
+  mouseUpCell: function (e) {
+    e.preventDefault();
+    if (this.$selectedLi.index() !== $(e.currentTarget).index() &&
+        this.editingFormula() &&
+        this.$firstSelectedLi.index() !== $(e.currentTarget).index()) {
+      this.insertRef(this.refToRange(this.$firstSelectedLi, $(e.currentTarget)));
+      this.selectingForInsertion = false;
     }
   },
 
   refToCell: function ($cellLi) {
-    var rowIndex = Math.floor($cellLi.index() / this.model.get("height"));
-    var colIndex = $cellLi.index() % this.model.get("height");
-    return "" + GoogleSheetsClone.columnName(colIndex) + (rowIndex + 1);
+    return "" + GoogleSheetsClone.columnName(this.cellCol($cellLi)) + (this.cellRow($cellLi) + 1);
+  },
+
+  refToRange: function ($firstCellLi, $lastCellLi) {
+    var topLeft = "";
+    var bottomRight = "";
+
+    var firstCol = this.cellCol($firstCellLi);
+    var lastCol = this.cellCol($lastCellLi);
+    topLeft += GoogleSheetsClone.columnName(Math.min(firstCol, lastCol));
+    bottomRight += GoogleSheetsClone.columnName(Math.max(firstCol, lastCol));
+
+    var firstRow = this.cellRow($firstCellLi);
+    var lastRow = this.cellRow($lastCellLi);
+    topLeft += Math.min(firstRow, lastRow) + 1;
+    bottomRight += Math.max(firstRow, lastRow) + 1;
+
+    return topLeft + ":" + bottomRight;
+  },
+
+  cellRow: function ($cellLi) {
+    return Math.floor($cellLi.index() / this.model.get("height"));
+  },
+
+  cellCol: function ($cellLi) {
+    return $cellLi.index() % this.model.get("height");
   },
 
   dblClickCell: function (e) {
