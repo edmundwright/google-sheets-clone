@@ -16,6 +16,7 @@
 //= require backbone
 //= require composite_view
 //= require jquery.serializejson
+//= require jquery.caret.min
 //= require google_sheets_clone
 //= require_tree ../templates
 //= require_tree ./models
