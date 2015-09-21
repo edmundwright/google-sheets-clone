@@ -311,17 +311,29 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     var firstRow = this.cellRow(this.$firstLiForInsertion);
     var lastRow = this.cellRow(this.$lastLiForInsertion);
 
+    var topMostRow = Math.min(firstRow, lastRow);
+    var bottomMostRow = Math.max(firstRow, lastRow);
+    var leftMostCol = Math.min(firstCol, lastCol);
+    var rightMostCol = Math.max(firstCol, lastCol);
+
     this.$(".cell").removeClass("selected-for-insertion");
 
-    for (var col = Math.min(firstCol, lastCol); col <= Math.max(firstCol, lastCol); col++) {
-      for (var row = Math.min(firstRow, lastRow); row <= Math.max(firstRow, lastRow); row++) {
+    for (var row = topMostRow; row <= bottomMostRow; row++) {
+      for (var col = leftMostCol; col <= rightMostCol; col++) {
         this.cellLiAtPos(row, col).addClass("selected-for-insertion");
       }
     }
+    
+    this.$cellsForInsertionBorder.css("left", "" + ((leftMostCol - 1) * 176 + 175) + "px");
+    this.$cellsForInsertionBorder.css("top", "" + ((topMostRow - 1) * 36 + 35) + "px");
+    this.$cellsForInsertionBorder.css("width", "" + ((rightMostCol - leftMostCol) * 176 + 171) + "px");
+    this.$cellsForInsertionBorder.css("height", "" + ((bottomMostRow - topMostRow) * 36 + 31) + "px");
+    this.$("#cells").append(this.$cellsForInsertionBorder);
   },
 
   finishInserting: function () {
     this.$(".cell").removeClass("selected-for-insertion");
+    this.$cellsForInsertionBorder.remove();
     this.inserting = false;
   },
 
@@ -411,6 +423,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
     this.$selectedCellBorder = $("<div>");
     this.$selectedCellBorder.addClass("selected-cell-border");
+
+    this.$cellsForInsertionBorder = $("<div>");
+    this.$cellsForInsertionBorder.addClass("cells-for-insertion-border");
 
     this.renderColumnHeaders();
     this.renderRowHeaders();

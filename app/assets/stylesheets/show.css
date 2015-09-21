@@ -76,13 +76,21 @@ li.column-header {
 }
 
 div.selected-cell-border {
-  top: -35px;
+  top: -36px;
   left: -1px;
   position: relative;
   display: block;
   border: 3px solid #4285f4;
   height: 31px;
   width: 171px;
+  pointer-events: none;
+}
+
+div.cells-for-insertion-border {
+  position: absolute;
+  display: block;
+  border: 3px dashed orange;
+  pointer-events: none;
 }
 
 div#select-all {
