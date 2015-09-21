@@ -34,7 +34,7 @@ ul.spreadsheet-attributes > li {
   display: block;
   font-size: 14px;
   font-weight: 500;
-  margin: 15px;
+
   vertical-align: middle;
   height: 21px;
   line-height: 21px;
@@ -42,6 +42,7 @@ ul.spreadsheet-attributes > li {
 
 ul.spreadsheet-attributes > li.logo {
   float: left;
+  margin: 15px;
 }
 
 ul.spreadsheet-attributes > li.logo img {
@@ -54,16 +55,35 @@ ul.spreadsheet-attributes > li.logo img {
 
 ul.spreadsheet-attributes > li.title {
   float: left;
-  width: 450px;
+  width: 425px;
+  margin: 15px;
 }
 
 ul.spreadsheet-attributes > li.owner {
   color: #756E6E;
   float: left;
   width: 170px;
+  margin: 15px;
 }
 
 ul.spreadsheet-attributes > li.updated-at {
   color: #756E6E;
+  float: left;
+  margin: 15px;
+}
+
+ul.spreadsheet-attributes > li.context-menu-link {
   float: right;
+  padding: 15px 15px;
+}
+
+ul.spreadsheet-attributes > li.context-menu-link > .dot {
+  background: #756E6E;
+  padding: 2px;
+  margin: 2px;
+  border-radius: 50%;
+}
+
+ul.spreadsheet-attributes > li.context-menu-link:hover > .dot {
+  background: black;
 }
