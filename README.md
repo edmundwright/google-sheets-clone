@@ -12,7 +12,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [x] See a list of their spreadsheets
 - [x] Navigate a spreadsheet with the mouse or keyboard
 - [x] Input a formula into a cell, and see it calculated immediately upon pressing enter
-- [ ] See any changes to a cell have an immediate effect on other cells that reference it
+- [x] See any changes to a cell have an immediate effect on other cells that reference it
 - [ ] Select a cell with the mouse or keyboard to insert a reference to it into the formula currently being edited
 - [ ] Select multiple cells with the mouse or keyboard to insert a reference to them into the formula currently being edited
 - [x] Have their work be autosaved to the server immediately following any change
@@ -55,6 +55,7 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 [Details][phase-five]
 
 ### Bonus Features (TBD)
+- [ ] Copy and paste cells
 - [ ] Share a spreadsheet with other users
 - [ ] Make a spreadsheet public so that any other person with the link can access it
 - [ ] Format cells with custom background and/or text colour, and different number formats.
