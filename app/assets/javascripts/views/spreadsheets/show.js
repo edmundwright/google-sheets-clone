@@ -255,7 +255,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
     // Deeply unsatisfactory to have to change to formula bar input for this to work,
     // but JQuery refuses to play nicely when trying to do it with cell input
-    this.currentInputField = ".formula-bar-input";
     var input = this.$(this.currentInputField);
 
     if (!this.inserting) {
@@ -276,8 +275,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
 
     input.val(input.val().slice(0, this.caretPosition) + newInsertedRef + afterInsertedRef);
-    input.caret(this.caretPosition + newInsertedRef.length);
-    this.updateSelectedLi();
+    if (this.currentInputField === ".formula-bar-input") {
+      input.caret(this.caretPosition + newInsertedRef.length);
+      this.updateSelectedLi();
+    } else {
+      this.updateFormulaBar();
+    }
+
     this.currentInsertedRef = newInsertedRef;
   },
 
