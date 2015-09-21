@@ -126,7 +126,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.finishInserting();
       }
       this.finishEditing();
-      var neighbourBelow = this.neighbourInDirection(40);
+      var neighbourBelow = this.neighbourInDirection(this.$selectedLi, 40);
       if (neighbourBelow) {
         this.selectCell(neighbourBelow);
       }
@@ -158,7 +158,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   handleArrowKey: function (e) {
     if (!this.editingFormula() && !this.editingFormulaBar()) {
       e.preventDefault();
-      var neighbour = this.neighbourInDirection(e.keyCode)
+      var neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode)
       if (neighbour) {
         if (this.editing()) {
           this.finishEditing();
@@ -166,30 +166,50 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.selectCell(neighbour);
       }
     } else if (this.editingFormula() && !this.editingFormulaBar()) {
+      e.preventDefault();
 
+      if (this.inserting) {
+        if (e.shiftKey) {
+          var $neighbour = this.neighbourInDirection(this.$lastLiForInsertion, e.keyCode)
+        } else {
+          var $neighbour = this.neighbourInDirection(this.$firstLiForInsertion, e.keyCode)
+        }
+      } else {
+        var $neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode)
+      }
+
+      if ($neighbour) {
+        if (this.inserting && e.shiftKey) {
+          this.$lastLiForInsertion = $neighbour;
+        } else {
+          this.$firstLiForInsertion = this.$lastLiForInsertion = $neighbour;
+        }
+        this.updateInsertedRef();
+        this.renderSelectionForInsertion();
+      }
     }
   },
 
-  neighbourInDirection: function (keyCode) {
+  neighbourInDirection: function ($li, keyCode) {
     switch (keyCode) {
       case 37:
-        if (this.$selectedLi.index() % this.model.get("width") !== 0) {
-          return this.$("li.cell:nth-child(" + this.$selectedLi.index() + ")");
+        if ($li.index() % this.model.get("width") !== 0) {
+          return this.$("li.cell:nth-child(" + $li.index() + ")");
         }
         return null;
       case 38:
-        if (this.$selectedLi.index() >= this.model.get("width")) {
-          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() - this.model.get("width") + 1) + ")")
+        if ($li.index() >= this.model.get("width")) {
+          return this.$("li.cell:nth-child(" + ($li.index() - this.model.get("width") + 1) + ")")
         }
         return null;
       case 39:
-        if ((this.$selectedLi.index() + 1) % this.model.get("width") !== 0) {
-          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + 2) + ")")
+        if (($li.index() + 1) % this.model.get("width") !== 0) {
+          return this.$("li.cell:nth-child(" + ($li.index() + 2) + ")")
         }
         return null;
       case 40:
-        if (this.$selectedLi.index() < (this.model.get("height") * this.model.get("width")) - this.model.get("height")) {
-          return this.$("li.cell:nth-child(" + (this.$selectedLi.index() + this.model.get("width") + 1) + ")")
+        if ($li.index() < (this.model.get("height") * this.model.get("width")) - this.model.get("height")) {
+          return this.$("li.cell:nth-child(" + ($li.index() + this.model.get("width") + 1) + ")")
         }
         return null;
     }
