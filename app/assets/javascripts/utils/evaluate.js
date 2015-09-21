@@ -31,7 +31,11 @@
     for(var i = formula.length - 1; i >= 0; i--) {
       if (formula[i] === ",") {
         return evaluateComma(formula);
-      } else if (formula[i] === ":") {
+      }
+    }
+
+    for(var i = formula.length - 1; i >= 0; i--) {
+      if (formula[i] === ":") {
         return evaluateColon(formula);
       }
     }
@@ -79,7 +83,7 @@
 
   var evaluateComma = function (formula) {
     var result = [];
-    
+
     formula.split(",").forEach(function (el) {
       var evaluatedEl = evaluate(el);
       if (Array.isArray(evaluatedEl)) {
