@@ -19,7 +19,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   events: {
     "click .formula-bar-input": "clickFormulaBar",
     "click .cell": "clickCell",
-    "click .column-header": "clickColumnHeader",
+    // "mousedown .column-header": "mouseDownColumnHeader",
     "dblclick .cell": "dblClickCell",
     "mousedown .cell": "mouseDownCell",
     "mouseover .cell": "mouseOverCell",
@@ -229,11 +229,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     e.preventDefault();
     if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
       this.$firstLiForInsertion = this.$lastLiForInsertion = $(e.currentTarget);
+      this.draggingOverCols = false;
       this.dragging = true;
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
     }
   },
+  //
+  // mouseDownColumnHeader: function (e) {
+  //   e.preventDefault();
+  //   if (this.editingFormula()) {
+  //     this.$firstColForInsertion = this.$lastColForInsertion = $(e.currentTarget);
+  //     this.draggingOverCols = true;
+  //     this.updateInsertedRef(e.ctrlKey || e.metaKey);
+  //     this.renderSelectionForInsertion();
+  //   }
+  // },
 
   updateInsertedRef: function (commaAndNewInsertion) {
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
