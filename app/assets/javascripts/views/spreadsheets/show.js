@@ -19,7 +19,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   events: {
     "click .formula-bar-input": "clickFormulaBar",
     "click .cell": "clickCell",
-    // "mousedown .column-header": "mouseDownColumnHeader",
+    "click #select-all": "clickSelectAll",
+    "mousedown .column-header": "mouseDownColumnHeader",
+    "mouseover .column-header": "mouseOverColumnHeader",
+    "mousedown .row-header": "mouseDownRowHeader",
+    "mouseover .row-header": "mouseOverRowHeader",
     "dblclick .cell": "dblClickCell",
     "mousedown .cell": "mouseDownCell",
     "mouseover .cell": "mouseOverCell",
@@ -255,26 +259,52 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.renderSelectionForInsertion();
     }
   },
-  //
-  // mouseDownColumnHeader: function (e) {
-  //   e.preventDefault();
-  //   if (this.editingFormula()) {
-  //     this.$firstColForInsertion = this.$lastColForInsertion = $(e.currentTarget);
-  //     this.draggingOverCols = true;
-  //     this.updateInsertedRef(e.ctrlKey || e.metaKey);
-  //     this.renderSelectionForInsertion();
-  //   }
-  // },
+
+  mouseDownColumnHeader: function (e) {
+    e.preventDefault();
+    if (this.editingFormula()) {
+      var col = $(e.currentTarget).index();
+      this.$firstLiForInsertion = this.cellLiAtPos(0, col);
+      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, col);
+      this.draggingOverCols = true;
+      this.updateInsertedRef(e.ctrlKey || e.metaKey);
+      this.renderSelectionForInsertion();
+    }
+  },
+
+  mouseDownRowHeader: function (e) {
+    e.preventDefault();
+    if (this.editingFormula()) {
+      var row = $(e.currentTarget).index();
+      this.$firstLiForInsertion = this.cellLiAtPos(row, 0);
+      this.$lastLiForInsertion = this.cellLiAtPos(row, this.model.get("width") - 1);
+      this.draggingOverRows = true;
+      this.updateInsertedRef(e.ctrlKey || e.metaKey);
+      this.renderSelectionForInsertion();
+    }
+  },
+
+  clickSelectAll: function (e) {
+    e.preventDefault();
+    if (this.editingFormula()) {
+      this.$firstLiForInsertion = this.cellLiAtPos(0, 0);
+      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, this.model.get("width") - 1);
+      this.updateInsertedRef(e.ctrlKey || e.metaKey);
+      this.renderSelectionForInsertion();
+    }
+  },
 
   updateInsertedRef: function (commaAndNewInsertion) {
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
       var newInsertedRef = this.refToCell(this.$firstLiForInsertion);
+    } else if (this.cellCol(this.$firstLiForInsertion) === 0 && this.cellCol(this.$lastLiForInsertion) === this.model.get("width") - 1) {
+      var newInsertedRef = this.refToRowRange(this.cellRow(this.$firstLiForInsertion), this.cellRow(this.$lastLiForInsertion));
+    } else if (this.cellRow(this.$firstLiForInsertion) === 0 && this.cellRow(this.$lastLiForInsertion) === this.model.get("height") - 1) {
+      var newInsertedRef = this.refToColRange(this.cellCol(this.$firstLiForInsertion), this.cellCol(this.$lastLiForInsertion));
     } else {
       var newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
     }
 
-    // Deeply unsatisfactory to have to change to formula bar input for this to work,
-    // but JQuery refuses to play nicely when trying to do it with cell input
     var input = this.$(this.currentInputField);
 
     if (!this.inserting) {
@@ -323,7 +353,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.cellLiAtPos(row, col).addClass("selected-for-insertion");
       }
     }
-    
+
     this.$cellsForInsertionBorder.css("left", "" + ((leftMostCol - 1) * 176 + 175) + "px");
     this.$cellsForInsertionBorder.css("top", "" + ((topMostRow - 1) * 36 + 35) + "px");
     this.$cellsForInsertionBorder.css("width", "" + ((rightMostCol - leftMostCol) * 176 + 171) + "px");
@@ -342,13 +372,39 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.$lastLiForInsertion = $(e.currentTarget);
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
+    } else if (this.draggingOverCols) {
+      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, this.cellCol($(e.currentTarget)));
+      this.updateInsertedRef();
+      this.renderSelectionForInsertion();
+    } else if (this.draggingOverRows) {
+      this.$lastLiForInsertion = this.cellLiAtPos(this.cellRow($(e.currentTarget)), this.model.get("width") - 1);
+      this.updateInsertedRef();
+      this.renderSelectionForInsertion();
+    }
+  },
+
+  mouseOverColumnHeader: function (e) {
+    if (this.draggingOverCols) {
+      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, $(e.currentTarget).index());
+      this.updateInsertedRef();
+      this.renderSelectionForInsertion();
+    }
+  },
+
+  mouseOverRowHeader: function (e) {
+    if (this.draggingOverRows) {
+      this.$lastLiForInsertion = this.cellLiAtPos($(e.currentTarget).index(), this.model.get("width") - 1);
+      this.updateInsertedRef();
+      this.renderSelectionForInsertion();
     }
   },
 
   mouseUp: function (e) {
-    if (this.dragging) {
+    if (this.dragging || this.draggingOverCols || this.draggingOverRows) {
       e.preventDefault();
       this.dragging = false;
+      this.draggingOverCols = false;
+      this.draggingOverRows = false;
       this.updateInsertedRef();
     }
   },
@@ -372,6 +428,22 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     bottomRight += Math.max(firstRow, lastRow) + 1;
 
     return topLeft + ":" + bottomRight;
+  },
+
+  refToColRange: function (firstCol, lastCol) {
+    if (firstCol < lastCol) {
+      return GoogleSheetsClone.columnName(firstCol) + ":" + GoogleSheetsClone.columnName(lastCol);
+    } else {
+      return GoogleSheetsClone.columnName(lastCol) + ":" + GoogleSheetsClone.columnName(firstCol);
+    }
+  },
+
+  refToRowRange: function (firstRow, lastRow) {
+    if (firstRow < lastRow) {
+      return "" + (firstRow + 1) + ":" + (lastRow + 1);
+    } else {
+      return "" + (lastRow + 1) + ":" + (firstRow + 1);
+    }
   },
 
   cellRow: function ($cellLi) {

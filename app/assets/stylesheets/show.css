@@ -49,6 +49,7 @@ li.row-header {
   text-align: center;
   font-size: 19px;
   padding: 8px 0 8px 0;
+  cursor: default;
 }
 
 ul#column-headers {
@@ -66,13 +67,14 @@ li.column-header {
   border-bottom: 1px solid #c0c0c0;
   font-size: 19px;
   width: 175px;
-}
-
-li.column-header {
-  cursor: default;
   height: 19px;
+  cursor: default;
   padding: 8px 0 8px 0;
   text-align: center;
+}
+
+li.column-header:hover, li.row-header:hover, div#select-all:hover  {
+  background: rgb(220, 220, 220);
 }
 
 div.selected-cell-border {
