@@ -131,7 +131,8 @@
     var cells = [];
     for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
       for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {
-        cells.push(GoogleSheetsClone.cells.findByPos(rowIndex, colIndex));
+        var thisCell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex)
+        cells.push(thisCell);
       }
     }
 
