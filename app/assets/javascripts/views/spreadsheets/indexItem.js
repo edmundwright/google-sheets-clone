@@ -4,7 +4,28 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
   tagName: "li",
 
   events: {
-    "click": "show"
+    "click": "click",
+    "contextmenu": "rightClick"
+  },
+
+  rightClick: function (e) {
+    e.preventDefault();
+    $(".context-menu").remove();
+    this.openContextMenu();
+  },
+
+  click: function(e) {
+    if($(e.target).hasClass("dot") || $(e.target).hasClass("context-menu-link")) {
+      $(".context-menu").remove();
+      this.openContextMenu();
+    } else if ($(e.target).hasClass("delete-link")) {
+      $("body").append(new GoogleSheetsClone.Views.SpreadsheetDelete({
+        model: this.model
+      }).render().$el)
+      $(".context-menu").remove();
+    } else {
+      this.show();
+    }
   },
 
   show: function () {
@@ -24,4 +45,9 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
 
     return this;
   },
+
+  openContextMenu: function () {
+    var $contextMenu = JST["spreadsheets/indexItemContextMenu"]();
+    this.$el.append($contextMenu);
+  }
 });
