@@ -223,47 +223,42 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
   },
 
-  insertRef: function (ref) {
-    // Deeply unsatsifactory. JQuery refuses to play nicely when I try to set caret in the cell input field.
-    var caretPosition = this.$(this.currentInputField).caret();
-    this.currentInputField = ".formula-bar-input";
-    var input = this.$(".formula-bar-input");
-    input.focus();
-    input.caret(caretPosition);
-    input.caret(ref);
-    this.updateSelectedLi();
-  },
-
   mouseDownCell: function (e) {
     e.preventDefault();
     if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
       this.$firstLiForInsertion = this.$lastLiForInsertion = $(e.currentTarget);
       this.dragging = true;
-      this.updateInsertedRef(e);
+      this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
     }
   },
 
-  updateInsertedRef: function (e) {
+  updateInsertedRef: function (commaAndNewInsertion) {
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
       var newInsertedRef = this.refToCell(this.$firstLiForInsertion);
     } else {
       var newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
     }
 
+    // Deeply unsatisfactory to have to change to formula bar input for this to work,
+    // but JQuery refuses to play nicely when trying to do it with cell input
+    this.currentInputField = ".formula-bar-input";
+    var input = this.$(this.currentInputField);
+
     if (!this.inserting) {
       this.inserting = true;
       this.caretPosition = this.$(this.currentInputField).caret();
-      this.currentInputField = ".formula-bar-input";
-      var input = this.$(this.currentInputField);
-      if (e.ctrlKey || e.metaKey) {
+      if (commaAndNewInsertion) {
         input.val(input.val().slice(0, this.caretPosition) + "," + input.val().slice(this.caretPosition));
         this.caretPosition += 1;
       }
       var afterInsertedRef = input.val().slice(this.caretPosition);
-
     } else {
-      var input = this.$(this.currentInputField);
+      if (commaAndNewInsertion) {
+        this.finishInserting();
+        this.updateInsertedRef(true);
+        return;
+      }
       var afterInsertedRef = input.val().slice(this.caretPosition + this.currentInsertedRef.length)
     }
 
