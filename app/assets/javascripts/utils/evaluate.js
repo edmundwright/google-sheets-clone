@@ -120,6 +120,14 @@
     var lastColIndex = GoogleSheetsClone.columnIndex(last.slice(0, i));
     var lastRowIndex = parseInt(last.slice(i)) - 1;
 
+    if (isNaN(firstColIndex) && isNaN(lastColIndex)) {
+      firstColIndex = 0;
+      lastColIndex = GoogleSheetsClone.spreadsheet.get("width") - 1
+    } else if (isNaN(firstRowIndex) && isNaN(lastRowIndex)) {
+      firstRowIndex = 0;
+      lastRowIndex = GoogleSheetsClone.spreadsheet.get("height") - 1
+    }
+
     var cells = [];
     for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
       for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {

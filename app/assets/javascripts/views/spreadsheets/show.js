@@ -5,6 +5,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.model.fetch({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
+        GoogleSheetsClone.spreadsheet = this.model;
         this.render();
       }.bind(this)
     });
@@ -18,6 +19,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   events: {
     "click .formula-bar-input": "clickFormulaBar",
     "click .cell": "clickCell",
+    "click .column-header": "clickColumnHeader",
     "dblclick .cell": "dblClickCell",
     "mousedown .cell": "mouseDownCell",
     "mouseover .cell": "mouseOverCell",
