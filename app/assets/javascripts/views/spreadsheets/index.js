@@ -2,17 +2,12 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   template: JST["spreadsheets/index"],
 
   initialize: function () {
-    this.listenTo(this.collection, "sync", this.render);
+    this.listenTo(this.collection, "sync destroy", this.render);
   },
 
   events: {
     "click .create": "create",
-    // "mousedown": "mouseDown",
-  },
-
-  mouseDown: function () {
-    debugger
-    $(".context-menu").remove();
+    "click": "click"
   },
 
   render: function () {
@@ -43,6 +38,12 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     }.bind(this))
 
     return this;
+  },
+
+  click: function (e) {
+    if (!$(e.target).hasClass("context-menu-link") && !$(e.target).hasClass("dot")) {
+      $(".context-menu").remove();
+    }
   },
 
   create: function () {
