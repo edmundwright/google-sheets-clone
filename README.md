@@ -17,6 +17,10 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [x] Select multiple cells with the mouse or keyboard to insert a reference to them into the formula currently being edited
 - [x] Have their work be autosaved to the server immediately following any change
 
+## Bonus features achieved
+
+- [x] Drag to resize rows and columns
+
 ## Design Docs
 * [View Wireframes][views]
 * [DB schema][schema]
@@ -54,13 +58,12 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 
 [Details][phase-five]
 
-### Bonus Features (TBD)
+### Bonus Features not yet achieved
 - [ ] Copy and paste cells
 - [ ] Share a spreadsheet with other users
 - [ ] Make a spreadsheet public so that any other person with the link can access it
 - [ ] Format cells with custom background and/or text colour, and different number formats.
 - [ ] Access spreadsheets through randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
-- [ ] Drag to resize rows and columns
 - [ ] Edit a spreadsheet simultaneously with another user, seeing their edits appear live
 
 
