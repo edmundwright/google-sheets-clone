@@ -512,7 +512,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $selectAll.attr("id", "select-all");
       this.$el.append($selectAll);
     }
-
+    
     return this;
   },
 
@@ -524,6 +524,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $li.addClass("column-header");
       $li.text(GoogleSheetsClone.columnName(col));
       $ul.append($li);
+      $li.resizable();
     }
   },
 
