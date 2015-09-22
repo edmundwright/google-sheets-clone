@@ -74,13 +74,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           this.handleArrowKey(e);
           break;
         case 8:
-          this.handleDeleteKey(e)
+          this.handleDeleteKey(e);
           break;
         case 46:
-          this.handleDeleteKey(e)
+          this.handleDeleteKey(e);
           break;
         case 27:
-          this.handleEscape(e)
+          this.handleEscape(e);
           break;
       }
     }
@@ -163,7 +163,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   handleArrowKey: function (e) {
     if (!this.editingFormula() && !this.editingFormulaBar()) {
       e.preventDefault();
-      var neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode)
+      var neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode);
       if (neighbour) {
         if (this.editing()) {
           this.finishEditing();
@@ -173,14 +173,15 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     } else if (this.editingFormula() && !this.editingFormulaBar()) {
       e.preventDefault();
 
+      var $neighbour;
       if (this.inserting) {
         if (e.shiftKey) {
-          var $neighbour = this.neighbourInDirection(this.$lastLiForInsertion, e.keyCode)
+          $neighbour = this.neighbourInDirection(this.$lastLiForInsertion, e.keyCode);
         } else {
-          var $neighbour = this.neighbourInDirection(this.$firstLiForInsertion, e.keyCode)
+          $neighbour = this.neighbourInDirection(this.$firstLiForInsertion, e.keyCode);
         }
       } else {
-        var $neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode)
+        $neighbour = this.neighbourInDirection(this.$selectedLi, e.keyCode);
       }
 
       if ($neighbour) {
@@ -204,17 +205,17 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         return null;
       case 38:
         if ($li.index() >= this.model.get("width")) {
-          return this.$("li.cell:nth-child(" + ($li.index() - this.model.get("width") + 1) + ")")
+          return this.$("li.cell:nth-child(" + ($li.index() - this.model.get("width") + 1) + ")");
         }
         return null;
       case 39:
         if (($li.index() + 1) % this.model.get("width") !== 0) {
-          return this.$("li.cell:nth-child(" + ($li.index() + 2) + ")")
+          return this.$("li.cell:nth-child(" + ($li.index() + 2) + ")");
         }
         return null;
       case 40:
         if ($li.index() < (this.model.get("height") * this.model.get("width")) - this.model.get("height")) {
-          return this.$("li.cell:nth-child(" + ($li.index() + this.model.get("width") + 1) + ")")
+          return this.$("li.cell:nth-child(" + ($li.index() + this.model.get("width") + 1) + ")");
         }
         return null;
     }
@@ -296,18 +297,20 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   updateInsertedRef: function (commaAndNewInsertion) {
+    var newInsertedRef;
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
-      var newInsertedRef = this.refToCell(this.$firstLiForInsertion);
+      newInsertedRef = this.refToCell(this.$firstLiForInsertion);
     } else if (this.cellCol(this.$firstLiForInsertion) === 0 && this.cellCol(this.$lastLiForInsertion) === this.model.get("width") - 1) {
-      var newInsertedRef = this.refToRowRange(this.cellRow(this.$firstLiForInsertion), this.cellRow(this.$lastLiForInsertion));
+      newInsertedRef = this.refToRowRange(this.cellRow(this.$firstLiForInsertion), this.cellRow(this.$lastLiForInsertion));
     } else if (this.cellRow(this.$firstLiForInsertion) === 0 && this.cellRow(this.$lastLiForInsertion) === this.model.get("height") - 1) {
-      var newInsertedRef = this.refToColRange(this.cellCol(this.$firstLiForInsertion), this.cellCol(this.$lastLiForInsertion));
+      newInsertedRef = this.refToColRange(this.cellCol(this.$firstLiForInsertion), this.cellCol(this.$lastLiForInsertion));
     } else {
-      var newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
+      newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
     }
 
     var input = this.$(this.currentInputField);
 
+    var afterInsertedRef;
     if (!this.inserting) {
       this.inserting = true;
       this.caretPosition = this.$(this.currentInputField).caret();
@@ -315,14 +318,14 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         input.val(input.val().slice(0, this.caretPosition) + "," + input.val().slice(this.caretPosition));
         this.caretPosition += 1;
       }
-      var afterInsertedRef = input.val().slice(this.caretPosition);
+      afterInsertedRef = input.val().slice(this.caretPosition);
     } else {
       if (commaAndNewInsertion) {
         this.finishInserting();
         this.updateInsertedRef(true);
         return;
       }
-      var afterInsertedRef = input.val().slice(this.caretPosition + this.currentInsertedRef.length)
+      afterInsertedRef = input.val().slice(this.caretPosition + this.currentInsertedRef.length);
     }
 
     input.val(input.val().slice(0, this.caretPosition) + newInsertedRef + afterInsertedRef);
@@ -509,7 +512,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $selectAll.attr("id", "select-all");
       this.$el.append($selectAll);
     }
-    
+
     return this;
   },
 
@@ -536,13 +539,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   renderCells: function () {
-    var $ul = this.$("ul#cells")
+    var $ul = this.$("ul#cells");
 
     var cellIdx = 0;
 
     for(var row = 0; row < this.model.get("height"); row++) {
       for(var col = 0; col < this.model.get("width"); col++) {
-        var cell = this.model.cells().at(cellIdx)
+        var cell = this.model.cells().at(cellIdx);
 
         if (cell && cell.get("row_index") === row && cell.get("col_index") === col) {
           cellIdx++;
@@ -556,7 +559,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           col: col,
           spreadsheet: this.model,
           $selectedCellBorder: this.$selectedCellBorder
-        }))
+        }));
       }
     }
 
@@ -566,6 +569,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   renderAllCells: function () {
     this.model.cells().each(function (cell) {
       cell.trigger("render");
-    })
+    });
   }
 });
