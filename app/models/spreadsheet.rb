@@ -6,4 +6,6 @@ class Spreadsheet < ActiveRecord::Base
     foreign_key: :owner_id
 
   has_many :cells, dependent: :destroy
+  has_many :columns, dependent: :destroy
+  has_many :rows, dependent: :destroy
 end
