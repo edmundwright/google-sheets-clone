@@ -1,4 +1,4 @@
-# Cells (provisional name)
+# Cells - a Google Sheets clone
 
 [Heroku link][heroku]
 
