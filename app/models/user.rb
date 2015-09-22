@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   validates :password, confirmation: true
 
   has_many :spreadsheets,
+    dependent: :destroy,
     class_name: "Spreadsheet",
     foreign_key: :owner_id
 
