@@ -127,6 +127,9 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       var contents = this.model.get("contents_str") ||
                      this.model.get("contents_int") ||
                      this.model.get("contents_flo");
+      if (this.model.get("contents_int") === 0) {
+        contents = 0;
+      }
     } else {
       var contents = "";
     }
