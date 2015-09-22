@@ -512,7 +512,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $selectAll.attr("id", "select-all");
       this.$el.append($selectAll);
     }
-    
+
     return this;
   },
 
@@ -524,7 +524,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $li.addClass("column-header");
       $li.text(GoogleSheetsClone.columnName(col));
       $ul.append($li);
-      $li.resizable();
+      $li.resizable({
+        handles: "e",
+        minWidth: 35,
+        alsoResize: "ul#cells, ul#column-headers, li.cell:nth-child(" +
+          this.model.get("width") + "n+" + ($li.index() + 1) + ")"
+      });
     }
   },
 
@@ -536,6 +541,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $li.addClass("row-header");
       $li.text(row + 1);
       $ul.append($li);
+      $li.resizable({
+        handles: "s",
+        minHeight: 19,
+        alsoResize: "ul#cells, ul#row-headers, li.cell:nth-child(n+" +
+          (this.model.get("width") * $li.index() + 1) + "):nth-child(-n+" +
+          (this.model.get("width") * ($li.index() + 1)) + ")"
+      });
     }
   },
 
