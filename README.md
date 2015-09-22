@@ -1,8 +1,8 @@
 # Cells - a Google Sheets clone
 
-[Heroku link][heroku]
+[Link to live site][live-site]
 
-[heroku]: http://google-sheets-clone.herokuapp.com
+[live-site]: http://cells.edmund.io
 
 ## Minimum Viable Product
 A clone of Google Sheets built on Rails and Backbone. Users can:
