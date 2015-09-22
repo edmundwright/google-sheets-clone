@@ -162,7 +162,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }));
 
     if (this.selected) {
-      // this.$selectedCellBorder.css("width", (this.$el.width + 8) + "px");
       this.$el.append(this.$selectedCellBorder);
     }
 
