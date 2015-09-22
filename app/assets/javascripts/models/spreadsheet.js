@@ -17,6 +17,11 @@ GoogleSheetsClone.Models.Spreadsheet = Backbone.Model.extend ({
       delete response.columns;
     }
 
+    if (response.rows) {
+      this.rows().set(response.rows);
+      delete response.rows;
+    }
+
     return response;
   },
 
@@ -38,6 +43,16 @@ GoogleSheetsClone.Models.Spreadsheet = Backbone.Model.extend ({
     }
 
     return this._columns;
+  },
+
+  rows: function () {
+    if (!this._rows) {
+      this._rows = new GoogleSheetsClone.Collections.Rows([], {
+        spreadsheet: this
+      });
+    }
+
+    return this._rows;
   },
 
   timePeriod: function () {

@@ -16,4 +16,10 @@ if with_cells
       json.partial! 'api/columns/column', column: column
     end
   end
+
+  json.rows do
+    json.array! spreadsheet.rows do |row|
+      json.partial! 'api/rows/row', row: row
+    end
+  end
 end

@@ -508,6 +508,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderCells();
 
     this.applyColumnWidths();
+    this.applyRowHeights();
 
     if (this.okForSelectAllToBeRendered) {
       var $selectAll = $("<div>");
@@ -534,6 +535,19 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
     this.$("ul#column-headers").css("width", totalWidth + "px");
     this.$("ul#cells").css("width", totalWidth + "px");
+  },
+
+  applyRowHeights: function () {
+    this.model.rows().forEach(function (row) {
+      var height = row.get("height");
+      var row_index = row.get("row_index");
+      this.$("li.row-header:nth-child(" + (row_index + 1) + ")")
+        .css("height", height + "px");
+      this.$("li.cell:nth-child(n+" +
+        (this.model.get("width") * row_index + 1) + "):nth-child(-n+" +
+        (this.model.get("width") * (row_index + 1)) + ")")
+        .css("height", height + "px");
+    }.bind(this));
   },
 
   renderColumnHeaders: function () {
@@ -577,20 +591,46 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     });
   },
 
+  saveRowHeight: function (e, ui) {
+    var row_index = ui.element.index();
+    var rowModel = this.model.rows().findWhere({
+      row_index: row_index
+    });
+
+    if (!rowModel) {
+      rowModel = new GoogleSheetsClone.Models.Row({
+        row_index: row_index,
+        spreadsheet_id: this.model.id
+      });
+      this.model.rows().add(rowModel);
+    }
+
+    GoogleSheetsClone.statusAreaView.displaySaving();
+
+    rowModel.save({ height: ui.size.height }, {
+      success: function () {
+        GoogleSheetsClone.statusAreaView.finishSaving();
+      }
+    });
+  },
+
   renderRowHeaders: function () {
     var $ul = this.$("ul#row-headers");
 
     for(var row = 0; row < this.model.get("height"); row++) {
       var $li = $("<li>");
+      var $div = $("<div>");
       $li.addClass("row-header");
-      $li.text(row + 1);
+      $div.text(row + 1);
+      $li.append($div);
       $ul.append($li);
       $li.resizable({
         handles: "s",
-        minHeight: 19,
+        minHeight: 35,
         alsoResize: "ul#cells, ul#row-headers, li.cell:nth-child(n+" +
           (this.model.get("width") * $li.index() + 1) + "):nth-child(-n+" +
-          (this.model.get("width") * ($li.index() + 1)) + ")"
+          (this.model.get("width") * ($li.index() + 1)) + ")",
+        stop: this.saveRowHeight.bind(this)
       });
     }
   },

@@ -45,11 +45,14 @@ li.row-header {
   display: block;
   width: 59px;
   border-bottom: 1px solid #c0c0c0;
-  height: 19px;
+  height: 35px;
   text-align: center;
   font-size: 19px;
-  padding: 8px 0 8px 0;
   cursor: default;
+}
+
+li.row-header div {
+  padding: 8px 0;
 }
 
 ul#column-headers {

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do
       resources :cells, only: [:create, :show, :update, :destroy]
       resources :columns, only: [:create, :show, :update, :destroy]
+      resources :rows, only: [:create, :show, :update, :destroy]
     end
   end
 end
