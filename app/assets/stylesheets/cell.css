@@ -12,13 +12,14 @@ li.cell .cell-contents {
   overflow: hidden;
   cursor: default;
   outline: none;
-  width: 165px;
-  height: 19px;
+  width: calc(100% - 10px);
+  height: calc(100% - 16px);
   padding: 8px 5px 8px 5px;
 }
 
 li.cell .cell-contents.input {
   cursor: text;
+  height: 19px;
 }
 
 li.cell.selected-for-insertion {
