@@ -1,4 +1,5 @@
 li.cell {
+  position: relative;
   height: 35px;
   display: block;
   float: left;

@@ -78,13 +78,13 @@ li.column-header:hover, li.row-header:hover, div#select-all:hover  {
 }
 
 div.selected-cell-border {
-  top: -36px;
+  bottom: -1px;
   left: -1px;
-  position: relative;
+  position: absolute;
   display: block;
   border: 3px solid #4285f4;
-  height: 31px;
-  width: 171px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
   pointer-events: none;
 }
 

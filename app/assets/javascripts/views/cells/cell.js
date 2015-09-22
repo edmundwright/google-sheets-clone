@@ -19,7 +19,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("delete", this.destroyModel.bind(this));
     this.$el.on("cancelEditing", this.cancelEditing.bind(this));
     if (this.model) {
-      this.listenTo(this.model, "render", this.render.bind(this))
+      this.listenTo(this.model, "render", this.render.bind(this));
     }
   },
 
@@ -74,7 +74,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.editing = true;
     this.render();
     if (options.replace) {
-      this.$("input").val("")
+      this.$("input").val("");
     } else {
       this.$("input").val(this.$("input").val());
     }
@@ -93,7 +93,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         spreadsheet_id: this.spreadsheet.id
       });
       this.spreadsheet.cells().add(this.model);
-      this.listenTo(this.model, "render", this.render.bind(this))
+      this.listenTo(this.model, "render", this.render.bind(this));
     }
 
     if (newContents === "") {
@@ -102,12 +102,13 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     } else {
       GoogleSheetsClone.statusAreaView.displaySaving();
 
+      var attrs;
       if (isNaN(newContents)) {
-        var attrs = { contents_str: newContents, contents_int: null, contents_flo: null };
+        attrs = { contents_str: newContents, contents_int: null, contents_flo: null };
       } else if (newContents % 1 === 0) {
-        var attrs = { contents_int: newContents, contents_str: null, contents_flo: null  };
+        attrs = { contents_int: newContents, contents_str: null, contents_flo: null  };
       } else {
-        var attrs = { contents_flo: newContents, contents_int: null, contents_str: null  };
+        attrs = { contents_flo: newContents, contents_int: null, contents_str: null  };
       }
 
       this.model.save(attrs, {
@@ -123,33 +124,35 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   },
 
   render: function () {
+    var contents;
     if (this.model) {
-      var contents = this.model.get("contents_str") ||
-                     this.model.get("contents_int") ||
-                     this.model.get("contents_flo");
+      contents = this.model.get("contents_str") ||
+                this.model.get("contents_int") ||
+                this.model.get("contents_flo");
       if (this.model.get("contents_int") === 0) {
         contents = 0;
       }
     } else {
-      var contents = "";
+      contents = "";
     }
 
+    var evaluatedContents;
     if (typeof contents ==="string" && contents[0] === "=") {
       try {
-        var evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1));
+        evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1));
       } catch (error) {
         if (error === "formulaNotWellFormed") {
-          var evaluatedContents = "#BAD FORMULA!"
+          evaluatedContents = "#BAD FORMULA!";
         } else if (error === "badReference") {
-          var evaluatedContents = "#BAD REF!"
+          evaluatedContents = "#BAD REF!";
         } else if (error === "divideByZero") {
-          var evaluatedContents = "#DIV BY ZERO!"
+          evaluatedContents = "#DIV BY ZERO!";
         } else {
-          var evaluatedContents = "#SOME ERROR!"
+          evaluatedContents = "#SOME ERROR!";
         }
       }
     } else {
-      var evaluatedContents = contents;
+      evaluatedContents = contents;
     }
 
     this.$el.html(this.template({
@@ -159,7 +162,8 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }));
 
     if (this.selected) {
-      this.$el.append(this.$selectedCellBorder)
+      // this.$selectedCellBorder.css("width", (this.$el.width + 8) + "px");
+      this.$el.append(this.$selectedCellBorder);
     }
 
     return this;
