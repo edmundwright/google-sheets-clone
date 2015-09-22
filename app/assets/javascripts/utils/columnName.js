@@ -3,5 +3,11 @@ GoogleSheetsClone.columnName = function (columnIndex) {
 };
 
 GoogleSheetsClone.columnIndex = function (columnName) {
-  return columnName.charCodeAt() - "A".charCodeAt();
+  if (columnName.charCodeAt() >= "A".charCodeAt() &&
+    columnName.charCodeAt() <= "Z".charCodeAt()) {
+    return columnName.charCodeAt() - "A".charCodeAt();
+  } else if (columnName.charCodeAt() >= "a".charCodeAt() &&
+    columnName.charCodeAt() <= "z".charCodeAt()) {
+    return columnName.charCodeAt() - "a".charCodeAt();        
+  }
 };
