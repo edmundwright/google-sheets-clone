@@ -3,11 +3,11 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
 
   initialize: function () {
     this.listenTo(this.collection, "sync destroy", this.render);
+    $(document).on("click", this.click.bind(this));
   },
 
   events: {
-    "click .create": "create",
-    "click": "click"
+    "click .create": "create"
   },
 
   render: function () {

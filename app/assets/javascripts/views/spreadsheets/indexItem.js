@@ -19,13 +19,28 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
       $(".context-menu").remove();
       this.openContextMenu();
     } else if ($(e.target).hasClass("delete-link")) {
-      $("body").append(new GoogleSheetsClone.Views.SpreadsheetDelete({
-        model: this.model
-      }).render().$el)
-      $(".context-menu").remove();
+      this.openDeleteModal();
+    } else if ($(e.target).hasClass("rename-link")) {
+      this.openRenameModal();
     } else {
       this.show();
     }
+  },
+
+  openDeleteModal: function () {
+    $("body").append(new GoogleSheetsClone.Views.SpreadsheetDelete({
+      model: this.model
+    }).render().$el)
+    $(".context-menu").remove();
+  },
+
+  openRenameModal: function () {
+    var renameView = new GoogleSheetsClone.Views.SpreadsheetRename({
+      model: this.model
+    })
+    $("body").append(renameView.render().$el)
+    renameView.focus();
+    $(".context-menu").remove();
   },
 
   show: function () {

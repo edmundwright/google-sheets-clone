@@ -1,0 +1,17 @@
+<div class="overlay"></div>
+
+<div class="window">
+  <h1>Rename</h1>
+
+  <p>Please enter a new name for the spreadsheet:</p>
+
+  <form class="rename-form">
+    <input class="title"
+      type="text"
+      name="spreadsheet[title]"
+      value="<%= spreadsheet.escape("title") %>">
+  </form>
+
+  <button class="rename-spreadsheet">OK</button>
+  <button class="close-modal">Cancel</button>
+</div>
