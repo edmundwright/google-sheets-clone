@@ -4,6 +4,8 @@ nav.header {
   position: fixed;
   width: 100%;
   color: #756E6E;
+  height: 60px;
+  overflow: hidden;
 }
 
 nav.header img {

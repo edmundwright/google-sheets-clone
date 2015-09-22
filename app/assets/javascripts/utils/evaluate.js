@@ -229,6 +229,9 @@
         case "*":
           return leftHandSide * rightHandSide;
         case "/":
+          if (rightHandSide == 0) {
+            throw "divideByZero";
+          }
           return leftHandSide / rightHandSide;
         case "^":
           return Math.pow(leftHandSide, rightHandSide);

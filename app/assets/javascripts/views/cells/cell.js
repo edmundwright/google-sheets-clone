@@ -139,6 +139,8 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
           var evaluatedContents = "#BAD FORMULA!"
         } else if (error === "badReference") {
           var evaluatedContents = "#BAD REF!"
+        } else if (error === "divideByZero") {
+          var evaluatedContents = "#DIV BY ZERO!"
         } else {
           var evaluatedContents = "#SOME ERROR!"
         }

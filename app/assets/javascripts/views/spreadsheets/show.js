@@ -6,6 +6,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
         GoogleSheetsClone.spreadsheet = this.model;
+        this.okForSelectAllToBeRendered = true;
         this.render();
       }.bind(this)
     });
@@ -503,6 +504,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderRowHeaders();
     this.renderCells();
 
+    if (this.okForSelectAllToBeRendered) {
+      var $selectAll = $("<div>");
+      $selectAll.attr("id", "select-all");
+      this.$el.append($selectAll);
+    }
+    
     return this;
   },
 

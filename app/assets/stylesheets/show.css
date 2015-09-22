@@ -108,6 +108,11 @@ div#select-all {
   z-index: 3;
 }
 
+div#select-all.before-loaded {
+  background: transparent;
+  border: none;
+}
+
 ul#cells {
   background: white;
   position: absolute;
