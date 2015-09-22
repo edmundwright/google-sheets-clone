@@ -507,6 +507,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderRowHeaders();
     this.renderCells();
 
+    this.applyColumnWidths();
+
     if (this.okForSelectAllToBeRendered) {
       var $selectAll = $("<div>");
       $selectAll.attr("id", "select-all");
@@ -514,6 +516,24 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
 
     return this;
+  },
+
+  applyColumnWidths: function () {
+    var totalWidth = this.$("ul#column-headers").width();
+
+    this.model.columns().forEach(function (column) {
+      var width = column.get("width");
+      var col_index = column.get("col_index");
+      totalWidth += (width - 175);
+      this.$("li.column-header:nth-child(" + (col_index + 1) + ")")
+        .css("width", width + "px");
+      this.$("li.cell:nth-child(" +
+        this.model.get("width") + "n+" + (col_index + 1) + ")")
+        .css("width", width + "px");
+    }.bind(this));
+
+    this.$("ul#column-headers").css("width", totalWidth + "px");
+    this.$("ul#cells").css("width", totalWidth + "px");
   },
 
   renderColumnHeaders: function () {
@@ -528,9 +548,33 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         handles: "e",
         minWidth: 35,
         alsoResize: "ul#cells, ul#column-headers, li.cell:nth-child(" +
-          this.model.get("width") + "n+" + ($li.index() + 1) + ")"
+          this.model.get("width") + "n+" + ($li.index() + 1) + ")",
+        stop: this.saveColumnWidth.bind(this)
       });
     }
+  },
+
+  saveColumnWidth: function (e, ui) {
+    var col_index = ui.element.index();
+    var columnModel = this.model.columns().findWhere({
+      col_index: col_index
+    });
+
+    if (!columnModel) {
+      columnModel = new GoogleSheetsClone.Models.Column({
+        col_index: col_index,
+        spreadsheet_id: this.model.id
+      });
+      this.model.columns().add(columnModel);
+    }
+
+    GoogleSheetsClone.statusAreaView.displaySaving();
+
+    columnModel.save({ width: ui.size.width }, {
+      success: function () {
+        GoogleSheetsClone.statusAreaView.finishSaving();
+      }
+    });
   },
 
   renderRowHeaders: function () {

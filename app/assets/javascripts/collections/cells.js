@@ -22,7 +22,7 @@ GoogleSheetsClone.Collections.Cells = Backbone.Collection.extend({
         result = model;
         return;
       }
-    })
+    });
 
     return result;
   }
