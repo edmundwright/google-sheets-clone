@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916174849) do
+ActiveRecord::Schema.define(version: 20150922200239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,28 @@ ActiveRecord::Schema.define(version: 20150916174849) do
 
   add_index "cells", ["spreadsheet_id", "row_index", "col_index"], name: "index_cells_on_spreadsheet_id_and_row_index_and_col_index", unique: true, using: :btree
   add_index "cells", ["spreadsheet_id"], name: "index_cells_on_spreadsheet_id", using: :btree
+
+  create_table "columns", force: :cascade do |t|
+    t.integer  "col_index",      null: false
+    t.integer  "width",          null: false
+    t.integer  "spreadsheet_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "columns", ["spreadsheet_id", "col_index"], name: "index_columns_on_spreadsheet_id_and_col_index", unique: true, using: :btree
+  add_index "columns", ["spreadsheet_id"], name: "index_columns_on_spreadsheet_id", using: :btree
+
+  create_table "rows", force: :cascade do |t|
+    t.integer  "row_index",      null: false
+    t.integer  "height",         null: false
+    t.integer  "spreadsheet_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "rows", ["spreadsheet_id", "row_index"], name: "index_rows_on_spreadsheet_id_and_row_index", unique: true, using: :btree
+  add_index "rows", ["spreadsheet_id"], name: "index_rows_on_spreadsheet_id", using: :btree
 
   create_table "spreadsheets", force: :cascade do |t|
     t.integer  "owner_id",                null: false
