@@ -76,7 +76,7 @@ li.column-header {
   text-align: center;
 }
 
-li.column-header:hover, li.row-header:hover, div#select-all:hover  {
+li.column-header:hover, li.row-header:hover, div#select-all:hover, li.column-header.ui-resizable-resizing,  li.row-header.ui-resizable-resizing {
   background: rgb(220, 220, 220);
 }
 

@@ -614,6 +614,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     $rowHeader.find("div.row-header-label").css("padding-top", (($rowHeader.height() - 19) / 2) + "px");
   },
 
+  duringResizingRow: function (e, ui) {
+    this.updateRowHeaderPadding(ui.element);
+  },
+
   saveRowHeight: function (e, ui) {
     var row_index = ui.element.index();
     var rowModel = this.model.rows().findWhere({
@@ -654,7 +658,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         alsoResize: "ul#cells, ul#row-headers, li.cell:nth-child(n+" +
           (this.model.get("width") * $li.index() + 1) + "):nth-child(-n+" +
           (this.model.get("width") * ($li.index() + 1)) + ")",
-        stop: this.finishResizingRow.bind(this)
+        stop: this.finishResizingRow.bind(this),
+        resize: this.duringResizingRow.bind(this)
       });
     }
   },
