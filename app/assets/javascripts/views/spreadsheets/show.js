@@ -553,8 +553,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.model.rows().forEach(function (row) {
       var height = row.get("height");
       var row_index = row.get("row_index");
-      this.$("li.row-header:nth-child(" + (row_index + 1) + ")")
-        .css("height", height + "px");
+      var $rowHeader = this.$("li.row-header:nth-child(" + (row_index + 1) + ")");
+      $rowHeader.css("height", height + "px");
+      this.updateRowHeaderPadding($rowHeader);
       this.$("li.cell:nth-child(n+" +
         (this.model.get("width") * row_index + 1) + "):nth-child(-n+" +
         (this.model.get("width") * (row_index + 1)) + ")")
@@ -603,6 +604,15 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     });
   },
 
+  finishResizingRow: function (e, ui) {
+    this.updateRowHeaderPadding(ui.element);
+    this.saveRowHeight(e, ui);
+  },
+
+  updateRowHeaderPadding: function ($rowHeader) {
+    $rowHeader.find("div.row-header-label").css("padding-top", (($rowHeader.height() - 19) / 2) + "px");
+  },
+
   saveRowHeight: function (e, ui) {
     var row_index = ui.element.index();
     var rowModel = this.model.rows().findWhere({
@@ -633,6 +643,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       var $li = $("<li>");
       var $div = $("<div>");
       $li.addClass("row-header");
+      $div.addClass("row-header-label");
       $div.text(row + 1);
       $li.append($div);
       $ul.append($li);
@@ -642,7 +653,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         alsoResize: "ul#cells, ul#row-headers, li.cell:nth-child(n+" +
           (this.model.get("width") * $li.index() + 1) + "):nth-child(-n+" +
           (this.model.get("width") * ($li.index() + 1)) + ")",
-        stop: this.saveRowHeight.bind(this)
+        stop: this.finishResizingRow.bind(this)
       });
     }
   },
