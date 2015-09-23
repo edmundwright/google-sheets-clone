@@ -9,10 +9,13 @@ class User < ActiveRecord::Base
     class_name: "Spreadsheet",
     foreign_key: :owner_id
 
-    has_many :shares, dependent: :destroy
-    has_many :shared_spreadsheets,
-      through: :shares,
-      source: :spreadsheet
+  has_many :shares,
+    dependent: :destroy,
+    inverse_of: :sharee
+
+  has_many :shared_spreadsheets,
+    through: :shares,
+    source: :spreadsheet
 
   has_many :cells,
     through: :spreadsheets,

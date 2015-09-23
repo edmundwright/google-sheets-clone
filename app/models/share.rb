@@ -6,5 +6,6 @@ class Share < ActiveRecord::Base
 
   belongs_to :sharee,
     class_name: "User",
-    foreign_key: :sharee_id
+    foreign_key: :sharee_id,
+    inverse_of: :shares
 end
