@@ -297,13 +297,21 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseDownRowHeader: function (e) {
     e.preventDefault();
+    var row = $(e.currentTarget).index();
     if (this.editingFormula()) {
-      var row = $(e.currentTarget).index();
       this.$firstLiForInsertion = this.cellLiAtPos(row, this.model.get("width") - 1);
       this.$lastLiForInsertion = this.cellLiAtPos(row, 0);
       this.draggingOverRows = true;
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
+    } else {
+      if (this.editing()) {
+        this.finishEditing();
+      }
+      this.selectCell(this.cellLiAtPos(row, 0));
+      this.$lastLiForCopy = this.cellLiAtPos(row, this.model.get("width") - 1);
+      this.draggingOverRowsForCopy = true;
+      this.renderSelectionForCopy(true);
     }
   },
 
@@ -463,6 +471,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     } else if (this.draggingOverColsForCopy) {
       this.$lastLiForCopy = this.cellLiAtPos(this.model.get("height") - 1, this.cellCol($(e.currentTarget)));
       this.renderSelectionForCopy(true);
+    } else if (this.draggingOverRowsForCopy) {
+      this.$lastLiForCopy = this.cellLiAtPos(this.cellRow($(e.currentTarget)), this.model.get("width") - 1);
+      this.renderSelectionForCopy(true);
     }
   },
 
@@ -482,6 +493,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.$lastLiForInsertion = this.cellLiAtPos($(e.currentTarget).index(), 0);
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
+    } else if (this.draggingOverRowsForCopy) {
+      this.$lastLiForCopy = this.cellLiAtPos($(e.currentTarget).index(), this.model.get("width") - 1);
+      this.renderSelectionForCopy(true);
     }
   },
 
@@ -492,9 +506,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.draggingOverCols = false;
       this.draggingOverRows = false;
       this.updateInsertedRef();
-    } else if (this.draggingForCopy || this.draggingOverColsForCopy) {
+    } else if (this.draggingForCopy || this.draggingOverColsForCopy || this.draggingOverRowsForCopy) {
       this.draggingForCopy = false;
       this.draggingOverColsForCopy = false;
+      this.draggingOverRowsForCopy = false;
     }
   },
 
