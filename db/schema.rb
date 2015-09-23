@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922200239) do
+ActiveRecord::Schema.define(version: 20150923200436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,17 @@ ActiveRecord::Schema.define(version: 20150922200239) do
 
   add_index "rows", ["spreadsheet_id", "row_index"], name: "index_rows_on_spreadsheet_id_and_row_index", unique: true, using: :btree
   add_index "rows", ["spreadsheet_id"], name: "index_rows_on_spreadsheet_id", using: :btree
+
+  create_table "shares", force: :cascade do |t|
+    t.integer  "spreadsheet_id", null: false
+    t.integer  "sharee_id",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "shares", ["sharee_id"], name: "index_shares_on_sharee_id", using: :btree
+  add_index "shares", ["spreadsheet_id", "sharee_id"], name: "index_shares_on_spreadsheet_id_and_sharee_id", using: :btree
+  add_index "shares", ["spreadsheet_id"], name: "index_shares_on_spreadsheet_id", using: :btree
 
   create_table "spreadsheets", force: :cascade do |t|
     t.integer  "owner_id",                null: false
