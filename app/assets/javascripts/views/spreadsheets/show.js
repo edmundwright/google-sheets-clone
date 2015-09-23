@@ -174,11 +174,21 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
     for (row = 0; row < this.copiedContents.length; row++) {
       for (col = 0; col < this.copiedContents[row].length; col++) {
-        var cellLiToPasteInto = this.cellLiAtPos(startRow + row, startCol + col);
-        if (cellLiToPasteInto.length !== 0) {
-          cellLiToPasteInto.trigger("paste", {
+        var $cellLiToPasteInto = this.cellLiAtPos(startRow + row, startCol + col);
+        if ($cellLiToPasteInto.length !== 0) {
+          var callback;
+          if ($cellLiToPasteInto.index() === this.$selectedLi.index()) {
+            callback = function () {
+              this.renderAllCells();
+              this.$(".formula-bar-input")
+                .val(this.$selectedLi.find(".cell-contents").data("contents"));
+            };
+          } else {
+            callback = this.renderAllCells;
+          }
+          $cellLiToPasteInto.trigger("paste", {
             newContents: this.copiedContents[row][col],
-            callback: this.renderAllCells.bind(this)
+            callback: callback.bind(this)
           });
         }
       }
