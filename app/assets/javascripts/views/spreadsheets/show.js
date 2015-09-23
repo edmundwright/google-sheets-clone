@@ -155,10 +155,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   paste: function () {
     var startRow = this.cellRow(this.$selectedLi);
     var startCol = this.cellCol(this.$selectedLi);
+    var row, col;
 
     if (this.cutNotCopy) {
-      for (var row = 0; row < this.copiedContents.length; row++) {
-        for (var col = 0; col < this.copiedContents[row].length; col++) {
+      for (row = 0; row < this.copiedContents.length; row++) {
+        for (col = 0; col < this.copiedContents[row].length; col++) {
           var originalCellLi = this.cellLiAtPos(
             this.copiedContents[row][col].originalRow,
             this.copiedContents[row][col].originalCol
@@ -168,8 +169,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       }
     }
 
-    for (var row = 0; row < this.copiedContents.length; row++) {
-      for (var col = 0; col < this.copiedContents[row].length; col++) {
+    for (row = 0; row < this.copiedContents.length; row++) {
+      for (col = 0; col < this.copiedContents[row].length; col++) {
         var cellLiToPasteInto = this.cellLiAtPos(startRow + row, startCol + col);
         if (cellLiToPasteInto.length !== 0) {
           cellLiToPasteInto.trigger("paste", {

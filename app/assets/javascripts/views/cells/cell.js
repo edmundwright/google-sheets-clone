@@ -28,8 +28,39 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     if (options.newContents.contents === "") {
       this.destroyModel(null, options.callback);
     } else {
-      this.save(options.newContents.contents, options.callback);
+      var newContents;
+      if (typeof options.newContents.contents === "string" &&
+          options.newContents.contents[0] === "=") {
+        newContents = this.translateFormulaContents(options.newContents);
+      } else {
+        newContents = options.newContents.contents;
+      }
+
+      this.save(newContents, options.callback);
     }
+  },
+
+  translateFormulaContents: function (options) {
+    var translatedFormula = options.contents.slice(1);
+
+    var rowDifference = this.row - options.originalRow;
+    var colDifference = this.col - options.originalCol;
+
+    var foundRef = GoogleSheetsClone.findRef(translatedFormula, 0);
+
+    while (foundRef) {
+      var newRowName = foundRef.row + rowDifference + 1;
+      var newColName = GoogleSheetsClone.columnName(foundRef.col + colDifference);
+      translatedFormula = translatedFormula.slice(0, foundRef.startPos) +
+        newColName + newRowName + translatedFormula.slice(foundRef.lastPos + 1);
+
+      foundRef = GoogleSheetsClone.findRef(
+        translatedFormula,
+        foundRef.startPos + (newColName + newRowName).length
+      );
+    }
+
+    return "=" + translatedFormula;
   },
 
   cancelEditing: function () {

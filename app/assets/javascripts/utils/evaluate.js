@@ -1,4 +1,39 @@
 (function () {
+  var findRef = GoogleSheetsClone.findRef = function (formula, posToStartLooking) {
+    var startPos, lastPos, colName, rowName, rowStartPos, row, col;
+
+    for(var i = posToStartLooking; i < formula.length; i++) {
+      if (startPos === undefined) {
+        if (formula.slice(i, i + 3).toUpperCase() === "SUM") {
+          i += 2;
+        } else if (formula[i].match(/[a-z]/i)) {
+          startPos = i;
+        }
+      } else if (rowStartPos === undefined && formula[i].match(/[0-9]/)) {
+        rowStartPos = i;
+        colName = formula.slice(startPos, rowStartPos);
+      } else if (rowStartPos !== undefined && !formula[i].match(/[0-9]/)) {
+        lastPos = i - 1;
+        break;
+      }
+    }
+
+    if (rowStartPos !== undefined) {
+      if (lastPos === undefined) {
+        lastPos = formula.length - 1;
+      }
+      rowName = formula.slice(rowStartPos, lastPos + 1);
+      row = parseInt(rowName) - 1;
+      col = GoogleSheetsClone.columnIndex(colName);
+      return {
+        row: row,
+        col: col,
+        startPos: startPos,
+        lastPos: lastPos
+      };
+    }
+  };
+
   var evaluate = GoogleSheetsClone.evaluate = function (formula) {
     if ((typeof formula === "number") || (typeof formula === "object")) {
       return formula;
