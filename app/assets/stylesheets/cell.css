@@ -27,6 +27,6 @@ li.cell.selected-for-insertion {
   background: rgb(255,245,232);
 }
 
-li.cell.selected-for-copy {
+li.cell.selected-for-operation {
   background: rgb(238, 242, 255);
 }

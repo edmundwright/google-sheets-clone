@@ -166,7 +166,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   pasteOneCell: function () {
     var that = this;
-    this.$(".selected-for-copy").each(function () {
+    this.$(".selected-for-operation").each(function () {
       $(this).trigger("paste", {
         newContents: that.copiedContents[0][0],
         callback: that.renderAllCells.bind(that)
@@ -528,7 +528,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.$selectedLi,
         this.$lastLiForCopy,
         null,
-        "selected-for-copy"
+        "selected-for-operation"
       );
 
       if (scrollToFirst) {
@@ -537,7 +537,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.scrollIfOutOfWindow(this.$lastLiForCopy);
       }
     } else {
-      this.$(".cell").removeClass("selected-for-copy");
+      this.$(".cell").removeClass("selected-for-operation");
     }
   },
 
