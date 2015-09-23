@@ -51,7 +51,7 @@ li.row-header {
   cursor: default;
 }
 
-li.row-header div {
+li.row-header div.row-header-label {
   padding: 8px 0;
 }
 
