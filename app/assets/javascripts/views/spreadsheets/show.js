@@ -266,8 +266,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     e.preventDefault();
     if (this.editingFormula()) {
       var col = $(e.currentTarget).index();
-      this.$firstLiForInsertion = this.cellLiAtPos(0, col);
-      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, col);
+      this.$firstLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, col);
+      this.$lastLiForInsertion = this.cellLiAtPos(0, col);
       this.draggingOverCols = true;
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
@@ -278,8 +278,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     e.preventDefault();
     if (this.editingFormula()) {
       var row = $(e.currentTarget).index();
-      this.$firstLiForInsertion = this.cellLiAtPos(row, 0);
-      this.$lastLiForInsertion = this.cellLiAtPos(row, this.model.get("width") - 1);
+      this.$firstLiForInsertion = this.cellLiAtPos(row, this.model.get("width") - 1);
+      this.$lastLiForInsertion = this.cellLiAtPos(row, 0);
       this.draggingOverRows = true;
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
@@ -289,8 +289,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   clickSelectAll: function (e) {
     e.preventDefault();
     if (this.editingFormula()) {
-      this.$firstLiForInsertion = this.cellLiAtPos(0, 0);
-      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, this.model.get("width") - 1);
+      this.$firstLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1,
+        this.model.get("width") - 1);
+      this.$lastLiForInsertion = this.cellLiAtPos(0, 0);
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
     }
@@ -300,9 +301,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     var newInsertedRef;
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
       newInsertedRef = this.refToCell(this.$firstLiForInsertion);
-    } else if (this.cellCol(this.$firstLiForInsertion) === 0 && this.cellCol(this.$lastLiForInsertion) === this.model.get("width") - 1) {
+    } else if (this.cellCol(this.$firstLiForInsertion) === this.model.get("width") - 1 && this.cellCol(this.$lastLiForInsertion) === 0) {
       newInsertedRef = this.refToRowRange(this.cellRow(this.$firstLiForInsertion), this.cellRow(this.$lastLiForInsertion));
-    } else if (this.cellRow(this.$firstLiForInsertion) === 0 && this.cellRow(this.$lastLiForInsertion) === this.model.get("height") - 1) {
+    } else if (this.cellRow(this.$firstLiForInsertion) === this.model.get("height") - 1 && this.cellRow(this.$lastLiForInsertion) === 0) {
       newInsertedRef = this.refToColRange(this.cellCol(this.$firstLiForInsertion), this.cellCol(this.$lastLiForInsertion));
     } else {
       newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
@@ -388,11 +389,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
     } else if (this.draggingOverCols) {
-      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, this.cellCol($(e.currentTarget)));
+      this.$lastLiForInsertion = this.cellLiAtPos(0, this.cellCol($(e.currentTarget)));
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
     } else if (this.draggingOverRows) {
-      this.$lastLiForInsertion = this.cellLiAtPos(this.cellRow($(e.currentTarget)), this.model.get("width") - 1);
+      this.$lastLiForInsertion = this.cellLiAtPos(this.cellRow($(e.currentTarget)), 0);
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
     }
@@ -400,7 +401,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseOverColumnHeader: function (e) {
     if (this.draggingOverCols) {
-      this.$lastLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, $(e.currentTarget).index());
+      this.$lastLiForInsertion = this.cellLiAtPos(0, $(e.currentTarget).index());
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
     }
@@ -408,7 +409,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseOverRowHeader: function (e) {
     if (this.draggingOverRows) {
-      this.$lastLiForInsertion = this.cellLiAtPos($(e.currentTarget).index(), this.model.get("width") - 1);
+      this.$lastLiForInsertion = this.cellLiAtPos($(e.currentTarget).index(), 0);
       this.updateInsertedRef();
       this.renderSelectionForInsertion();
     }
