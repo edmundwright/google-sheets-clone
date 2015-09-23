@@ -1,4 +1,9 @@
 class Api::SharesController < ApplicationController
+  def index
+    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    @shares = spreadsheet.shares
+  end
+
   def show
     spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
     @share = spreadsheet.shares.find(params[:id])
