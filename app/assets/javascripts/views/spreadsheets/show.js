@@ -281,6 +281,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       e.preventDefault();
       this.$(".formula-bar-input").val("");
       this.$selectedLi.trigger("delete", this.renderAllCells.bind(this));
+      var that = this;
+      this.$(".selected-for-operation").each(function () {
+        $(this).trigger("delete", that.renderAllCells.bind(that));
+      });
     } else if (this.inserting) {
       this.finishInserting();
     }
