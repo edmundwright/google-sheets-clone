@@ -20,7 +20,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 ## Bonus features achieved
 
 - [x] Drag to resize rows and columns
-- [x] Copy and paste cells (but not yet with intelligent copying of formulae)
+- [x] Copy, cut and paste cells
 
 ## Design Docs
 * [View Wireframes][views]
