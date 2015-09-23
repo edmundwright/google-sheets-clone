@@ -7,7 +7,7 @@
 ## Minimum Viable Product
 A clone of Google Sheets built on Rails and Backbone. Users can:
 
-- [ ] Create accounts, log in, log out, add a user profile photo
+- [ ] Create accounts, log in (optionally using OAuth provider), log out, add a user profile photo
 - [x] Create new spreadsheets
 - [x] See a list of their spreadsheets
 - [x] Navigate a spreadsheet with the mouse or keyboard
