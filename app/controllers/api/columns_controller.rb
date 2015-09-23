@@ -1,11 +1,11 @@
 class Api::ColumnsController < ApplicationController
   def show
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @column = spreadsheet.columns.find(params[:id])
   end
 
   def create
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
 
     @column = spreadsheet.columns.new(column_params)
 
@@ -18,7 +18,7 @@ class Api::ColumnsController < ApplicationController
   end
 
   def update
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @column = spreadsheet.columns.find(params[:id])
 
     if @column.update(column_params)
@@ -30,7 +30,7 @@ class Api::ColumnsController < ApplicationController
   end
 
   def destroy
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @column = spreadsheet.columns.find(params[:id])
     @column.destroy!
     spreadsheet.touch

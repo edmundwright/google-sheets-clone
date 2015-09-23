@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
 
   has_many :shares,
     dependent: :destroy,
+    class_name: "Share",
+    foreign_key: :sharee_id,
     inverse_of: :sharee
 
   has_many :shared_spreadsheets,
@@ -50,5 +52,11 @@ class User < ActiveRecord::Base
 
   def ensure_session_token
     self.session_token ||= self.class.random_token
+  end
+
+  def all_spreadsheets
+    Spreadsheet
+      .joins("LEFT JOIN shares ON spreadsheets.id = shares.spreadsheet_id")
+      .where("spreadsheets.owner_id = ? OR shares.sharee_id = ?", id, id) 
   end
 end

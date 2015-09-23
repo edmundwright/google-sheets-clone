@@ -1,11 +1,11 @@
 class Api::CellsController < ApplicationController
   def show
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
   end
 
   def create
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
 
     @cell = spreadsheet.cells.new(cell_params)
 
@@ -18,7 +18,7 @@ class Api::CellsController < ApplicationController
   end
 
   def update
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
 
     if @cell.update(cell_params)
@@ -30,7 +30,7 @@ class Api::CellsController < ApplicationController
   end
 
   def destroy
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
     @cell.destroy!
     spreadsheet.touch

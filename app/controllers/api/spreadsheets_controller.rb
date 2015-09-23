@@ -11,15 +11,15 @@ class Api::SpreadsheetsController < ApplicationController
   end
 
   def index
-    @spreadsheets = current_user.spreadsheets
+    @spreadsheets = current_user.all_spreadsheets
   end
 
   def show
-    @spreadsheet = current_user.spreadsheets.find(params[:id])
+    @spreadsheet = current_user.all_spreadsheets.find(params[:id])
   end
 
   def update
-    @spreadsheet = current_user.spreadsheets.find(params[:id])
+    @spreadsheet = current_user.all_spreadsheets.find(params[:id])
 
     if @spreadsheet.update(spreadsheet_params)
       render :show
