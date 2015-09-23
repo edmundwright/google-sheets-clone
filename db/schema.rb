@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20150923200436) do
   end
 
   add_index "shares", ["sharee_id"], name: "index_shares_on_sharee_id", using: :btree
-  add_index "shares", ["spreadsheet_id", "sharee_id"], name: "index_shares_on_spreadsheet_id_and_sharee_id", using: :btree
+  add_index "shares", ["spreadsheet_id", "sharee_id"], name: "index_shares_on_spreadsheet_id_and_sharee_id", unique: true, using: :btree
   add_index "shares", ["spreadsheet_id"], name: "index_shares_on_spreadsheet_id", using: :btree
 
   create_table "spreadsheets", force: :cascade do |t|

@@ -9,6 +9,6 @@ class CreateShares < ActiveRecord::Migration
 
     add_index :shares, :spreadsheet_id
     add_index :shares, :sharee_id
-    add_index :shares, [:spreadsheet_id, :sharee_id]
+    add_index :shares, [:spreadsheet_id, :sharee_id], unique: true
   end
 end
