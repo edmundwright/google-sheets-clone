@@ -98,6 +98,13 @@ div.cells-for-insertion-border {
   pointer-events: none;
 }
 
+div.copied-cells-border {
+  position: absolute;
+  display: block;
+  border: 3px dashed #4285f4;
+  pointer-events: none;
+}
+
 div#select-all {
   background: rgb(238, 238, 238);
   position: fixed;
