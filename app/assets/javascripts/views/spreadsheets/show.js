@@ -81,6 +81,98 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         case 27:
           this.handleEscape(e);
           break;
+        case 67:
+          if (e.ctrlKey || e.metaKey) {
+            this.handleCtrlC(e);
+          }
+          break;
+        case 88:
+          if (e.ctrlKey || e.metaKey) {
+            this.handleCtrlX(e);
+          }
+          break;
+        case 86:
+          if (e.ctrlKey || e.metaKey) {
+            this.handleCtrlV(e);
+          }
+          break;
+      }
+    }
+  },
+
+  handleCtrlC: function (e) {
+    if (!this.editing()) {
+      e.preventDefault();
+      this.copy();
+    }
+  },
+
+  handleCtrlX: function (e) {
+    if (!this.editing()) {
+      e.preventDefault();
+      this.cut();
+    }
+  },
+
+  handleCtrlV: function (e) {
+    if (!this.editing()) {
+      e.preventDefault();
+      this.paste();
+    }
+  },
+
+  copy: function () {
+    var rangeLimits = this.rangeLimits(this.$selectedLi, this.$lastLiForCopy);
+    this.copiedContents = [];
+    for (var row = rangeLimits.topMostRow; row <= rangeLimits.bottomMostRow; row++) {
+      var rowContents = [];
+
+      for (var col = rangeLimits.leftMostCol; col <= rangeLimits.rightMostCol; col++ ) {
+        var model = this.model.cells().findByPos(row, col);
+        var contentsToCopy;
+        if (model) {
+          contentsToCopy = model.contents();
+        } else {
+          contentsToCopy = "";
+        }
+        rowContents.push({
+          contents: contentsToCopy,
+          originalRow: row,
+          originalCol: col
+        });
+      }
+
+      this.copiedContents.push(rowContents);
+    }
+    this.cutNotCopy = false;
+  },
+
+  cut: function () {
+    this.copy();
+    this.cutNotCopy = true;
+  },
+
+  paste: function () {
+    var startRow = this.cellRow(this.$selectedLi);
+    var startCol = this.cellCol(this.$selectedLi);
+
+    for (var row = 0; row < this.copiedContents.length; row++) {
+      for (var col = 0; col < this.copiedContents[row].length; col++) {
+        if (this.cutNotCopy) {
+          var originalCellLi = this.cellLiAtPos(
+            this.copiedContents[row][col].originalRow,
+            this.copiedContents[row][col].originalCol
+          );
+          originalCellLi.trigger("delete", this.renderAllCells.bind(this));
+        }
+
+        var cellLiToPasteInto = this.cellLiAtPos(startRow + row, startCol + col);
+        if (cellLiToPasteInto.length !== 0) {
+          cellLiToPasteInto.trigger("paste", {
+            newContents: this.copiedContents[row][col],
+            callback: this.renderAllCells.bind(this)
+          });
+        }
       }
     }
   },
@@ -407,36 +499,42 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
   },
 
-  renderSelection: function ($firstLi, $lastLi, $border, classToApply) {
+  rangeLimits: function ($firstLi, $lastLi) {
     var firstCol = this.cellCol($firstLi);
     var lastCol = this.cellCol($lastLi);
     var firstRow = this.cellRow($firstLi);
     var lastRow = this.cellRow($lastLi);
 
-    var topMostRow = Math.min(firstRow, lastRow);
-    var bottomMostRow = Math.max(firstRow, lastRow);
-    var leftMostCol = Math.min(firstCol, lastCol);
-    var rightMostCol = Math.max(firstCol, lastCol);
+    return {
+      topMostRow: Math.min(firstRow, lastRow),
+      bottomMostRow: Math.max(firstRow, lastRow),
+      leftMostCol: Math.min(firstCol, lastCol),
+      rightMostCol: Math.max(firstCol, lastCol)
+    };
+  },
+
+  renderSelection: function ($firstLi, $lastLi, $border, classToApply) {
+    var rangeLimits = this.rangeLimits($firstLi, $lastLi);
 
     this.$(".cell").removeClass(classToApply);
 
     var borderHeight = -5;
 
-    for (var row = topMostRow; row <= bottomMostRow; row++) {
+    for (var row = rangeLimits.topMostRow; row <= rangeLimits.bottomMostRow; row++) {
       borderHeight += this.$(".row-header:nth-child(" + (row + 1) + ")").height() + 1;
-      for (var col = leftMostCol; col <= rightMostCol; col++) {
+      for (var col = rangeLimits.leftMostCol; col <= rangeLimits.rightMostCol; col++) {
         this.cellLiAtPos(row, col).addClass(classToApply);
       }
     }
 
     if ($border) {
       var borderWidth = -5;
-      for (var colu = leftMostCol; colu <= rightMostCol; colu++) {
+      for (var colu = rangeLimits.leftMostCol; colu <= rangeLimits.rightMostCol; colu++) {
         borderWidth += this.$(".column-header:nth-child(" + (colu + 1) + ")").width() + 1;
       }
 
-      $border.css("left", ""+ (this.cellLiAtPos(0, leftMostCol).position().left - 1) + "px");
-      $border.css("top", "" + (this.cellLiAtPos(topMostRow, 0).position().top - 1) + "px");
+      $border.css("left", ""+ (this.cellLiAtPos(0, rangeLimits.leftMostCol).position().left - 1) + "px");
+      $border.css("top", "" + (this.cellLiAtPos(rangeLimits.topMostRow, 0).position().top - 1) + "px");
       $border.css("width", borderWidth + "px");
       $border.css("height", borderHeight + "px");
       this.$("#cells").append($border);

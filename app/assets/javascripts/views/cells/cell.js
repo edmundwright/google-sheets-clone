@@ -18,8 +18,17 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("finishEditing", this.finishEditing.bind(this));
     this.$el.on("delete", this.destroyModel.bind(this));
     this.$el.on("cancelEditing", this.cancelEditing.bind(this));
+    this.$el.on("paste", this.paste.bind(this));
     if (this.model) {
       this.listenTo(this.model, "render", this.render.bind(this));
+    }
+  },
+
+  paste: function (e, options) {
+    if (options.newContents.contents === "") {
+      this.destroyModel(null, options.callback);
+    } else {
+      this.save(options.newContents.contents, options.callback);
     }
   },
 
@@ -66,9 +75,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
   },
 
-  finishEditing: function (e, callback) {
-    var newContents = this.$("input").val();
-
+  save: function (newContents, callback) {
     if (!this.model) {
       this.model = new GoogleSheetsClone.Models.Cell({
         row_index: this.row,
@@ -101,8 +108,11 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         }
       });
     }
+  },
 
+  finishEditing: function (e, callback) {
     this.editing = false;
+    this.save(this.$("input").val(), callback);
     this.render();
   },
 
