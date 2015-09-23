@@ -19,7 +19,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   events: {
     "click .formula-bar-input": "clickFormulaBar",
-    "click .cell": "clickCell",
     "click #select-all": "clickSelectAll",
     "mousedown .column-header": "mouseDownColumnHeader",
     "mouseover .column-header": "mouseOverColumnHeader",
@@ -238,27 +237,24 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.$selectedLi.find(".cell-contents").val(this.$(".formula-bar-input").val());
   },
 
-  clickCell: function (e) {
-    e.preventDefault();
-    if (this.$selectedLi.index() === $(e.currentTarget).index() & this.editing()) {
-      this.currentInputField = ".cell-contents.input";
-      this.$selectedLi.find("input").focus();
-    } else if (!this.editing()) {
-      this.selectCell($(e.currentTarget));
-    } else if (!this.editingFormula()) {
-      this.finishEditing();
-      this.selectCell($(e.currentTarget));
-    }
-  },
-
   mouseDownCell: function (e) {
     e.preventDefault();
-    if (this.$selectedLi.index() !== $(e.currentTarget).index() && this.editingFormula()) {
-      this.$firstLiForInsertion = this.$lastLiForInsertion = $(e.currentTarget);
-      this.draggingOverCols = false;
-      this.dragging = true;
-      this.updateInsertedRef(e.ctrlKey || e.metaKey);
-      this.renderSelectionForInsertion();
+    if (this.editing()) {
+      if (this.$selectedLi.index() === $(e.currentTarget).index()) {
+        this.currentInputField = ".cell-contents.input";
+        this.$selectedLi.find("input").focus();
+      } else if (this.editingFormula()) {
+        this.$firstLiForInsertion = this.$lastLiForInsertion = $(e.currentTarget);
+        this.draggingOverCols = false;
+        this.dragging = true;
+        this.updateInsertedRef(e.ctrlKey || e.metaKey);
+        this.renderSelectionForInsertion();
+      } else {
+        this.finishEditing();
+        this.selectCell($(e.currentTarget));
+      }
+    } else {
+      this.selectCell($(e.currentTarget));
     }
   },
 
