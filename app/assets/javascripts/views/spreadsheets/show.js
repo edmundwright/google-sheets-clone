@@ -435,10 +435,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     var newInsertedRef;
     if (this.$firstLiForInsertion.index() === this.$lastLiForInsertion.index()) {
       newInsertedRef = this.refToCell(this.$firstLiForInsertion);
-    } else if (this.cellCol(this.$firstLiForInsertion) === this.model.get("width") - 1 && this.cellCol(this.$lastLiForInsertion) === 0) {
-      newInsertedRef = this.refToRowRange(this.cellRow(this.$firstLiForInsertion), this.cellRow(this.$lastLiForInsertion));
-    } else if (this.cellRow(this.$firstLiForInsertion) === this.model.get("height") - 1 && this.cellRow(this.$lastLiForInsertion) === 0) {
-      newInsertedRef = this.refToColRange(this.cellCol(this.$firstLiForInsertion), this.cellCol(this.$lastLiForInsertion));
     } else {
       newInsertedRef = this.refToRange(this.$firstLiForInsertion, this.$lastLiForInsertion);
     }
