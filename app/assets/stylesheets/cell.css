@@ -26,3 +26,7 @@ li.cell .cell-contents.input {
 li.cell.selected-for-insertion {
   background: rgb(255,245,232);
 }
+
+li.cell.selected-for-copy {
+  background: rgb(238, 242, 255);
+}
