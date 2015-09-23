@@ -5,6 +5,11 @@ class Spreadsheet < ActiveRecord::Base
     class_name: "User",
     foreign_key: :owner_id
 
+  has_many :shares, dependent: :destroy
+  has_many :sharees,
+    through: :shares,
+    source: :sharee
+
   has_many :cells, dependent: :destroy
   has_many :columns, dependent: :destroy
   has_many :rows, dependent: :destroy
