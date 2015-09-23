@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :cells, only: [:create, :show, :update, :destroy]
       resources :columns, only: [:create, :show, :update, :destroy]
       resources :rows, only: [:create, :show, :update, :destroy]
+      resources :shares, only: [:create, :index, :show, :update, :destroy]
     end
   end
 end
