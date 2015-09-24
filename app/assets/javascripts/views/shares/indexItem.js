@@ -3,11 +3,20 @@ GoogleSheetsClone.Views.ShareIndexItem = Backbone.View.extend({
 
   tagName: "li",
 
-  className: "share",
+  className: "share group",
+
+  events: {
+    "click .delete-share": "delete"
+  },
+
+  delete: function (e) {
+    e.preventDefault();
+    this.model.destroy();
+  },
 
   render: function () {
     this.$el.html(this.template({
-      spreadsheet: this.model
+      share: this.model
     }));
 
     return this;

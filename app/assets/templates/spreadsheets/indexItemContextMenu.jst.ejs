@@ -1,6 +1,11 @@
 <ul class="context-menu">
   <div class="triangle inner"></div>
   <div class="triangle outer"></div>
-  <li class="delete-link">Delete</li>
+  <% if (GoogleSheetsClone.currentUser.id === spreadsheet.owner.id) { %>
+      <li class="delete-link">Delete</li>
+  <% } %>
   <li class="rename-link">Rename</li>
+  <% if (GoogleSheetsClone.currentUser.id === spreadsheet.owner.id) { %>
+  <li class="sharing-options-link">Sharing</li>
+  <% } %>
 </ul>

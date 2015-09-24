@@ -1,6 +1,8 @@
+<img src="<%= GoogleSheetsClone.placeholderProfilePicture %>">
+
 <ul class="share-attributes">
-  <li class="sharee-email"><%= share.sharee.email %></li>
-  <li class="sharee-name"><%= share.sharee.name %></li>
+  <li class="sharee-name"><%= share.sharee.escape("name") %></li>
+  <li class="sharee-email"><%= share.sharee.escape("email") %></li>
 </ul>
 
 <button class="delete-share">Revoke</button>

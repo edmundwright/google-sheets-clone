@@ -26,7 +26,7 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
         $h2.text(timePeriod);
         $ul = $("<ul>");
         $ul.addClass("spreadsheets");
-        $("div.spreadsheets-container").append($h2).append($ul)
+        $("div.spreadsheets-container").append($h2).append($ul);
       }
 
       this.addSubview(
@@ -35,7 +35,7 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
           model: model
         })
       );
-    }.bind(this))
+    }.bind(this));
 
     return this;
   },
@@ -59,6 +59,6 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
       success: function () {
         Backbone.history.navigate("spreadsheets/" + model.id, { trigger: true });
       }
-    })
+    });
   }
 });

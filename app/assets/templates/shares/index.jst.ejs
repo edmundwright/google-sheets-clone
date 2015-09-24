@@ -1,14 +1,24 @@
 <div class="overlay"></div>
 
 <div class="window">
-  <h1>Share with others</h1>
+  <h1>Sharing settings</h1>
 
   <h2>Who has access</h2>
-  <ul class="shares"></ul>
+  <ul class="shares">
+    <li class="share group">
+      <img src="<%= GoogleSheetsClone.placeholderProfilePicture %>">
+      <ul class="share-attributes">
+        <li class="sharee-name"><%= owner.escape("name") %> (you)</li>
+        <li class="sharee-email"><%= owner.escape("email") %></li>
+      </ul>
 
-  <h2>Add someone:</h2>
+      <div class="owner-notice">Owner</div>
+    </li>
+  </ul>
+
   <form class="new-share-form">
-    <input type="text" placeholder="Enter an email address" name="share[sharee_email]">
+    <label for="share_sharee_email">Add someone</label>
+    <input id="share_sharee_email" type="text" placeholder="Enter an email address" name="share[sharee_email]">
     <button>Add</button>
   </form>
 

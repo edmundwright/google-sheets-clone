@@ -70,3 +70,93 @@
   top: calc(50% - 93px);
   left: calc(50% - 172px);
 }
+
+.modal.shares-index .window {
+  width: 514px;
+  padding: 43px;
+  top: calc(50% - 250px);
+  left: calc(50% - 300px);
+}
+
+.modal.shares-index h1 {
+  font-size: 20px;
+}
+
+.modal.shares-index h2 {
+  font-size: 14px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+.modal.shares-index ul.shares {
+  border-top: 1px solid rgb(196, 196, 196);
+  display: block;
+}
+
+.modal.shares-index li.share {
+  border-bottom: 1px solid rgb(196, 196, 196);
+  display: block;
+}
+
+.modal.shares-index li.share img {
+  display: block;
+  float: left;
+  height: 32px;
+  margin: 12px 14px 12px 0;
+}
+
+.modal.shares-index li.share ul.share-attributes {
+  display: block;
+  float: left;
+  height: 32px;
+  margin: 12px 0;
+}
+
+.modal.shares-index .sharee-email {
+  color: #756E6E;
+}
+
+.modal.shares-index li.share button.delete-share {
+  display: block;
+  float: right;
+  height: 40px;
+  padding: 10px 0;
+  margin: 8px 0;
+}
+
+.modal.shares-index li.share div.owner-notice {
+  display: block;
+  float: right;
+  height: 16px;
+  padding: 20px 27px 20px 0;
+}
+
+.modal.shares-index form.new-share-form {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  display: block;
+  background: rgb(238, 238, 238);
+  padding: 14px;
+}
+
+.modal.shares-index form.new-share-form label {
+  font-size: 14px;
+  display: block;
+}
+
+.modal.shares-index form.new-share-form input {
+  margin-top: 14px;
+  height: 18px;
+  padding: 10px;
+  width: 361px;
+  background: white;
+}
+
+.modal.shares-index form.new-share-form button{
+  margin-top: 14px;
+}
+
+.modal.shares-index button.close-modal {
+  background: rgb(15, 157, 88);
+  color: white;
+}

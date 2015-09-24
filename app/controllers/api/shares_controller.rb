@@ -12,20 +12,11 @@ class Api::SharesController < ApplicationController
   def create
     spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
 
-    @share = spreadsheet.shares.new(share_params)
+    sharee = User.find_by(email: share_params[:sharee_email])
+
+    @share = spreadsheet.shares.new(sharee_id: sharee.id)
 
     if @share.save
-      render :show
-    else
-      render json: @share.errors.full_messages, status: :unprocessable_entity
-    end
-  end
-
-  def update
-    spreadsheet = current_user.spreadsheets.find(params[:spreadsheet_id])
-    @share = spreadsheet.shares.find(params[:id])
-
-    if @share.update(share_params)
       render :show
     else
       render json: @share.errors.full_messages, status: :unprocessable_entity
@@ -42,6 +33,6 @@ class Api::SharesController < ApplicationController
   private
 
   def share_params
-    params.require(:share).permit(:sharee_id)
+    params.require(:share).permit(:sharee_email)
   end
 end

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     get :confirm_delete, on: :member
   end
 
-  resource :session, only: [:new, :create, :destroy]
+  resource :session, only: [:show, :new, :create, :destroy]
 
   namespace :api, defaults: { format: :json } do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do

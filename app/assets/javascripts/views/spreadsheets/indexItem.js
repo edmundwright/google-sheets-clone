@@ -22,6 +22,8 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
       this.openDeleteModal();
     } else if ($(e.target).hasClass("rename-link")) {
       this.openRenameModal();
+    } else if ($(e.target).hasClass("sharing-options-link")) {
+      this.openSharingModal();
     } else {
       this.show();
     }
@@ -30,21 +32,35 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
   openDeleteModal: function () {
     $("body").append(new GoogleSheetsClone.Views.SpreadsheetDelete({
       model: this.model
-    }).render().$el)
+    }).render().$el);
     $(".context-menu").remove();
+  },
+
+  openSharingModal: function () {
+    var collection = new GoogleSheetsClone.Collections.Shares([], {
+      spreadsheet: this.model
+    });
+    collection.fetch({
+      success: function () {
+        $("body").append(new GoogleSheetsClone.Views.ShareIndex({
+          collection: collection
+        }).render().$el);
+        $(".context-menu").remove();
+      }
+    });
   },
 
   openRenameModal: function () {
     var renameView = new GoogleSheetsClone.Views.SpreadsheetRename({
       model: this.model
-    })
-    $("body").append(renameView.render().$el)
+    });
+    $("body").append(renameView.render().$el);
     renameView.focus();
     $(".context-menu").remove();
   },
 
   show: function () {
-    Backbone.history.navigate("#spreadsheets/" + this.model.id, { trigger: true })
+    Backbone.history.navigate("#spreadsheets/" + this.model.id, { trigger: true });
   },
 
   initialize: function (options) {
@@ -52,7 +68,7 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
   },
 
   render: function () {
-    this.$el.data("spreadsheet-id", this.model.id)
+    this.$el.data("spreadsheet-id", this.model.id);
 
     this.$el.html(this.template({
       spreadsheet: this.model
@@ -62,7 +78,9 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
   },
 
   openContextMenu: function () {
-    var $contextMenu = JST["spreadsheets/indexItemContextMenu"]();
+    var $contextMenu = JST["spreadsheets/indexItemContextMenu"]({
+      spreadsheet: this.model
+    });
     this.$el.append($contextMenu);
   }
 });
