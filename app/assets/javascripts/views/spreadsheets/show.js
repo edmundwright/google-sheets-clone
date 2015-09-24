@@ -2,13 +2,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
+    this.lastFetchedAt = new Date(Date.now());
     this.model.fetch({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
         GoogleSheetsClone.spreadsheet = this.model;
         this.okForSelectAllToBeRendered = true;
         this.render();
-        this.lastFetchedAt = new Date(Date.now());
         this.syncCurrentEditors();
       }.bind(this)
     });
@@ -34,11 +34,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   syncCurrentEditors: function () {
+    var oldLastFetchedAt = this.lastFetchedAt;
+    this.lastFetchedAt = new Date(Date.now());
     $.ajax({
       url: "/api/spreadsheets/" + this.model.id + "/current_editors",
       type: "GET",
       data: {
-        last_fetched_at: this.lastFetchedAt.getTime()
+        last_fetched_at: oldLastFetchedAt.getTime()
       },
       success: function (response) {
         this.model.currentEditors().set(response.current_editors);
@@ -63,7 +65,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           }
           $cellLi.trigger("receiveNewModel", model);
         }.bind(this));
-        this.lastFetchedAt = new Date(Date.now());
         window.setTimeout(
           this.syncCurrentEditors.bind(this),
           syncInterval
