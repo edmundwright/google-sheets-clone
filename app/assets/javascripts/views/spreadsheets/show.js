@@ -8,13 +8,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         GoogleSheetsClone.spreadsheet = this.model;
         this.okForSelectAllToBeRendered = true;
         this.render();
+        this.syncCurrentEditors();
       }.bind(this)
     });
     $(document).on("keypress", this.keyPress.bind(this));
     $(document).on("keydown", this.keyDown.bind(this));
     $(document).on("mouseup", this.mouseUp.bind(this));
     $(window).scroll(this.scroll);
-    window.setTimeout(this.syncCurrentEditors.bind(this), 15000);
     this.$selectedLi = null;
   },
 
@@ -39,7 +39,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         if (this.model.currentEditors().length <= 1) {
           syncInterval = 15000;
         } else {
-          syncInterval = 1000;
+          syncInterval = 2000;
         }
         this.renderCurrentEditors();
         window.setTimeout(

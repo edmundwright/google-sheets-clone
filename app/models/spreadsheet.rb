@@ -21,7 +21,7 @@ class Spreadsheet < ActiveRecord::Base
 
   def current_editors
     editors.each do |editor|
-      if editor.updated_at < 1.minute.ago
+      if editor.updated_at < 30.seconds.ago
         editor.update({ current_spreadsheet_id: nil })
       end
     end
