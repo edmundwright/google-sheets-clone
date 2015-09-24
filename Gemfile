@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'paperclip'
 gem 'figaro'
-gem 'aws-sdk'
+gem 'aws-sdk', '< 2.0'
 
 # For Heroku
 gem 'newrelic_rpm'
