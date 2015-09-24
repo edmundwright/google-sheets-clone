@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924155507) do
+ActiveRecord::Schema.define(version: 20150924194053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,8 +25,11 @@ ActiveRecord::Schema.define(version: 20150924155507) do
     t.float    "contents_flo"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "last_editor_id"
   end
 
+  add_index "cells", ["last_editor_id", "updated_at"], name: "index_cells_on_last_editor_id_and_updated_at", using: :btree
+  add_index "cells", ["last_editor_id"], name: "index_cells_on_last_editor_id", using: :btree
   add_index "cells", ["spreadsheet_id", "row_index", "col_index"], name: "index_cells_on_spreadsheet_id_and_row_index_and_col_index", unique: true, using: :btree
   add_index "cells", ["spreadsheet_id"], name: "index_cells_on_spreadsheet_id", using: :btree
 

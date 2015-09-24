@@ -8,6 +8,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         GoogleSheetsClone.spreadsheet = this.model;
         this.okForSelectAllToBeRendered = true;
         this.render();
+        this.lastFetchedAt = new Date(Date.now());
         this.syncCurrentEditors();
       }.bind(this)
     });
@@ -33,15 +34,36 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   syncCurrentEditors: function () {
-    this.model.currentEditors().fetch({
-      success: function () {
-        var syncInterval;
+    $.ajax({
+      url: "/api/spreadsheets/" + this.model.id + "/current_editors",
+      type: "GET",
+      data: {
+        last_fetched_at: this.lastFetchedAt.getTime()
+      },
+      success: function (response) {
+        this.model.currentEditors().set(response.current_editors);
         if (this.model.currentEditors().length <= 1) {
           syncInterval = 15000;
         } else {
           syncInterval = 2000;
         }
         this.renderCurrentEditors();
+        response.cells.forEach(function (cell) {
+          var model = this.model.cells().get(cell.id);
+          if (model) {
+            model.set(cell);
+          } else {
+            model = new GoogleSheetsClone.Models.Cell();
+            model.set(cell);
+            this.model.cells().add(model);
+          }
+          var $cellLi = this.cellLiAtPos(model.get("row_index"), model.get("col_index"));
+          if ($cellLi.index() === this.$selectedLi.index()) {
+            this.handleEscape();
+          }
+          $cellLi.trigger("receiveNewModel", model);
+        }.bind(this));
+        this.lastFetchedAt = new Date(Date.now());
         window.setTimeout(
           this.syncCurrentEditors.bind(this),
           syncInterval
@@ -336,7 +358,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       if (this.inserting) {
         this.finishInserting();
       }
-      e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
       this.cancelEditing();
     }
   },

@@ -32,7 +32,7 @@ GoogleSheetsClone.Models.Spreadsheet = Backbone.Model.extend ({
 
   currentEditors: function () {
     if (!this._currentEditors) {
-      this._currentEditors = new GoogleSheetsClone.Collections.CurrentEditors([], {
+      this._currentEditors = new GoogleSheetsClone.Collections.Users([], {
         currentSpreadsheet: this
       });
     }

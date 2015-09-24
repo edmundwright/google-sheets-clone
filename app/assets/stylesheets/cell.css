@@ -30,3 +30,9 @@ li.cell.selected-for-insertion {
 li.cell.selected-for-operation {
   background: rgb(238, 242, 255);
 }
+
+li.cell.other-editor-edited {
+  background: rgb(15, 157, 88);
+  transition: background 1s;
+  color: white;
+}

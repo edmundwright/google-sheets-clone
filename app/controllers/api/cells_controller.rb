@@ -7,7 +7,9 @@ class Api::CellsController < ApplicationController
   def create
     spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
 
-    @cell = spreadsheet.cells.new(cell_params)
+    @cell = spreadsheet.cells.new(
+      cell_params.merge({last_editor_id: current_user.id})
+    )
 
     if @cell.save
       spreadsheet.touch
@@ -21,7 +23,7 @@ class Api::CellsController < ApplicationController
     spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
 
-    if @cell.update(cell_params)
+    if @cell.update(cell_params.merge({last_editor_id: current_user.id}))
       spreadsheet.touch
       render :show
     else
