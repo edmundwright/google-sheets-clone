@@ -4,7 +4,12 @@ GoogleSheetsClone.Models.Cell = Backbone.Model.extend ({
   },
 
   contents: function () {
-    return this.get("contents_str") || this.get("contents_int") ||
-      this.get("contents_flo");
+    if (this.get("contents_str") !== null) {
+      return this.get("contents_str");
+    } else if (this.get("contents_int") !== null) {
+      return this.get("contents_int");
+    } else if (this.get("contents_flo") !== null) {
+      return this.get("contents_flo");
+    }
   }
 });
