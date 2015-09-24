@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :password, confirmation: true
 
-  has_attached_file :picture, default_url: "missing.png"
+  has_attached_file :picture, default_url: "http://a3.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE5NDg0MDU1MTUyNzIzNDcx.jpg"
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/,
           :storage => :s3,
           :bucket  => ENV['MY_BUCKET_NAME']
