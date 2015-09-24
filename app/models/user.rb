@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :password, confirmation: true
 
-  has_attached_file :picture, default_url: "placeholder-profile-picture.jpg"
+  has_attached_file :picture, default_url: "missing.png"
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/,
           :storage => :s3,
           :bucket  => ENV['MY_BUCKET_NAME']
@@ -40,6 +40,22 @@ class User < ActiveRecord::Base
   def self.find_by_credentials(email, password)
     user = find_by(email: email)
     user && user.password_matches?(password) ? user : nil
+  end
+
+  def self.find_or_create_by_auth_hash(auth_hash)
+    user = User.find_by(uid: auth_hash[:uid], provider: auth_hash[:provider])
+
+    unless user
+      user = User.create!(
+        uid: auth_hash[:uid],
+        provider: auth_hash[:provider],
+        name: auth_hash[:info][:name],
+        email: auth_hash[:info][:name] + "@ facebook",
+        password: self.random_token
+      )
+    end
+
+    user
   end
 
   after_initialize :ensure_session_token

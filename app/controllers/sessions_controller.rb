@@ -9,6 +9,17 @@ class SessionsController < ApplicationController
     end
   end
 
+  def omniauth
+    user = User.find_or_create_by_auth_hash(omniauth_hash)
+    if user
+      log_in_user!(user)
+      redirect_to :root
+    else
+      flash[:errors] = ["An error occurred logging in with Facebook. Please try again."]
+      redirect_to new_session_url
+    end
+  end
+
   def update
     if logged_in?
       if current_user.update(params.require(:session).permit(
@@ -52,5 +63,11 @@ class SessionsController < ApplicationController
   def destroy
     log_out!
     redirect_to new_session_url
+  end
+
+  private
+
+  def omniauth_hash
+    request.env["omniauth.auth"]
   end
 end

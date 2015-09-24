@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'paperclip'
 gem 'figaro'
 gem 'aws-sdk', '< 2.0'
+gem 'omniauth-facebook'
 
 # For Heroku
 gem 'newrelic_rpm'

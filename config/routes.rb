@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   resource :session, only: [:show, :new, :create, :destroy, :update]
 
+  get "/auth/facebook/callback", to: "sessions#omniauth"
+
   namespace :api, defaults: { format: :json } do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do
       resources :cells, only: [:create, :show, :update, :destroy]
