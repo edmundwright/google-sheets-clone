@@ -34,6 +34,11 @@ class Api::SpreadsheetsController < ApplicationController
     render :show
   end
 
+  def editors
+    spreadsheet = current_user.spreadsheets.find(params[:id])
+    @current_editors = spreadsheet.current_editors
+  end
+
   private
 
   def spreadsheet_params
