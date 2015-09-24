@@ -20,11 +20,13 @@ ul.spreadsheets > li:hover {
 h2.time-period {
   display: block;
   width: 900px;
-  margin: 20px auto 0 auto;
+  margin-top: 20px;
 }
 
 div.spreadsheets-container {
-  margin-bottom: 100px;
+  width: 901px;
+  margin: 0 auto 100px auto;
+  position: relative;
 }
 
 ul.spreadsheet-attributes {
@@ -127,4 +129,16 @@ ul.context-menu .triangle.outer {
   top: -22px;
   border: 11px solid transparent;
   border-bottom: 11px solid rgb(200, 200, 200);
+}
+
+h2.owner-header, h2.updated-header {
+  position: absolute;
+}
+
+h2.owner-header {
+  left: 522px;
+}
+
+h2.updated-header {
+  left: 722px;
 }

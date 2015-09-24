@@ -11,7 +11,9 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   },
 
   render: function () {
-    this.$el.html(this.template());
+    this.$el.html(this.template({
+      spreadsheets: this.collection
+    }));
 
     var timePeriod = null;
     var $ul = null;

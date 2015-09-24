@@ -5,4 +5,9 @@
   </section>
 </section>
 
-<div class="spreadsheets-container"></div>
+<div class="spreadsheets-container">
+  <% if (this.collection.length !== 0) { %>
+    <h2 class="owner-header">Owner</h2>
+    <h2 class="updated-header">Last edited</h2>
+  <% } %>
+</div>
