@@ -65,6 +65,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           }
           $cellLi.trigger("receiveNewModel", model);
         }.bind(this));
+
+        this.renderAllCells();
+
         window.setTimeout(
           this.syncCurrentEditors.bind(this),
           syncInterval

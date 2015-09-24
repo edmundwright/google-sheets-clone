@@ -11,6 +11,20 @@
   <% end %>
   </ul>
 
+  <h2>Update your picture</h2>
+
+  <img src="<%= @user.picture.url %>">
+
+  <form action="<%= user_url(@user) %>" method="post" enctype="multipart/form-data">
+    <%= hidden_auth_token %>
+
+    <input type="hidden" name="_method" value="patch">
+
+    <input type="file" name="user[picture]">
+
+    <button>Update</button>
+  </form>
+
   <h2>Update your email address or name</h2>
 
   <form action="<%= user_url(@user) %>" method="post">

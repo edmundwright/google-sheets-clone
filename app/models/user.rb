@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :password, confirmation: true
 
+  has_attached_file :picture, default_url: "placeholder-profile-picture.jpg"
+  validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
+
   belongs_to :current_spreadsheet,
     class_name: "Spreadsheet",
     foreign_key: :current_spreadsheet_id,
