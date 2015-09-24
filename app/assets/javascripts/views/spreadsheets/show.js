@@ -36,7 +36,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.model.currentEditors().fetch({
       success: function () {
         var syncInterval;
-        if (this.model.currentEditors().length === 1) {
+        if (this.model.currentEditors().length <= 1) {
           syncInterval = 15000;
         } else {
           syncInterval = 1000;
