@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150924131251) do
+ActiveRecord::Schema.define(version: 20150924134122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,18 +40,6 @@ ActiveRecord::Schema.define(version: 20150924131251) do
 
   add_index "columns", ["spreadsheet_id", "col_index"], name: "index_columns_on_spreadsheet_id_and_col_index", unique: true, using: :btree
   add_index "columns", ["spreadsheet_id"], name: "index_columns_on_spreadsheet_id", using: :btree
-
-  create_table "editing_sessions", force: :cascade do |t|
-    t.integer  "spreadsheet_id", null: false
-    t.integer  "editor_id",      null: false
-    t.integer  "row_index",      null: false
-    t.integer  "col_index",      null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "editing_sessions", ["spreadsheet_id", "editor_id"], name: "index_editing_sessions_on_spreadsheet_id_and_editor_id", unique: true, using: :btree
-  add_index "editing_sessions", ["spreadsheet_id"], name: "index_editing_sessions_on_spreadsheet_id", using: :btree
 
   create_table "rows", force: :cascade do |t|
     t.integer  "row_index",      null: false
@@ -87,14 +75,20 @@ ActiveRecord::Schema.define(version: 20150924131251) do
   add_index "spreadsheets", ["owner_id"], name: "index_spreadsheets_on_owner_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",           null: false
-    t.string   "name",            null: false
-    t.string   "password_digest", null: false
-    t.string   "session_token",   null: false
+    t.string   "email",                  null: false
+    t.string   "name",                   null: false
+    t.string   "password_digest",        null: false
+    t.string   "session_token",          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "current_spreadsheet_id"
+    t.integer  "current_row_index"
+    t.integer  "current_col_index"
+    t.datetime "moved_at"
   end
 
+  add_index "users", ["current_spreadsheet_id", "moved_at"], name: "index_users_on_current_spreadsheet_id_and_moved_at", using: :btree
+  add_index "users", ["current_spreadsheet_id"], name: "index_users_on_current_spreadsheet_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["session_token"], name: "index_users_on_session_token", unique: true, using: :btree
 
