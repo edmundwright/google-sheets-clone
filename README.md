@@ -21,6 +21,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 
 - [x] Drag to resize rows and columns
 - [x] Copy, cut and paste cells
+- [x] Share a spreadsheet with other users
 
 ## Design Docs
 * [View Wireframes][views]
@@ -60,7 +61,6 @@ I'll implement selecting navigating the spreadsheet using the arrow keys, and se
 [Details][phase-five]
 
 ### Bonus Features not yet achieved
-- [ ] Share a spreadsheet with other users
 - [ ] Make a spreadsheet public so that any other person with the link can access it
 - [ ] Format cells with custom background and/or text colour, and different number formats.
 - [ ] Access spreadsheets through randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
