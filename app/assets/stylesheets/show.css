@@ -107,13 +107,14 @@ div.current-editor-border {
   position: absolute;
   display: block;
   border: 3px solid rgb(15, 157, 88);
-  width: calc(100% - 7px);
-  height: calc(100% - 4px);
+  width: calc(100% - 6px);
+  height: calc(100% - 5px);
   pointer-events: none;
   color: rgb(15, 157, 88);
   font-size: 12px;
   text-align: right;
-  padding-right: 3px;
+  padding-right: 2px;
+  padding-top: 1px;
 }
 
 div.cells-for-insertion-border {

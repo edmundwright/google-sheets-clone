@@ -3,7 +3,7 @@ GoogleSheetsClone.Collections.Users = Backbone.Collection.extend({
 });
 
 GoogleSheetsClone.Collections.CurrentEditors = GoogleSheetsClone.Collections.Users.extend({
-  initialize: function (options) {
+  initialize: function (models, options) {
     this.currentSpreadsheet = options.currentSpreadsheet;
   },
 

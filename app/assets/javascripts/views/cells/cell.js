@@ -20,14 +20,20 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("cancelEditing", this.cancelEditing.bind(this));
     this.$el.on("paste", this.paste.bind(this));
     this.$el.on("addCurrentEditor", this.addCurrentEditor.bind(this));
+    this.$el.on("removeCurrentEditor", this.removeCurrentEditor.bind(this));
     if (this.model) {
       this.listenTo(this.model, "render", this.render.bind(this));
     }
   },
 
+  removeCurrentEditor: function () {
+    this.currentEditor = null;
+    this.$(".current-editor-border").remove();
+  },
+
   addCurrentEditor: function (e, currentEditor) {
     this.currentEditor = currentEditor;
-    this.render();
+    this.renderCurrentEditorBorder();
   },
 
   paste: function (e, options) {
@@ -196,12 +202,16 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     if (this.currentEditor) {
-      $currentEditorBorder = $("<div>");
-      $currentEditorBorder.addClass("current-editor-border");
-      $currentEditorBorder.text(this.currentEditor.escape("name"));
-      this.$el.append($currentEditorBorder);
+      this.renderCurrentEditorBorder();
     }
 
     return this;
+  },
+
+  renderCurrentEditorBorder: function () {
+    $currentEditorBorder = $("<div>");
+    $currentEditorBorder.addClass("current-editor-border");
+    $currentEditorBorder.text(this.currentEditor.escape("name"));
+    this.$el.append($currentEditorBorder);
   }
 });

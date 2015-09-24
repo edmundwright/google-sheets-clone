@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     get :confirm_delete, on: :member
   end
 
-  resource :session, only: [:show, :new, :create, :destroy]
+  resource :session, only: [:show, :new, :create, :destroy, :update]
 
   namespace :api, defaults: { format: :json } do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do
@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :columns, only: [:create, :show, :update, :destroy]
       resources :rows, only: [:create, :show, :update, :destroy]
       resources :shares, only: [:create, :index, :show, :update, :destroy]
+      get 'current_editors', on: :member
     end
   end
 end

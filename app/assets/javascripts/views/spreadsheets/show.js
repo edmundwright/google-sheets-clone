@@ -14,6 +14,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     $(document).on("keydown", this.keyDown.bind(this));
     $(document).on("mouseup", this.mouseUp.bind(this));
     $(window).scroll(this.scroll);
+    window.setTimeout(this.syncCurrentEditors.bind(this), 1000);
     this.$selectedLi = null;
   },
 
@@ -29,6 +30,24 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     "mouseover .cell": "mouseOverCell",
     "input .cell-contents.input": "updateFormulaBar",
     "input .formula-bar-input": "updateSelectedLi"
+  },
+
+  syncCurrentEditors: function () {
+    this.model.currentEditors().fetch({
+      success: function () {
+        this.renderCurrentEditors();
+        window.setTimeout(this.syncCurrentEditors.bind(this), 1000);
+      }.bind(this)
+    });
+    GoogleSheetsClone.currentUser.save({
+      current_user: {
+        current_spreadsheet_id: this.model.id,
+        current_row_index: this.cellRow(this.$selectedLi),
+        current_col_index: this.cellCol(this.$selectedLi)
+      }
+    }, {
+      type: 'put'
+    });
   },
 
   editing: function () {
@@ -802,12 +821,15 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   renderCurrentEditors: function () {
+    this.$(".cell").trigger("removeCurrentEditor");
     this.model.currentEditors().each(function (currentEditor) {
-      var $locationLi = this.cellLiAtPos(
-        currentEditor.get("current_row_index"),
-        currentEditor.get("current_col_index")
-      );
-      $locationLi.trigger("addCurrentEditor", currentEditor);
+      if (currentEditor.id !== GoogleSheetsClone.currentUser.id) {
+        var $locationLi = this.cellLiAtPos(
+          currentEditor.get("current_row_index"),
+          currentEditor.get("current_col_index")
+        );
+        $locationLi.trigger("addCurrentEditor", currentEditor);
+      }
     }.bind(this));
   },
 

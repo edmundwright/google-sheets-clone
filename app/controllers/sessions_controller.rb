@@ -9,6 +9,19 @@ class SessionsController < ApplicationController
     end
   end
 
+  def update
+    if logged_in?
+      if current_user.update(params.require(:current_user).permit(
+        :current_row_index,
+        :current_col_index,
+        :current_spreadsheet_id))
+        render :show
+      else
+        render json: current_user.errors.full_messages, status: :unprocessable_entity
+      end
+    end
+  end
+
   def new
     if session[:filled_out_email]
       filled_out_email = session[:filled_out_email]

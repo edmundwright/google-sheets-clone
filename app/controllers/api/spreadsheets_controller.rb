@@ -35,7 +35,7 @@ class Api::SpreadsheetsController < ApplicationController
   end
 
   def current_editors
-    spreadsheet = current_user.spreadsheets.find(params[:id])
+    spreadsheet = current_user.all_spreadsheets.find(params[:id])
     @current_editors = spreadsheet.current_editors
     render :current_editors
   end
