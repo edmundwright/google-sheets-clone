@@ -22,7 +22,7 @@ A clone of Google Sheets built on Rails and Backbone. Users can:
 - [x] Drag to resize rows and columns
 - [x] Copy, cut and paste cells
 - [x] Share a spreadsheet with other users
-- [x] Edit a spreadsheet simultaneously with another user, seeing their edits appear live (excluding deletion of cells, and resizing of columns and rows)
+- [x] Edit a spreadsheet simultaneously with another user, seeing their edits appear live (currently excluding deletion of cells, and resizing of columns and rows)
 
 ## Design Docs
 * [View Wireframes][views]
