@@ -620,6 +620,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   mouseOverCell: function (e) {
+    if (this.$(".ui-resizable-resizing").length) {
+      return;
+    }
     if (this.dragging) {
       this.$lastLiForInsertion = $(e.currentTarget);
       this.updateInsertedRef();
@@ -645,6 +648,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   mouseOverColumnHeader: function (e) {
+    if (this.$(".ui-resizable-resizing").length) {
+      return;
+    }
     if (this.draggingOverCols) {
       this.$lastLiForInsertion = this.cellLiAtPos(0, $(e.currentTarget).index());
       this.updateInsertedRef();
@@ -656,6 +662,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   mouseOverRowHeader: function (e) {
+    if (this.$(".ui-resizable-resizing").length) {
+      return;
+    }
     if (this.draggingOverRows) {
       this.$lastLiForInsertion = this.cellLiAtPos($(e.currentTarget).index(), 0);
       this.updateInsertedRef();

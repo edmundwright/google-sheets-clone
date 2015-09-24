@@ -80,6 +80,15 @@ li.column-header:hover, li.row-header:hover, div#select-all:hover, li.column-hea
   background: rgb(220, 220, 220);
 }
 
+li.column-header.ui-resizable-resizing + li.column-header:hover {
+  background: transparent;
+}
+
+li.row-header.ui-resizable-resizing + li.row-header:hover {
+  background: transparent;
+}
+
+
 div.selected-cell-border {
   bottom: -1px;
   left: -1px;
