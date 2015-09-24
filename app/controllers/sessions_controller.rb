@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
 
   def update
     if logged_in?
-      if current_user.update(params.require(:current_user).permit(
+      if current_user.update(params.require(:session).permit(
         :current_row_index,
         :current_col_index,
         :current_spreadsheet_id))

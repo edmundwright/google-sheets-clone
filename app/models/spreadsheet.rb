@@ -20,11 +20,11 @@ class Spreadsheet < ActiveRecord::Base
     inverse_of: :current_spreadsheet
 
   def current_editors
-    # editors.each do |editor|
-    #   if editor.moved_at < 1.minute.ago
-    #     editor.update({ current_spreadsheet_id: nil })
-    #   end
-    # end
+    editors.each do |editor|
+      if editor.updated_at < 1.minute.ago
+        editor.update({ current_spreadsheet_id: nil })
+      end
+    end
 
     editors(true)
   end

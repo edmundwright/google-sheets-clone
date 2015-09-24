@@ -14,7 +14,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     $(document).on("keydown", this.keyDown.bind(this));
     $(document).on("mouseup", this.mouseUp.bind(this));
     $(window).scroll(this.scroll);
-    window.setTimeout(this.syncCurrentEditors.bind(this), 1000);
+    window.setTimeout(this.syncCurrentEditors.bind(this), 15000);
     this.$selectedLi = null;
   },
 
@@ -35,17 +35,27 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   syncCurrentEditors: function () {
     this.model.currentEditors().fetch({
       success: function () {
+        var syncInterval;
+        if (this.model.currentEditors().length === 1) {
+          syncInterval = 15000;
+        } else {
+          syncInterval = 1000;
+        }
         this.renderCurrentEditors();
-        window.setTimeout(this.syncCurrentEditors.bind(this), 1000);
+        window.setTimeout(
+          this.syncCurrentEditors.bind(this),
+          syncInterval
+        );
       }.bind(this)
     });
-    GoogleSheetsClone.currentUser.save({
-      current_user: {
-        current_spreadsheet_id: this.model.id,
-        current_row_index: this.cellRow(this.$selectedLi),
-        current_col_index: this.cellCol(this.$selectedLi)
-      }
-    }, {
+
+    GoogleSheetsClone.currentUser.set({
+      current_spreadsheet_id: this.model.id,
+      current_row_index: this.cellRow(this.$selectedLi),
+      current_col_index: this.cellCol(this.$selectedLi)
+    });
+
+    GoogleSheetsClone.currentUser.save({}, {
       type: 'put'
     });
   },
