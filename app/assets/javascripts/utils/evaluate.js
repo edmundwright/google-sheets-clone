@@ -215,7 +215,7 @@
     var rowIndex = parseInt(rowName) - 1;
     var cell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex);
 
-    if (!cell) {
+    if (cell === null) {
       var evaluatedCellContents = "";
     } else if (cell.get("contents_str") && cell.get("contents_str")[0] === "=") {
       var evaluatedCellContents = evaluate(cell.get("contents_str").slice(1));
