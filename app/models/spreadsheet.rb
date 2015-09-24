@@ -13,4 +13,19 @@ class Spreadsheet < ActiveRecord::Base
   has_many :cells, dependent: :destroy
   has_many :columns, dependent: :destroy
   has_many :rows, dependent: :destroy
+
+  has_many :editors,
+    class_name: "User",
+    foreign_key: :current_spreadsheet_id,
+    inverse_of: :current_spreadsheet
+
+  def current_editors
+    editors.each do |editor|
+      if editor.moved_at < 1.minute.ago
+        editor.update({ current_spreadsheet_id: nil })
+      end
+    end
+
+    editors(true)
+  end
 end

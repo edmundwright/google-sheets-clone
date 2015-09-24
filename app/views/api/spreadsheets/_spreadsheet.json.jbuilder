@@ -23,3 +23,11 @@ if with_cells
     end
   end
 end
+
+if with_current_editors
+  json.current_editors do
+    json.array! spreadsheet.current_editors do |current_editor|
+      json.partial! 'api/users/user', user: current_editor
+    end
+  end
+end
