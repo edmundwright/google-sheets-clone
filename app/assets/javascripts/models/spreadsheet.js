@@ -22,7 +22,22 @@ GoogleSheetsClone.Models.Spreadsheet = Backbone.Model.extend ({
       delete response.rows;
     }
 
+    if (response.current_editors) {
+      this.currentEditors().set(response.current_editors);
+      delete response.current_editors;
+    }
+
     return response;
+  },
+
+  currentEditors: function () {
+    if (!this._currentEditors) {
+      this._currentEditors = new GoogleSheetsClone.Collections.CurrentEditors([], {
+        currentSpreadsheet: this
+      });
+    }
+
+    return this._currentEditors;
   },
 
   cells: function () {

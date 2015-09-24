@@ -98,6 +98,22 @@ div.selected-cell-border {
   width: calc(100% - 4px);
   height: calc(100% - 4px);
   pointer-events: none;
+  z-index: 2;
+}
+
+div.current-editor-border {
+  bottom: -1px;
+  left: -1px;
+  position: absolute;
+  display: block;
+  border: 3px solid rgb(15, 157, 88);
+  width: calc(100% - 7px);
+  height: calc(100% - 4px);
+  pointer-events: none;
+  color: rgb(15, 157, 88);
+  font-size: 12px;
+  text-align: right;
+  padding-right: 3px;
 }
 
 div.cells-for-insertion-border {

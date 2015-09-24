@@ -787,6 +787,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderColumnHeaders();
     this.renderRowHeaders();
     this.renderCells();
+    this.renderCurrentEditors();
 
     this.applyColumnWidths();
     this.applyRowHeights();
@@ -798,6 +799,16 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
 
     return this;
+  },
+
+  renderCurrentEditors: function () {
+    this.model.currentEditors().each(function (currentEditor) {
+      var $locationLi = this.cellLiAtPos(
+        currentEditor.get("current_row_index"),
+        currentEditor.get("current_col_index")
+      );
+      $locationLi.trigger("addCurrentEditor", currentEditor);
+    }.bind(this));
   },
 
   applyColumnWidths: function () {

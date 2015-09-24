@@ -33,10 +33,11 @@ class Api::SpreadsheetsController < ApplicationController
     @spreadsheet.destroy!
     render :show
   end
-  
-  def editors
+
+  def current_editors
     spreadsheet = current_user.spreadsheets.find(params[:id])
     @current_editors = spreadsheet.current_editors
+    render :current_editors
   end
 
   private

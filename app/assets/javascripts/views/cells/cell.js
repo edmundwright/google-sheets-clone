@@ -19,9 +19,15 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("delete", this.destroyModel.bind(this));
     this.$el.on("cancelEditing", this.cancelEditing.bind(this));
     this.$el.on("paste", this.paste.bind(this));
+    this.$el.on("addCurrentEditor", this.addCurrentEditor.bind(this));
     if (this.model) {
       this.listenTo(this.model, "render", this.render.bind(this));
     }
+  },
+
+  addCurrentEditor: function (e, currentEditor) {
+    this.currentEditor = currentEditor;
+    this.render();
   },
 
   paste: function (e, options) {
@@ -187,6 +193,13 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
     if (this.selected) {
       this.$el.append(this.$selectedCellBorder);
+    }
+
+    if (this.currentEditor) {
+      $currentEditorBorder = $("<div>");
+      $currentEditorBorder.addClass("current-editor-border");
+      $currentEditorBorder.text(this.currentEditor.escape("name"));
+      this.$el.append($currentEditorBorder);
     }
 
     return this;
