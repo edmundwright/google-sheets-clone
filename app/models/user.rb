@@ -4,6 +4,11 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   validates :password, confirmation: true
 
+  has_many :editing_sessions,
+    class_name: "EditingSession",
+    foreign_key: :editor_id,
+    inverse_of: :editor
+
   has_many :spreadsheets,
     dependent: :destroy,
     class_name: "Spreadsheet",
@@ -57,6 +62,6 @@ class User < ActiveRecord::Base
   def all_spreadsheets
     Spreadsheet
       .joins("LEFT JOIN shares ON spreadsheets.id = shares.spreadsheet_id")
-      .where("spreadsheets.owner_id = ? OR shares.sharee_id = ?", id, id) 
+      .where("spreadsheets.owner_id = ? OR shares.sharee_id = ?", id, id)
   end
 end
