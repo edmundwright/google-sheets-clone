@@ -1,7 +1,7 @@
 json.extract! spreadsheet, :id, :title, :width, :height, :updated_at
 
 json.owner do
-  json.partial! 'api/users/user', user: spreadsheet.owner, with_email: true
+  json.partial! 'api/users/user', user: spreadsheet.owner, with_email: true, with_picture: true
 end
 
 if with_cells
@@ -27,7 +27,7 @@ end
 if with_current_editors
   json.current_editors do
     json.array! spreadsheet.current_editors do |current_editor|
-      json.partial! 'api/users/user', user: current_editor, with_email: false
+      json.partial! 'api/users/user', user: current_editor, with_email: false, with_picture: false
     end
   end
 end
