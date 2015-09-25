@@ -23,7 +23,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("removeCurrentEditor", this.removeCurrentEditor.bind(this));
     this.$el.on("receiveNewModel", this.receiveNewModel.bind(this));
     if (this.model) {
-      this.listenTo(this.model, "render", this.render.bind(this));
+      this.listenTo(this.model, "render change", this.render.bind(this));
     }
   },
 
@@ -40,7 +40,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       );
     }
     this.model = newModel;
-    this.listenTo(this.model, "render", this.render.bind(this));
+    this.listenTo(this.model, "render change", this.render.bind(this));
   },
 
   removeCurrentEditor: function () {
@@ -143,7 +143,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         spreadsheet_id: this.spreadsheet.id
       });
       this.spreadsheet.cells().add(this.model);
-      this.listenTo(this.model, "render", this.render.bind(this));
+      this.listenTo(this.model, "render change", this.render.bind(this));
     }
 
     if (newContents === "") {
@@ -164,7 +164,9 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       this.model.save(attrs, {
         success: function () {
           GoogleSheetsClone.statusAreaView.finishSaving();
-          callback();
+          if (callback) {
+            callback();
+          }
         }
       });
     }
@@ -214,6 +216,10 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       editing: this.editing
     }));
 
+    if (this.model) {
+      this.applyStyling();
+    }
+
     if (this.selected) {
       this.$el.append(this.$selectedCellBorder);
     }
@@ -223,6 +229,15 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     return this;
+  },
+
+  applyStyling: function () {
+    var $contents = this.$el.find(".cell-contents");
+    if (this.model.get("bold")) {
+      $contents.css("font-weight", "bold");
+    } else {
+      $contents.css("font-weight", "");
+    }
   },
 
   renderCurrentEditorBorder: function () {

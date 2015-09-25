@@ -50,7 +50,7 @@ class Api::CellsController < ApplicationController
       :contents_flo,
       :bold,
       :italic,
-      :underline,
+      :underlined,
       :color,
       :background_color
     )

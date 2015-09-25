@@ -8,6 +8,6 @@ json.extract! cell,
   :contents_flo,
   :bold,
   :italic,
-  :underline,
+  :underlined,
   :color,
   :background_color

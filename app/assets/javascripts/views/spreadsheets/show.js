@@ -136,6 +136,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         case 27:
           this.handleEscape(e);
           break;
+        case 66:
+          if (e.ctrlKey || e.metaKey) {
+            this.handleCtrlB(e);
+          }
+          break;
         case 67:
           if (e.ctrlKey || e.metaKey) {
             this.handleCtrlC(e);
@@ -151,6 +156,28 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
             this.handleCtrlV(e);
           }
           break;
+      }
+    }
+  },
+
+  handleCtrlB: function (e) {
+    if (!this.editing()) {
+      e.preventDefault();
+      this.applyToSelectedCells(function (cell) {
+        if (cell.get("bold")) {
+          cell.set("bold", false);
+        } else {
+          cell.set("bold", true);
+        }
+      });
+    }
+  },
+
+  applyToSelectedCells: function (callback) {
+    var rangeLimits = this.rangeLimits(this.$selectedLi, this.$lastLiForCopy);
+    for (var row = rangeLimits.topMostRow; row <= rangeLimits.bottomMostRow; row++) {
+      for (var col = rangeLimits.leftMostCol; col <= rangeLimits.rightMostCol; col++ ) {
+        callback(this.model.cells().findByPos(row, col));
       }
     }
   },
