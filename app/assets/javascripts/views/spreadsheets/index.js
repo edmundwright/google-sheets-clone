@@ -43,8 +43,9 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   },
 
   click: function (e) {
-    if (!$(e.target).hasClass("context-menu-link") && !$(e.target).hasClass("dot")) {
-      $(".context-menu").remove();
+    if (!$(e.target).hasClass("context-menu-link") &&
+        !$(e.target).hasClass("dot")) {
+      $(".index-context-menu").remove();
     }
   },
 

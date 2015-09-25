@@ -1,4 +1,7 @@
-<img src="<%= share.sharee.escape("picture") %>">
+<div
+  style="background: url(<%= share.sharee.escape("picture") %>); background-size: cover"
+  class="picture-container">
+</div>
 
 <ul class="share-attributes">
   <li class="sharee-name"><%= share.sharee.escape("name") %></li>

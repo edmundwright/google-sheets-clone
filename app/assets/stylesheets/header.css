@@ -5,7 +5,7 @@ nav.header {
   width: 100%;
   color: #756E6E;
   height: 60px;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 nav.header img {
@@ -66,15 +66,69 @@ nav.header .untitled {
   font-style: italic;
 }
 
-nav.header .session-link {
+nav.header .session-header {
+  position: relative;
   cursor: pointer;
   font-size: 20px;
   display: block;
   float: right;
   line-height: 50px;
-  padding: 5px 20px;
+  margin: 5px;
 }
 
-nav.header .session-link:hover, nav.header a:hover {
+nav.header .session-header .picture-container {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  display: block;
+  float: right;
+  cursor: pointer;
+}
+
+nav.header .session-header .name {
+  display: block;
+  float: left;
+  padding-right: 10px;
+}
+
+nav.header .session-header .drop-down {
+  width: 150px;
+  right: 0px;
+  top: 50px;
+  display:none;
+}
+
+nav.header .session-header:hover .drop-down {
+  display: block;
+}
+
+nav.header .session-header .drop-down li {
+  width: 150px;
+  padding: 0;
+}
+
+nav.header .session-header .drop-down li button {
+  width: 150px;
+  text-align: left;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+nav.header .session-header .drop-down li a {
+  padding-left: 20px;
+  width: 100px;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+nav.header .session-header .drop-down .triangle.inner {
+  left: 68px;
+}
+
+nav.header .session-header .drop-down .triangle.outer {
+  left: 67px;
+}
+
+nav.header .session-header:hover, nav.header a:hover {
   color: black;
 }

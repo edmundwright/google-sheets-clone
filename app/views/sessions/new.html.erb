@@ -21,6 +21,15 @@
     <button>Log in!</button>
   </form>
 
+  <form action="<%= session_url %>" method="post">
+    <%= hidden_auth_token %>
+
+    <input type="hidden" name="user[email]" value="edmund@edmund.io">
+    <input type="hidden" name="user[password]" value="password">
+
+    <button>Demo log in</button>
+  </form>
+
   <a href="<%= new_user_url %>">No account? Sign up.</a>
-  <a href="/auth/facebook">Log in with Facebook</a>
+  <a href="/auth/facebook">Or log in with Facebook</a>
 </section>

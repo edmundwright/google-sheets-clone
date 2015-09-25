@@ -9,17 +9,32 @@
   <div id="status-area"></div>
 
   <% if logged_in? %>
-    <form action="<%= session_url %>" method="post">
-      <%= hidden_auth_token %>
-      <input type="hidden" name="_method" value="delete">
-      <button class="session-link">Log out</button>
-    </form>
 
-    <a class="session-link" href="<%= edit_user_url(current_user) %>">
-      <%= current_user.name %>
-    </a>
+    <div class="session-header group">
+      <div class="name"><%= current_user.name %></div>
+
+      <div
+        style="background: url(<%= current_user.picture.url %>); background-size: cover"
+        class="picture-container">
+      </div>
+
+      <ul class="context-menu drop-down">
+        <div class="triangle inner"></div>
+        <div class="triangle outer"></div>
+        <li>
+          <a class="session-link" href="<%= edit_user_url(current_user) %>">Edit account</a>
+        </li>
+        <li>
+          <form action="<%= session_url %>" method="post">
+            <%= hidden_auth_token %>
+            <input type="hidden" name="_method" value="delete">
+            <button class="session-link">Log out</button>
+          </form>
+        </li>
+      </ul>
+    </div>
   <% else %>
-    <a href="<%= new_session_url %>" class="session-link">Log in</a>
-    <a href="<%= new_user_url %>" class="session-link">Sign up</a>
+    <a href="<%= new_session_url %>" class="session-header">Log in</a>
+    <a href="<%= new_user_url %>" class="session-header">Sign up</a>
   <% end %>
 </nav>

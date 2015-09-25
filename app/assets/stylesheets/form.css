@@ -16,7 +16,6 @@ section.form .picture-container {
   height: 300px;
   margin: auto;
   border-radius: 50%;
-  background-size: cover;
 }
 
 section.form input.picture {

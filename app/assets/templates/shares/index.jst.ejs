@@ -6,7 +6,10 @@
   <h2>Who has access</h2>
   <ul class="shares">
     <li class="share group">
-      <img src="<%= owner.escape("picture") %>">
+      <div
+        style="background: url(<%= owner.escape("picture") %>); background-size: cover"
+        class="picture-container">
+      </div>
       <ul class="share-attributes">
         <li class="sharee-name"><%= owner.escape("name") %> (me)</li>
         <li class="sharee-email"><%= owner.escape("email") %></li>

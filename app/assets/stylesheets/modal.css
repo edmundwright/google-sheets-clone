@@ -98,11 +98,12 @@
   display: block;
 }
 
-.modal.shares-index li.share img {
+.modal.shares-index li.share .picture-container {
   display: block;
   float: left;
   height: 32px;
   margin: 12px 14px 12px 0;
+  width: 32px;
 }
 
 .modal.shares-index li.share ul.share-attributes {
