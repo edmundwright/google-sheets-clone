@@ -40,6 +40,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       );
     }
     this.model = newModel;
+    this.listenTo(this.model, "render", this.render.bind(this));
   },
 
   removeCurrentEditor: function () {
