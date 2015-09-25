@@ -25,7 +25,7 @@ class UsersController < ApplicationController
       redirect_to :root
     else
       session[:filled_out_fields] = user_params.delete_if do |key, _|
-        key == :password
+        key == :password || key == "password"
       end
       flash[:errors] = user.errors.full_messages
       redirect_to new_user_url
@@ -38,7 +38,10 @@ class UsersController < ApplicationController
 
   def update
     user = current_user
-    if user.update(user_params.delete_if { |k, v| k == :password })
+    
+    if user_params.empty?
+      flash[:errors] = ["No picture was provided."]
+    elsif user.update(user_params)
       flash[:notice] = "Your account details have been updated."
     else
       flash[:errors] = user.errors.full_messages

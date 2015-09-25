@@ -4,6 +4,30 @@ section.form {
   text-align: center;
 }
 
+section.form .left-pane, section.form .right-pane {
+  width: 450px;
+  display: block;
+  float: left;
+}
+
+section.form .picture-container {
+  width: 300px;
+  overflow: hidden;
+  height: 300px;
+  margin: auto;
+  border-radius: 50%;
+  background-size: cover;
+}
+
+section.form input.picture {
+  width: 200px;
+  text-align: center;
+}
+
+section.form img {
+  width: 300px;
+}
+
 ul.errors > li {
   background: red;
   color: white;
