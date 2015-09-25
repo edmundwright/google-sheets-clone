@@ -7,7 +7,7 @@ end
 if with_cells
   json.cells do
     json.array! spreadsheet.cells do |cell|
-      json.partial! 'api/cells/cell', cell: cell
+      json.partial! 'api/cells/cell', cell: cell, with_updated_at: true
     end
   end
 

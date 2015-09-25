@@ -25,5 +25,18 @@ GoogleSheetsClone.Collections.Cells = Backbone.Collection.extend({
     });
 
     return result;
+  },
+
+  lastUpdatedAt: function () {
+    var mostRecentUpdate = 0;
+
+    this.each(function (model) {
+      var modelUpdate = model.get("updated_at");
+      if (modelUpdate > mostRecentUpdate) {
+        mostRecentUpdate = modelUpdate;
+      }
+    });
+
+    return mostRecentUpdate;
   }
 });

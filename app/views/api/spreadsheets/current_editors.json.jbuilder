@@ -9,6 +9,6 @@ end
 
 json.cells do
   json.array! @cells do |cell|
-    json.partial! 'api/cells/cell', cell: cell
+    json.partial! 'api/cells/cell', cell: cell, with_updated_at: true
   end
 end

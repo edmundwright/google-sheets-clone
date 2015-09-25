@@ -38,8 +38,8 @@ class Api::SpreadsheetsController < ApplicationController
     spreadsheet = current_user.all_spreadsheets.find(params[:id])
     @current_editors = spreadsheet.current_editors
     @cells = spreadsheet.cells.where(
-      "updated_at >= ? AND last_editor_id <> ?",
-      Time.at(params[:last_fetched_at].to_i / 1000),
+      "updated_at > ? AND last_editor_id <> ?",
+      Time.at((params[:last_fetched_at].to_i / 1_000_000.0) + 0.00001),
       current_user.id
     )
     render :current_editors

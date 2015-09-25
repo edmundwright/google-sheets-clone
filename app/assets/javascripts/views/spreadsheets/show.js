@@ -2,13 +2,13 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
-    this.lastFetchedAt = new Date(Date.now());
     this.model.fetch({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
         GoogleSheetsClone.spreadsheet = this.model;
         this.okForSelectAllToBeRendered = true;
         this.render();
+        this.lastUpdatedAt = this.model.cells().lastUpdatedAt();
         this.syncCurrentEditors();
       }.bind(this)
     });
@@ -34,13 +34,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   syncCurrentEditors: function () {
-    var oldLastFetchedAt = this.lastFetchedAt;
-    this.lastFetchedAt = new Date(Date.now());
     $.ajax({
       url: "/api/spreadsheets/" + this.model.id + "/current_editors",
       type: "GET",
       data: {
-        last_fetched_at: oldLastFetchedAt.getTime()
+        last_fetched_at: this.lastUpdatedAt
       },
       success: function (response) {
         this.model.currentEditors().set(response.current_editors);
@@ -50,20 +48,33 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           syncInterval = 2000;
         }
         this.renderCurrentEditors();
+
         response.cells.forEach(function (cell) {
+          var thisUpdatedAt = cell.updated_at;
+          if (thisUpdatedAt > this.lastUpdatedAt) {
+            this.lastUpdatedAt = thisUpdatedAt;
+          }
+          var contentsChanged = false;
           var model = this.model.cells().get(cell.id);
           if (model) {
+            var oldContents = model.contents();
             model.set(cell);
+            if (oldContents !== model.contents()) {
+              contentsChanged = true;
+            }
           } else {
             model = new GoogleSheetsClone.Models.Cell();
             model.set(cell);
             this.model.cells().add(model);
+            contentsChanged = true;
           }
           var $cellLi = this.cellLiAtPos(model.get("row_index"), model.get("col_index"));
           if ($cellLi.index() === this.$selectedLi.index()) {
             this.handleEscape();
           }
-          $cellLi.trigger("receiveNewModel", model);
+          if (contentsChanged) {
+            $cellLi.trigger("receiveNewModel", model);
+          }
         }.bind(this));
 
         if (response.cells.length > 0) {

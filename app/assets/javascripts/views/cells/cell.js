@@ -31,14 +31,12 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     if (this.editing) {
       this.cancelEditing();
     }
-    if (!this.model || this.model.contents() !== newModel.contents()) {
-      this.$el.addClass("other-editor-edited");
-      window.setTimeout(function () {
-          this.$el.removeClass("other-editor-edited");
-        }.bind(this),
-        2000
-      );
-    }
+    this.$el.addClass("other-editor-edited");
+    window.setTimeout(function () {
+        this.$el.removeClass("other-editor-edited");
+      }.bind(this),
+      2000
+    );
     this.model = newModel;
     this.listenTo(this.model, "render", this.render.bind(this));
   },

@@ -6,3 +6,7 @@ json.extract! cell,
   :contents_str,
   :contents_int,
   :contents_flo
+
+if with_updated_at
+  json.updated_at (cell.updated_at.to_f * 1_000_000).to_i
+end
