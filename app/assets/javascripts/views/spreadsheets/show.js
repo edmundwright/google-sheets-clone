@@ -461,6 +461,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseDownCell: function (e) {
     e.preventDefault();
+    $("#title-area input").blur();
     if (this.editing()) {
       if (this.$selectedLi.index() === $(e.currentTarget).index()) {
         this.currentInputField = ".cell-contents.input";
@@ -489,6 +490,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseDownColumnHeader: function (e) {
     e.preventDefault();
+    $("#title-area input").blur();
     var col = $(e.currentTarget).index();
     if (this.editingFormula()) {
       this.$firstLiForInsertion = this.cellLiAtPos(this.model.get("height") - 1, col);
@@ -509,6 +511,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   mouseDownRowHeader: function (e) {
     e.preventDefault();
+    $("#title-area input").blur();
     var row = $(e.currentTarget).index();
     if (this.editingFormula()) {
       this.$firstLiForInsertion = this.cellLiAtPos(row, this.model.get("width") - 1);

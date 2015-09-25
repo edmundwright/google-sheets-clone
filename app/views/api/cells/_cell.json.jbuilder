@@ -5,9 +5,4 @@ json.extract! cell,
   :col_index,
   :contents_str,
   :contents_int,
-  :contents_flo,
-  :bold,
-  :italic,
-  :underlined,
-  :color,
-  :background_color
+  :contents_flo

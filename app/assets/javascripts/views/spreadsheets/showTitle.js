@@ -8,18 +8,25 @@ GoogleSheetsClone.Views.SpreadsheetShowTitle = Backbone.View.extend({
 
   events: {
     "submit form": "submit",
-    "click h1.title": "edit"
+    "click h1.title": "edit",
+    "blur input": "save"
   },
 
-  submit: function(e) {
-    e.preventDefault();
-    var formData = $(e.currentTarget).serializeJSON();
+  save: function () {
+    var formData = this.$("form").serializeJSON();
     this.model.save(formData, {
       success: function () {
         this.editing = false;
         this.render();
+        GoogleSheetsClone.statusAreaView.displaySaving();
+        GoogleSheetsClone.statusAreaView.finishSaving();
       }.bind(this)
     });
+  },
+
+  submit: function(e) {
+    e.preventDefault();
+    this.save();
   },
 
   edit: function() {
