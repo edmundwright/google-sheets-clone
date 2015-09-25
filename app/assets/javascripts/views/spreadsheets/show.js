@@ -66,7 +66,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           $cellLi.trigger("receiveNewModel", model);
         }.bind(this));
 
-        this.renderAllCells();
+        if (response.cells.length > 0) {
+          this.renderAllCells();
+        }
 
         window.setTimeout(
           this.syncCurrentEditors.bind(this),
@@ -1033,7 +1035,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   renderAllCells: function () {
     this.model.cells().each(function (cell) {
-      cell.trigger("render");
+      cell.trigger("render", true);
     });
   },
 
