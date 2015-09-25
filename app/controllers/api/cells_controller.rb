@@ -47,7 +47,12 @@ class Api::CellsController < ApplicationController
       :col_index,
       :contents_str,
       :contents_int,
-      :contents_flo
+      :contents_flo,
+      :bold,
+      :italic,
+      :underline,
+      :color,
+      :background_color
     )
   end
 end
