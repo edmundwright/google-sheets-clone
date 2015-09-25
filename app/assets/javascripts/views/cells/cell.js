@@ -23,7 +23,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.$el.on("removeCurrentEditor", this.removeCurrentEditor.bind(this));
     this.$el.on("receiveNewModel", this.receiveNewModel.bind(this));
     if (this.model) {
-      this.listenTo(this.model, "render change", this.render.bind(this));
+      this.listenTo(this.model, "render", this.render.bind(this));
     }
   },
 
@@ -143,7 +143,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         spreadsheet_id: this.spreadsheet.id
       });
       this.spreadsheet.cells().add(this.model);
-      this.listenTo(this.model, "render change", this.render.bind(this));
+      this.listenTo(this.model, "render", this.render.bind(this));
     }
 
     if (newContents === "") {
