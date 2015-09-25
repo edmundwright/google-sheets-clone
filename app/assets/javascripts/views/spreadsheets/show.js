@@ -2,6 +2,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
+    this.syncInterval = 2000;
     this.model.fetch({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
@@ -43,9 +44,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       success: function (response) {
         this.model.currentEditors().set(response.current_editors);
         if (this.model.currentEditors().length <= 1) {
-          syncInterval = 15000;
+          this.syncInterval = 15000;
         } else {
-          syncInterval = 2000;
+          this.syncInterval = 3000;
         }
         this.renderCurrentEditors();
 
@@ -81,10 +82,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           this.renderAllCells();
         }
 
-        window.setTimeout(
-          this.syncCurrentEditors.bind(this),
-          syncInterval
-        );
       }.bind(this)
     });
 
@@ -97,6 +94,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     GoogleSheetsClone.currentUser.save({}, {
       type: 'put'
     });
+
+    window.setTimeout(
+      this.syncCurrentEditors.bind(this),
+      this.syncInterval
+    );
   },
 
   editing: function () {
