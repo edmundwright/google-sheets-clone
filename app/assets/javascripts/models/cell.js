@@ -11,5 +11,11 @@ GoogleSheetsClone.Models.Cell = Backbone.Model.extend ({
     } else if (this.get("contents_flo") !== null) {
       return this.get("contents_flo");
     }
+  },
+
+  toJSON: function () {
+    var json = Backbone.Model.prototype.toJSON.call(this);
+
+    return {"cell": json};
   }
 });
