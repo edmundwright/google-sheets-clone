@@ -10,13 +10,13 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
 
   rightClick: function (e) {
     e.preventDefault();
-    $(".context-menu").remove();
+    $(".index-context-menu").remove();
     this.openContextMenu();
   },
 
   click: function(e) {
     if($(e.target).hasClass("dot") || $(e.target).hasClass("context-menu-link")) {
-      $(".context-menu").remove();
+      $(".index-context-menu").remove();
       this.openContextMenu();
     } else if ($(e.target).hasClass("delete-link")) {
       this.openDeleteModal();
@@ -33,7 +33,7 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
     $("body").append(new GoogleSheetsClone.Views.SpreadsheetDelete({
       model: this.model
     }).render().$el);
-    $(".context-menu").remove();
+    $(".index-context-menu").remove();
   },
 
   openSharingModal: function () {
@@ -45,7 +45,7 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
         $("body").append(new GoogleSheetsClone.Views.ShareIndex({
           collection: collection
         }).render().$el);
-        $(".context-menu").remove();
+        $(".index-context-menu").remove();
       }
     });
   },
@@ -56,7 +56,7 @@ GoogleSheetsClone.Views.SpreadsheetIndexItem = Backbone.View.extend({
     });
     $("body").append(renameView.render().$el);
     renameView.focus();
-    $(".context-menu").remove();
+    $(".index-context-menu").remove();
   },
 
   show: function () {
