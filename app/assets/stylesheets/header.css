@@ -1,11 +1,10 @@
 nav.header {
-  z-index: 3;
+  z-index: 4;
   background: white;
   position: fixed;
   width: 100%;
   color: #756E6E;
   height: 60px;
-  /*overflow: hidden;*/
 }
 
 nav.header img {
@@ -96,6 +95,7 @@ nav.header .session-header .drop-down {
   right: 0px;
   top: 50px;
   display:none;
+  z-index: 4;
 }
 
 nav.header .session-header:hover .drop-down {
