@@ -6,6 +6,8 @@
       if (startPos === undefined) {
         if (formula.slice(i, i + 3).toUpperCase() === "SUM") {
           i += 2;
+        } else if (formula.slice(i, i + 7).toUpperCase() === "AVERAGE") {
+          i += 6;
         } else if (formula[i].match(/[a-z]/i)) {
           startPos = i;
         }
@@ -16,7 +18,7 @@
         lastPos = i - 1;
         break;
       }
-    }
+    };
 
     if (rowStartPos !== undefined) {
       if (lastPos === undefined) {
@@ -60,6 +62,12 @@
     for(var i = formula.length - 1; i >= 0; i--) {
       if (formula.slice(i - 2, i + 1).toUpperCase() === "SUM") {
         return evaluateSum(formula, i);
+      }
+    }
+
+    for(var i = formula.length - 1; i >= 0; i--) {
+      if (formula.slice(i - 6, i + 1).toUpperCase() === "AVERAGE") {
+        return evaluateAverage(formula, i);
       }
     }
 
@@ -249,6 +257,30 @@
 
     return formula.slice(0, mPos - 2) +
       sum +
+      formula.slice(i + 1);
+  };
+
+  var evaluateAverage = function (formula, ePos) {
+    for(var i = ePos + 2; i < formula.length; i++) {
+      if (formula[i] === ")") {
+        break;
+      }
+    }
+
+    var toSum = evaluate(formula.slice(ePos + 2, i));
+
+    var result;
+    if (typeof toSum === "object") {
+      result = toSum.reduce(function(x, y) {
+        return x + y;
+      });
+      result = result / toSum.length;
+    } else {
+      result = toSum;
+    }
+
+    return formula.slice(0, ePos - 6) +
+      result +
       formula.slice(i + 1);
   };
 
