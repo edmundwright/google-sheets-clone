@@ -40,7 +40,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       );
     }
     this.model = newModel;
-    this.listenTo(this.model, "render change", this.render.bind(this));
+    this.listenTo(this.model, "render", this.render.bind(this));
   },
 
   removeCurrentEditor: function () {
@@ -216,10 +216,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       editing: this.editing
     }));
 
-    if (this.model) {
-      this.applyStyling();
-    }
-
     if (this.selected) {
       this.$el.append(this.$selectedCellBorder);
     }
@@ -229,15 +225,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     }
 
     return this;
-  },
-
-  applyStyling: function () {
-    var $contents = this.$el.find(".cell-contents");
-    if (this.model.get("bold")) {
-      $contents.css("font-weight", "bold");
-    } else {
-      $contents.css("font-weight", "");
-    }
   },
 
   renderCurrentEditorBorder: function () {
