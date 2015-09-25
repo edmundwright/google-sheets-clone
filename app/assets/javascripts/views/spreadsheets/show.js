@@ -234,10 +234,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
 
     this.$(".selected-for-operation").each(function () {
-      $(this).trigger("paste", {
-        newContents: that.copiedContents[0][0],
-        callback: that.renderAllCells.bind(that)
-      });
+      if ($(this).index() !== that.$selectedLi.index()) {
+        $(this).trigger("paste", {
+          newContents: that.copiedContents[0][0],
+          callback: that.renderAllCells.bind(that)
+        });
+      }
     });
     this.$selectedLi.trigger("paste", {
       newContents: that.copiedContents[0][0],
