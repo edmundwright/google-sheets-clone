@@ -127,6 +127,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       this.$("input").focus();
     }
     if (options.replace) {
+      this.$("input").val("");
       this.$("input").val(String.fromCharCode(options.characterToInput));
     } else {
       var text = this.$("input").val();
