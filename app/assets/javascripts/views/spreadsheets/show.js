@@ -308,21 +308,26 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (!GoogleSheetsClone.titleView.editing) {
       if (e.keyCode === 13) {
         this.handleEnter(e);
+      } else if (e.keyCode === 27) {
       } else if (!this.editing()) {
-        this.beginEditingCell(true);
+        e.preventDefault();
+        this.beginEditingCell(true, e.which);
       } else if (this.inserting) {
         this.finishInserting();
       }
     }
   },
 
-  beginEditing: function (replace, focus) {
-    this.$selectedLi.trigger("beginEditing", {replace: replace, focus: focus});
+  beginEditing: function (replace, focus, characterToInput) {
+    this.$selectedLi.trigger(
+      "beginEditing",
+      {replace: replace, focus: focus, characterToInput: characterToInput}
+    );
   },
 
-  beginEditingCell: function (replace) {
+  beginEditingCell: function (replace, characterToInput) {
     this.currentInputField = ".cell-contents.input";
-    this.beginEditing(replace, true);
+    this.beginEditing(replace, true, characterToInput);
   },
 
   beginEditingFormulaBar: function () {

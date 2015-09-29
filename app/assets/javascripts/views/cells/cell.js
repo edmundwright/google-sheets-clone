@@ -123,13 +123,15 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   beginEditing: function (e, options) {
     this.editing = true;
     this.render();
-    if (options.replace) {
-      this.$("input").val("");
-    } else {
-      this.$("input").val(this.$("input").val());
-    }
     if (options.focus) {
       this.$("input").focus();
+    }
+    if (options.replace) {
+      this.$("input").val(String.fromCharCode(options.characterToInput));
+    } else {
+      var text = this.$("input").val();
+      this.$("input").val("");
+      this.$("input").val(text);
     }
   },
 
