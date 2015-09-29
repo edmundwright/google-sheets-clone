@@ -1062,18 +1062,18 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       return;
     }
 
-    var $body = $("body");
+    var $window = $(window);
 
-    if ($elToScrollTo.offset().top + 37 > $body.scrollTop() + $(window).height()) {
-      $body.scrollTop($elToScrollTo.offset().top + 37 - $(window).height());
-    } else if ($elToScrollTo.offset().top < $body.scrollTop() + 135) {
-      $body.scrollTop($elToScrollTo.offset().top - 135);
+    if ($elToScrollTo.offset().top + 37 > $window.scrollTop() + $window.height()) {
+      $window.scrollTop($elToScrollTo.offset().top + 37 - $window.height());
+    } else if ($elToScrollTo.offset().top < $window.scrollTop() + 135) {
+      $window.scrollTop($elToScrollTo.offset().top - 135);
     }
 
-    if ($elToScrollTo.offset().left + 176 > $body.scrollLeft() + $(window).width()) {
-      $body.scrollLeft($elToScrollTo.offset().left + 176 - $(window).width());
-    } else if ($elToScrollTo.offset().left < $body.scrollLeft() + 60) {
-      $body.scrollLeft($elToScrollTo.offset().left - 60);
+    if ($elToScrollTo.offset().left + 176 > $window.scrollLeft() + $window.width()) {
+      $window.scrollLeft($elToScrollTo.offset().left + 176 - $window.width());
+    } else if ($elToScrollTo.offset().left < $window.scrollLeft() + 60) {
+      $window.scrollLeft($elToScrollTo.offset().left - 60);
     }
   }
 });
