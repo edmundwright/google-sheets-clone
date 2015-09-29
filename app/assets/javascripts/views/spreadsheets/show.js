@@ -130,6 +130,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   keyDown: function (e) {
     if (!GoogleSheetsClone.titleView.editing)  {
       switch (e.keyCode) {
+        case 9:
+          this.handleTab(e);
+          break;
         case 37:
           this.handleArrowKey(e);
           break;
@@ -167,6 +170,19 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
           }
           break;
       }
+    }
+  },
+
+  handleTab: function (e) {
+    e.preventDefault();
+    if (this.editing()) {
+      this.finishEditing();
+    }
+
+    var neighbour = this.neighbourInDirection(this.$selectedLi, 39);
+
+    if (neighbour) {
+      this.selectCell(neighbour);
     }
   },
 
@@ -305,7 +321,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   keyPress: function (e) {
-    if (!GoogleSheetsClone.titleView.editing) {
+    if (!GoogleSheetsClone.titleView.editing && !e.metaKey && !e.ctrlKey) {
       if (e.keyCode === 13) {
         this.handleEnter(e);
       } else if (e.keyCode === 27) {
