@@ -937,8 +937,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       var $rowHeader = this.$("li.row-header:nth-child(" + (row_index + 1) + ")");
       $rowHeader.css("height", height + "px");
       this.updateRowHeaderPadding($rowHeader);
-      this.$("li.cell:nth-child(n+" +
-        (this.model.get("width") * row_index + 1) + "):nth-child(-n+" +
+      this.$("li.cell:nth-of-type(n+" +
+        (this.model.get("width") * row_index + 1) + "):nth-of-type(-n+" + 
         (this.model.get("width") * (row_index + 1)) + ")")
         .css("height", height + "px");
     }.bind(this));
@@ -1035,8 +1035,8 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $li.resizable({
         handles: "s",
         minHeight: 35,
-        alsoResize: "ul#cells, ul#row-headers, li.cell:nth-child(n+" +
-          (this.model.get("width") * $li.index() + 1) + "):nth-child(-n+" +
+        alsoResize: "ul#cells, ul#row-headers, li.cell:nth-of-type(n+" +
+          (this.model.get("width") * $li.index() + 1) + "):nth-of-type(-n+" +
           (this.model.get("width") * ($li.index() + 1)) + ")",
         stop: this.finishResizingRow.bind(this),
         resize: this.duringResizingRow.bind(this)
