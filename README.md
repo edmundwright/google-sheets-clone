@@ -4,7 +4,7 @@
 
 [live-site]: http://cells.edmund.io
 
-A clone of Google Sheets built on Rails and Backbone. Works in Chrome and Firefox, and mostly works in Safari. Users can:
+A clone of Google Sheets built on Rails and Backbone. Works in Chrome, and works in Firefox and Safari with some small styling bugs. Users can:
 
 - [x] Create accounts, log in (optionally using OAuth provider), log out, add a user profile photo
 - [x] Create new spreadsheets
