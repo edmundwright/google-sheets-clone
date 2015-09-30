@@ -1,4 +1,4 @@
-(function () {
+var wam = function () {
   var findRef = GoogleSheetsClone.findRef = function (formula, posToStartLooking) {
     var startPos, lastPos, colName, rowName, rowStartPos, row, col;
 
@@ -323,4 +323,4 @@
 
     throw "formulaNotWellFormed";
   };
-})();
+};
