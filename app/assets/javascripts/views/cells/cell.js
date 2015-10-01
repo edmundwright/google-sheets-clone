@@ -183,35 +183,13 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     if (skipIfEditing && this.editing) {
       return;
     }
-    var contents;
-    if (this.model) {
-      contents = this.model.get("contents_str") ||
-                this.model.get("contents_int") ||
-                this.model.get("contents_flo");
-      if (this.model.get("contents_int") === 0) {
-        contents = 0;
-      }
-    } else {
-      contents = "";
-    }
 
-    var evaluatedContents;
-    if (typeof contents ==="string" && contents[0] === "=") {
-      try {
-        evaluatedContents = GoogleSheetsClone.evaluate(contents.slice(1));
-      } catch (error) {
-        if (error === "formulaNotWellFormed") {
-          evaluatedContents = "#BAD FORMULA!";
-        } else if (error === "badReference") {
-          evaluatedContents = "#BAD REF!";
-        } else if (error === "divideByZero") {
-          evaluatedContents = "#DIV BY ZERO!";
-        } else {
-          evaluatedContents = "#SOME ERROR!";
-        }
-      }
-    } else {
-      evaluatedContents = contents;
+    var contents = "";
+    var evaluatedContents = "";
+
+    if (this.model) {
+      contents = this.model.contents();
+      evaluatedContents = GoogleSheetsClone.evaluate(this.model);
     }
 
     this.$el.html(this.template({

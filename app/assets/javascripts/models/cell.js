@@ -1,4 +1,8 @@
 GoogleSheetsClone.Models.Cell = Backbone.Model.extend ({
+  initialize: function () {
+    this.dependents = [];
+  },
+
   urlRoot: function () {
     return "/api/spreadsheets/" + this.get("spreadsheet_id") + "/cells";
   },
@@ -17,5 +21,11 @@ GoogleSheetsClone.Models.Cell = Backbone.Model.extend ({
     var json = Backbone.Model.prototype.toJSON.call(this);
 
     return {"cell": json};
+  },
+
+  addDependent: function (dependent) {
+    if (this.dependents.indexOf(dependent) === -1) {
+      this.dependents.push(dependent);
+    }
   }
 });

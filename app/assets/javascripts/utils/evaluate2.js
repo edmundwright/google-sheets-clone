@@ -6,7 +6,20 @@
       cell.evaluation = cell.contents();
     } else {
       var formula = contents_str.slice(1).replace(/ /g, '');
-      cell.evaluation = evaluateFormula(formula, cell);
+
+      try {
+        cell.evaluation = evaluateFormula(formula, cell);
+      } catch (error) {
+        if (error === "formulaNotWellFormed") {
+          cell.evaluation = "#BAD FORMULA!";
+        } else if (error === "badReference") {
+          cell.evaluation = "#BAD REF!";
+        } else if (error === "divideByZero") {
+          cell.evaluation = "#DIV BY ZERO!";
+        } else {
+          cell.evaluation = "#SOME ERROR!";
+        }
+      }
     }
 
     evaluateDependents(cell);
@@ -15,14 +28,15 @@
   };
 
   var evaluateDependents = function (cell) {
-
+    for (var i; i < cell.dependents.length; i++) {
+      GoogleSheetsClone.evaluate(cell.dependents[i]);
+    }
   };
 
   var evaluateFormula = function (formula, cell) {
     var oldFormula = "";
 
-    while (oldFormula != formula && isNaN(formula) &&
-          (typeof formula !== "object")) {
+    while (oldFormula != formula && isNaN(formula) && !Array.isArray(formula)) {
       oldFormula = formula;
       formula = evaluateOnePart(formula, cell);
     }
@@ -35,15 +49,17 @@
   };
 
   var evaluateOnePart = function (formula, cell) {
-    var functs = [
+    var evaluationFunctions = [
       evaluateSumIfPresent,
-      evaluateAverageIfPresent
+      evaluateAverageIfPresent,
+      evaluateCommasIfPresent,
+      evaluateColonIfPresent
     ];
 
     var newFormula;
 
-    for (var i = 0; i < functs.length; i++) {
-      newFormula = functs[i](formula, cell);
+    for (var i = 0; i < evaluationFunctions.length; i++) {
+      newFormula = evaluationFunctions[i](formula, cell);
       if (newFormula !== formula) {
         return newFormula;
       }
@@ -55,9 +71,9 @@
   var evaluateSumIfPresent = function (formula, cell) {
     return formula.replace(
       /SUM\((.+?)\)/i,
-      function (unused, stringToSum) {
+      function (_, stringToSum) {
         var toSum = evaluateFormula(stringToSum, cell);
-        if (typeof toSum === "object") {
+        if (Array.isArray(toSum)) {
           return toSum.reduce(function (x, y) {
             return x + y;
           });
@@ -71,9 +87,9 @@
   var evaluateAverageIfPresent = function (formula, cell) {
     return formula.replace(
       /AVERAGE\((.+?)\)/i,
-      function (unused, stringToAverage) {
-        var toAverage = evaluateFormula(stringToSum, cell);
-        if (typeof toAverage === "object") {
+      function (_, stringToAverage) {
+        var toAverage = evaluateFormula(stringToAverage, cell);
+        if (Array.isArray(toAverage)) {
           return toAverage.reduce(function (x, y) {
             return x + y;
           }) / toAverage.length;
@@ -84,5 +100,56 @@
     );
   };
 
+  var evaluateCommasIfPresent = function (formula, cell) {
+    var commaSeparatedComponents = formula.split(",");
+    if (commaSeparatedComponents.length === 1) {
+      return formula;
+    }
 
+    var result = [];
+
+    commaSeparatedComponents.forEach(function (el) {
+      var evaluatedEl = evaluateFormula(el, cell);
+      if (Array.isArray(evaluatedEl)) {
+        result = result.concat(evaluatedEl);
+      } else {
+        result.push(evaluatedEl);
+      }
+    });
+
+    return result;
+  };
+
+  var evaluateColonIfPresent = function (formula, cell) {
+    var matchData = formula.match(/([a-zA-Z]+)(\d+):([a-zA-Z]+)(\d+)/);
+    if (matchData === null) {
+      return formula;
+    }
+    var firstColIndex = GoogleSheetsClone.columnIndex(matchData[1]);
+    var firstRowIndex = GoogleSheetsClone.rowIndex(matchData[2]);
+    var lastColIndex = GoogleSheetsClone.columnIndex(matchData[3]);
+    var lastRowIndex = GoogleSheetsClone.rowIndex(matchData[4]);
+
+    var resultArray = [];
+    var referencedCell, evaluatedReference;
+    for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
+      for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {
+        referencedCell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex);
+        if (referencedCell) {
+          if (referencedCell.evaluation === undefined) {
+            evaluatedReference = evaluate(referencedCell);
+          } else {
+            evaluatedReference = referencedCell.evaluation;
+          }
+          if (isNaN(evaluatedReference)) {
+            throw "badReference";
+          }
+          resultArray.push(evaluatedReference);
+          referencedCell.addDependent(cell);
+        }
+      }
+    }
+
+    return resultArray;
+  };
 })();
