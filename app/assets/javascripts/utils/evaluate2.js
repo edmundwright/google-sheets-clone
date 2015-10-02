@@ -53,7 +53,10 @@
       evaluateSumIfPresent,
       evaluateAverageIfPresent,
       evaluateCommasIfPresent,
-      evaluateColonIfPresent
+      evaluateColonIfPresent,
+      evaluateReferencesIfPresent,
+      throwErrorIfLettersRemain,
+      evaluateParenthesesIfPresent
     ];
 
     var newFormula;
@@ -68,6 +71,10 @@
     return formula;
   };
 
+  // TODO: This (and similarly evaluateAverageIfPresent below) will not cope
+  // with e.g. SUM((2 * 3),1), as it will assume the first closing parenthesis
+  // closes the sum. Solution is probably just to do it manually, rather than
+  // using regex.
   var evaluateSumIfPresent = function (formula, cell) {
     return formula.replace(
       /SUM\((.+?)\)/i,
@@ -86,16 +93,26 @@
 
   var evaluateAverageIfPresent = function (formula, cell) {
     return formula.replace(
-      /AVERAGE\((.+?)\)/i,
-      function (_, stringToAverage) {
-        var toAverage = evaluateFormula(stringToAverage, cell);
+      /AVERAGE(\(.+)/i,
+      function (_, afterAVERAGE) {
+        var evaluatedParens = evaluateParenthesesIfPresent(
+          afterAVERAGE,
+          cell,
+          true
+        );
+        var toAverage = evaluatedParens.evaluated;
+        var after = evaluatedParens.after;
+
+        var average;
         if (Array.isArray(toAverage)) {
-          return toAverage.reduce(function (x, y) {
+          average =  toAverage.reduce(function (x, y) {
             return x + y;
           }) / toAverage.length;
         } else {
-          return toSum;
+          average = toAverage;
         }
+
+        return "" + average + after;
       }
     );
   };
@@ -125,31 +142,109 @@
     if (matchData === null) {
       return formula;
     }
-    var firstColIndex = GoogleSheetsClone.columnIndex(matchData[1]);
-    var firstRowIndex = GoogleSheetsClone.rowIndex(matchData[2]);
-    var lastColIndex = GoogleSheetsClone.columnIndex(matchData[3]);
-    var lastRowIndex = GoogleSheetsClone.rowIndex(matchData[4]);
+    var firstCol = GoogleSheetsClone.columnIndex(matchData[1]);
+    var firstRow = GoogleSheetsClone.rowIndex(matchData[2]);
+    var lastCol = GoogleSheetsClone.columnIndex(matchData[3]);
+    var lastRow = GoogleSheetsClone.rowIndex(matchData[4]);
 
     var resultArray = [];
     var referencedCell, evaluatedReference;
-    for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
-      for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {
-        referencedCell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex);
-        if (referencedCell) {
-          if (referencedCell.evaluation === undefined) {
-            evaluatedReference = evaluate(referencedCell);
-          } else {
-            evaluatedReference = referencedCell.evaluation;
-          }
-          if (isNaN(evaluatedReference)) {
-            throw "badReference";
-          }
+    for (var col = firstCol; col <= lastCol; col++) {
+      for (var row = firstRow; row <= lastRow; row++) {
+        evaluatedReference = getEvaluatedReference(row, col, cell);
+        if (evaluatedReference !== null) {
           resultArray.push(evaluatedReference);
-          referencedCell.addDependent(cell);
         }
       }
     }
 
     return resultArray;
+  };
+
+  var getEvaluatedReference = function (row, col, cell) {
+    referencedCell = GoogleSheetsClone.cells.findByPos(row, col);
+
+    if (referencedCell) {
+      referencedCell.addDependent(cell);
+
+      var evaluatedReference;
+      if (referencedCell.evaluation === undefined) {
+        evaluatedReference = evaluate(referencedCell);
+      } else {
+        evaluatedReference = referencedCell.evaluation;
+      }
+
+      if (isNaN(evaluatedReference)) {
+        throw "badReference";
+      } else {
+        return evaluatedReference;
+      }
+    } else {
+      return null;
+    }
+  };
+
+  var evaluateReferencesIfPresent = function (formula, cell) {
+    return formula.replace(
+      /([a-zA-Z]+)(\d+)/g,
+      function (_, colName, rowName) {
+        var col = GoogleSheetsClone.columnIndex(colName);
+        var row = GoogleSheetsClone.rowIndex(rowName);
+
+        var evaluatedReference = getEvaluatedReference(row, col, cell);
+
+        if (evaluatedReference === null) {
+          return 0;
+        } else {
+          return evaluatedReference;
+        }
+      }
+    );
+  };
+
+  // is this necessary?
+  var throwErrorIfLettersRemain = function (formula, cell) {
+    if (formula.match(/[a-zA-Z]/) !== null) {
+      throw "formulaNotWellFormed";
+    } else {
+      return formula;
+    }
+  };
+
+  var evaluateParenthesesIfPresent = function (formula, cell, forFunction) {
+    var openingParenPos;
+    var openingMinusClosing = 0;
+    for(var i = 0; i < formula.length; i++) {
+      switch (formula[i]) {
+        case "(":
+          openingMinusClosing += 1;
+          if (openingParenPos === undefined) {
+            openingParenPos = i;
+          }
+          break;
+        case ")":
+          openingMinusClosing -= 1;
+          if (openingParenPos === undefined) {
+            throw "formulaNotWellFormed";
+          } else if (openingMinusClosing === 0) {
+            var inParentheses = formula.slice(openingParenPos + 1, i);
+            var after = formula.slice(i + 1);
+            var evaluated = evaluateFormula(inParentheses, cell);
+
+            if (forFunction) {
+              return { evaluated: evaluated, after: after };
+            } else {
+              var before = formula.slice(0, openingParenPos);
+              return "" + before + evaluated + after;
+            }
+          }
+        }
+    }
+
+    if (openingMinusClosing === 0) {
+      return formula;
+    } else {
+      throw "formulaNotWellFormed";
+    }
   };
 })();
