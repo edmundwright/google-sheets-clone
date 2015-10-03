@@ -50,13 +50,17 @@
 
   var evaluateOnePart = function (formula, cell) {
     var evaluationFunctions = [
-      evaluateSumIfPresent,
-      evaluateAverageIfPresent,
-      evaluateCommasIfPresent,
-      evaluateColonIfPresent,
-      evaluateReferencesIfPresent,
+      evaluateFunctions,
+      evaluateCommas,
+      evaluateColon,
+      evaluateReferences,
       throwErrorIfLettersRemain,
-      evaluateParenthesesIfPresent
+      evaluateParentheses,
+      evaluateAddition,
+      evaluateSubtraction,
+      evaluateMultiplication,
+      evaluateDivision,
+      evaluateExponentiation
     ];
 
     var newFormula;
@@ -71,53 +75,62 @@
     return formula;
   };
 
-  // TODO: This (and similarly evaluateAverageIfPresent below) will not cope
-  // with e.g. SUM((2 * 3),1), as it will assume the first closing parenthesis
-  // closes the sum. Solution is probably just to do it manually, rather than
-  // using regex.
-  var evaluateSumIfPresent = function (formula, cell) {
+  var evaluateFunctions = function (formula, cell) {
     return formula.replace(
-      /SUM\((.+?)\)/i,
-      function (_, stringToSum) {
-        var toSum = evaluateFormula(stringToSum, cell);
-        if (Array.isArray(toSum)) {
-          return toSum.reduce(function (x, y) {
+      /AVERAGE(\(.+)/i,
+      function (_, stringAfterAVERAGE) {
+        return evaluateAVERAGE(stringAfterAVERAGE, cell);
+      }
+    ).replace(
+      /SUM(\(.+)/i,
+      function (_, stringAfterSUM) {
+        return evaluateSUM(stringAfterSUM, cell);
+      }
+    );
+  };
+
+  var evaluateSingleFunction = function (stringAfterFUNCTION, cell, funct) {
+    var evaluatedParens = evaluateParentheses(stringAfterFUNCTION, cell, true);
+    var inputForFunction = evaluatedParens.evaluated;
+    var afterInput = evaluatedParens.after;
+    return funct(inputForFunction, afterInput);
+  };
+
+  var evaluateAVERAGE = function (stringAfterAVERAGE, cell) {
+    return evaluateSingleFunction(
+      stringAfterAVERAGE, cell,
+      function (input, afterInput) {
+        var average;
+        if (Array.isArray(input)) {
+          average =  input.reduce(function (x, y) {
+            return x + y;
+          }) / input.length;
+        } else {
+          average = input;
+        }
+        return "" + average + afterInput;
+      }
+    );
+  };
+
+  var evaluateSUM = function (stringAfterSUM, cell) {
+    return evaluateSingleFunction(
+      stringAfterSUM, cell,
+      function (input, afterInput) {
+        var sum;
+        if (Array.isArray(input)) {
+          sum =  input.reduce(function (x, y) {
             return x + y;
           });
         } else {
-          return toSum;
+          sum = input;
         }
+        return "" + sum + afterInput;
       }
     );
   };
 
-  var evaluateAverageIfPresent = function (formula, cell) {
-    return formula.replace(
-      /AVERAGE(\(.+)/i,
-      function (_, afterAVERAGE) {
-        var evaluatedParens = evaluateParenthesesIfPresent(
-          afterAVERAGE,
-          cell,
-          true
-        );
-        var toAverage = evaluatedParens.evaluated;
-        var after = evaluatedParens.after;
-
-        var average;
-        if (Array.isArray(toAverage)) {
-          average =  toAverage.reduce(function (x, y) {
-            return x + y;
-          }) / toAverage.length;
-        } else {
-          average = toAverage;
-        }
-
-        return "" + average + after;
-      }
-    );
-  };
-
-  var evaluateCommasIfPresent = function (formula, cell) {
+  var evaluateCommas = function (formula, cell) {
     var commaSeparatedComponents = formula.split(",");
     if (commaSeparatedComponents.length === 1) {
       return formula;
@@ -137,7 +150,7 @@
     return result;
   };
 
-  var evaluateColonIfPresent = function (formula, cell) {
+  var evaluateColon = function (formula, cell) {
     var matchData = formula.match(/([a-zA-Z]+)(\d+):([a-zA-Z]+)(\d+)/);
     if (matchData === null) {
       return formula;
@@ -184,7 +197,7 @@
     }
   };
 
-  var evaluateReferencesIfPresent = function (formula, cell) {
+  var evaluateReferences = function (formula, cell) {
     return formula.replace(
       /([a-zA-Z]+)(\d+)/g,
       function (_, colName, rowName) {
@@ -211,7 +224,7 @@
     }
   };
 
-  var evaluateParenthesesIfPresent = function (formula, cell, forFunction) {
+  var evaluateParentheses = function (formula, cell, forFunction) {
     var openingParenPos;
     var openingMinusClosing = 0;
     for(var i = 0; i < formula.length; i++) {
@@ -245,6 +258,54 @@
       return formula;
     } else {
       throw "formulaNotWellFormed";
+    }
+  };
+
+  var evaluateAddition = function (formula, cell) {
+    return evaluateSimpleOperation("+", formula, cell);
+  };
+
+  var evaluateSubtraction = function (formula, cell) {
+    return evaluateSimpleOperation("-", formula, cell);
+  };
+
+  var evaluateMultiplication = function (formula, cell) {
+    return evaluateSimpleOperation("*", formula, cell);
+  };
+
+  var evaluateDivision = function (formula, cell) {
+    return evaluateSimpleOperation("/", formula, cell);
+  };
+
+  var evaluateExponentiation = function (formula, cell) {
+    return evaluateSimpleOperation("^", formula, cell);
+  };
+
+  var evaluateSimpleOperation = function (operation, formula, cell) {
+    var matchData = formula.match(new RegExp("(^.+)\\" + operation + "(.+$)"));
+    if (matchData === null) {
+      return formula;
+    } else if (operation === "-" && matchData[1].match(/(\+|\-|\*|\/|\^)$/)) {
+      return formula;
+    }
+
+    var leftHandSide = evaluateFormula(matchData[1], cell);
+    var rightHandSide = evaluateFormula(matchData[2], cell);
+
+    switch (operation) {
+      case "+":
+        return leftHandSide + rightHandSide;
+      case "-":
+        return leftHandSide - rightHandSide;
+      case "*":
+        return leftHandSide * rightHandSide;
+      case "/":
+        if (rightHandSide === 0) {
+          throw "divideByZero";
+        }
+        return leftHandSide / rightHandSide;
+      case "^":
+        return Math.pow(leftHandSide, rightHandSide);
     }
   };
 })();
