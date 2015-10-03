@@ -39,6 +39,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     );
     this.model = newModel;
     this.listenTo(this.model, "render", this.render.bind(this));
+    GoogleSheetsClone.evaluate(this.model);
   },
 
   removeCurrentEditor: function () {
@@ -68,26 +69,21 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   },
 
   translateFormulaContents: function (options) {
-    var translatedFormula = options.contents.slice(1);
+    var formula = options.contents.slice(1);
 
     var rowDifference = this.row - options.originalRow;
     var colDifference = this.col - options.originalCol;
 
-    var foundRef = GoogleSheetsClone.findRef(translatedFormula, 0);
+    return "=" + formula.replace(
+      /([a-zA-Z]+)(\d+)/g,
+      function (_, colName, rowName) {
+        var col = GoogleSheetsClone.columnIndex(colName);
+        var row = GoogleSheetsClone.rowIndex(rowName);
 
-    while (foundRef) {
-      var newRowName = foundRef.row + rowDifference + 1;
-      var newColName = GoogleSheetsClone.columnName(foundRef.col + colDifference);
-      translatedFormula = translatedFormula.slice(0, foundRef.startPos) +
-        newColName + newRowName + translatedFormula.slice(foundRef.lastPos + 1);
-
-      foundRef = GoogleSheetsClone.findRef(
-        translatedFormula,
-        foundRef.startPos + (newColName + newRowName).length
-      );
-    }
-
-    return "=" + translatedFormula;
+        return GoogleSheetsClone.columnName(col + colDifference) +
+          GoogleSheetsClone.rowName(row + rowDifference);
+      }
+    );
   },
 
   cancelEditing: function () {
@@ -97,13 +93,18 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
   destroyModel: function (e, callback) {
     if (this.model) {
+      var pos = this.model.pos();
+      this.model.removeDependencies();
       GoogleSheetsClone.statusAreaView.displaySaving();
       this.model.destroy({
         success: function () {
           GoogleSheetsClone.statusAreaView.finishSaving();
-          callback();
+          if (callback) {
+            callback();
+          }
         }
       });
+      GoogleSheetsClone.evaluateDependents(pos);
       this.model = null;
     }
 
@@ -150,6 +151,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     if (newContents === "") {
       this.model.destroy();
       this.model = null;
+      this.render();
     } else {
       GoogleSheetsClone.statusAreaView.displaySaving();
 
@@ -162,7 +164,11 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
         attrs = { contents_flo: newContents, contents_int: null, contents_str: null  };
       }
 
-      this.model.save(attrs, {
+      this.model.set(attrs);
+
+      GoogleSheetsClone.evaluate(this.model);
+
+      this.model.save({}, {
         success: function () {
           GoogleSheetsClone.statusAreaView.finishSaving();
           if (callback) {
@@ -176,7 +182,6 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
   finishEditing: function (e, callback) {
     this.editing = false;
     this.save(this.$("input").val(), callback);
-    this.render();
   },
 
   render: function (e, skipIfEditing) {
@@ -189,7 +194,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
     if (this.model) {
       contents = this.model.contents();
-      evaluatedContents = GoogleSheetsClone.evaluate(this.model);
+      evaluatedContents = this.model.evaluation;
     }
 
     this.$el.html(this.template({

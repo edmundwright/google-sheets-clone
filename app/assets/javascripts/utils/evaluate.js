@@ -1,326 +1,346 @@
-var wam = function () {
-  var findRef = GoogleSheetsClone.findRef = function (formula, posToStartLooking) {
-    var startPos, lastPos, colName, rowName, rowStartPos, row, col;
+(function () {
+  var evaluate = GoogleSheetsClone.evaluate = function (cell) {
+    cell.removeDependencies();
 
-    for(var i = posToStartLooking; i < formula.length; i++) {
-      if (startPos === undefined) {
-        if (formula.slice(i, i + 3).toUpperCase() === "SUM") {
-          i += 2;
-        } else if (formula.slice(i, i + 7).toUpperCase() === "AVERAGE") {
-          i += 6;
-        } else if (formula[i].match(/[a-z]/i)) {
-          startPos = i;
+    var contents_str = cell.get("contents_str");
+
+    if (!contents_str) {
+      cell.evaluation = Number(cell.contents());
+    } else if (contents_str[0] !== "=") {
+      cell.evaluation = cell.contents();
+    } else {
+      var formula = contents_str.slice(1).replace(/ /g, '');
+
+      try {
+        cell.evaluation = evaluateFormula(formula, cell);
+      } catch (error) {
+        if (error === "formulaNotWellFormed") {
+          cell.evaluation = "#BAD FORMULA!";
+        } else if (error === "badReference") {
+          cell.evaluation = "#BAD REF!";
+        } else if (error === "divideByZero") {
+          cell.evaluation = "#DIV BY ZERO!";
+        } else if (error === "cycleInDependencies") {
+          cell.evaluation = "#CIRCULAR REF!";
+        } else {
+          cell.evaluation = "#SOME ERROR!";
         }
-      } else if (rowStartPos === undefined && formula[i].match(/[0-9]/)) {
-        rowStartPos = i;
-        colName = formula.slice(startPos, rowStartPos);
-      } else if (rowStartPos !== undefined && !formula[i].match(/[0-9]/)) {
-        lastPos = i - 1;
-        break;
       }
-    };
+    }
 
-    if (rowStartPos !== undefined) {
-      if (lastPos === undefined) {
-        lastPos = formula.length - 1;
+    if (cell.evaluation === "#CIRCULAR REF!") {
+      setDependentsToCircularRef(cell.pos(), cell);
+    } else {
+      evaluateDependents(cell.pos());
+    }
+
+    cell.trigger("render");
+
+    return cell.evaluation;
+  };
+
+  var evaluateDependents = GoogleSheetsClone.evaluateDependents = function (pos) {
+    var dependents = GoogleSheetsClone.cells.dependents(pos);
+    for (var dependentRow in dependents) {
+      for (var dependentCol in dependents[dependentRow]) {
+        dependent = GoogleSheetsClone.cells.findByPos(
+          [parseInt(dependentRow), parseInt(dependentCol)]
+        );
+        if (dependent) {
+          evaluate(dependent);
+        }
       }
-      rowName = formula.slice(rowStartPos, lastPos + 1);
-      row = parseInt(rowName) - 1;
-      col = GoogleSheetsClone.columnIndex(colName);
-      return {
-        row: row,
-        col: col,
-        startPos: startPos,
-        lastPos: lastPos
-      };
     }
   };
 
-  var evaluate = GoogleSheetsClone.evaluate = function (formula) {
-    if ((typeof formula === "number") || (typeof formula === "object")) {
-      return formula;
+  var setDependentsToCircularRef = function (pos, dependentToSkip) {
+    var dependents = GoogleSheetsClone.cells.dependents(pos);
+    for (var dependentRow in dependents) {
+      for (var dependentCol in dependents[dependentRow]) {
+        var dependentPos = [parseInt(dependentRow), parseInt(dependentCol)];
+        var dependent = GoogleSheetsClone.cells.findByPos(dependentPos);
+        if (dependent && dependent !== dependentToSkip) {
+          dependent.evaluation = "#CIRCULAR REF!";
+          setDependentsToCircularRef(dependentPos, dependentToSkip);
+          dependent.trigger("render");
+        }
+      }
     }
+  };
 
-    var newFormula = formula.replace(/ /g, '');
+  var evaluateFormula = function (formula, cell) {
     var oldFormula = "";
 
-    while (oldFormula != newFormula && isNaN(newFormula) && (typeof newFormula !== "object")) {
-      var oldFormula = newFormula;
-      newFormula = evaluateOnePart(newFormula);
+    while (oldFormula != formula && isNaN(formula) && !Array.isArray(formula)) {
+      oldFormula = formula;
+      formula = evaluateOnePart(formula, cell);
     }
 
-    if (!isNaN(newFormula)) {
-      newFormula = Number(newFormula);
+    if (!isNaN(formula)) {
+      return Number(formula);
+    } else {
+      return formula;
     }
-
-    return newFormula;
   };
 
-  var evaluateOnePart = function (formula) {
-    var newFormula = "";
+  var evaluateOnePart = function (formula, cell) {
+    var evaluationFunctions = [
+      evaluateFunctions,
+      evaluateCommas,
+      evaluateColon,
+      evaluateReferences,
+      throwErrorIfLettersRemain,
+      evaluateParentheses,
+      evaluateAddition,
+      evaluateSubtraction,
+      evaluateMultiplication,
+      evaluateDivision,
+      evaluateExponentiation
+    ];
 
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula.slice(i - 2, i + 1).toUpperCase() === "SUM") {
-        return evaluateSum(formula, i);
-      }
-    }
+    var newFormula;
 
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula.slice(i - 6, i + 1).toUpperCase() === "AVERAGE") {
-        return evaluateAverage(formula, i);
-      }
-    }
-
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === ",") {
-        return evaluateComma(formula);
-      }
-    }
-
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === ":") {
-        return evaluateColon(formula);
-      }
-    }
-
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i].match(/[a-z]/i)) {
-        return evaluateReference(formula, i);
-      }
-    }
-
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === ")") {
-        return evaluateBrackets(formula, i);
-      }
-    }
-
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === "+") {
-        return evaluateSimpleOperation(formula, i, "+");
-      } else if (formula[i] === "-" &&
-                 i !== 0 &&
-                 formula[i-1] != "+" &&
-                 formula[i-1] != "-" &&
-                 formula[i-1] != "*" &&
-                 formula[i-1] != "/" &&
-                 formula[i-1] != "^") {
-        return evaluateSimpleOperation(formula, i, "-");
-      }
-    }
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === "*") {
-        return evaluateSimpleOperation(formula, i, "*");
-      } else if (formula[i] === "/") {
-        return evaluateSimpleOperation(formula, i, "/");
-      }
-    }
-    for(var i = formula.length - 1; i >= 0; i--) {
-      if (formula[i] === "^") {
-        return evaluateSimpleOperation(formula, i, "^");
+    for (var i = 0; i < evaluationFunctions.length; i++) {
+      newFormula = evaluationFunctions[i](formula, cell);
+      if (newFormula !== formula) {
+        return newFormula;
       }
     }
 
     return formula;
   };
 
-  var evaluateComma = function (formula) {
+  var evaluateFunctions = function (formula, cell) {
+    return formula.replace(
+      /AVERAGE(\(.+)/i,
+      function (_, stringAfterAVERAGE) {
+        return evaluateAVERAGE(stringAfterAVERAGE, cell);
+      }
+    ).replace(
+      /SUM(\(.+)/i,
+      function (_, stringAfterSUM) {
+        return evaluateSUM(stringAfterSUM, cell);
+      }
+    );
+  };
+
+  var evaluateSingleFunction = function (stringAfterFUNCTION, cell, funct) {
+    var evaluatedParens = evaluateParentheses(stringAfterFUNCTION, cell, true);
+    var inputForFunction = evaluatedParens.evaluated;
+    var afterInput = evaluatedParens.after;
+    return funct(inputForFunction, afterInput);
+  };
+
+  var evaluateAVERAGE = function (stringAfterAVERAGE, cell) {
+    return evaluateSingleFunction(
+      stringAfterAVERAGE, cell,
+      function (input, afterInput) {
+        var average;
+        if (Array.isArray(input)) {
+          average =  input.reduce(function (x, y) {
+            return x + y;
+          }) / input.length;
+        } else {
+          average = input;
+        }
+        return "" + average + afterInput;
+      }
+    );
+  };
+
+  var evaluateSUM = function (stringAfterSUM, cell) {
+    return evaluateSingleFunction(
+      stringAfterSUM, cell,
+      function (input, afterInput) {
+        var sum;
+        if (Array.isArray(input)) {
+          sum =  input.reduce(function (x, y) {
+            return x + y;
+          });
+        } else {
+          sum = input;
+        }
+        return "" + sum + afterInput;
+      }
+    );
+  };
+
+  var evaluateCommas = function (formula, cell) {
+    var commaSeparatedComponents = formula.split(",");
+    if (commaSeparatedComponents.length === 1) {
+      return formula;
+    }
+
     var result = [];
 
-    formula.split(",").forEach(function (el) {
-      var evaluatedEl = evaluate(el);
+    commaSeparatedComponents.forEach(function (el) {
+      var evaluatedEl = evaluateFormula(el, cell);
       if (Array.isArray(evaluatedEl)) {
         result = result.concat(evaluatedEl);
       } else {
         result.push(evaluatedEl);
       }
-    })
+    });
 
     return result;
   };
 
-  var evaluateColon = function (formula) {
-    var firstAndLast = formula.split(":");
-    if (firstAndLast.length !== 2) {
-      throw "formulaNotWellFormed";
+  var evaluateColon = function (formula, cell) {
+    var matchData = formula.match(/([a-zA-Z]+)(\d+):([a-zA-Z]+)(\d+)/);
+    if (matchData === null) {
+      return formula;
     }
-    var first = firstAndLast[0];
-    var last = firstAndLast[1];
+    var firstCol = GoogleSheetsClone.columnIndex(matchData[1]);
+    var firstRow = GoogleSheetsClone.rowIndex(matchData[2]);
+    var lastCol = GoogleSheetsClone.columnIndex(matchData[3]);
+    var lastRow = GoogleSheetsClone.rowIndex(matchData[4]);
 
-    for (var i = 0; i < first.length; i++) {
-      if (first[i].match(/[0-9]/)) {
-        break;
-      }
-    }
-    var firstColIndex = GoogleSheetsClone.columnIndex(first.slice(0, i));
-    var firstRowIndex = parseInt(first.slice(i)) - 1;
-
-    for (var i = 0; i < last.length; i++) {
-      if (last[i].match(/[0-9]/)) {
-        break;
-      }
-    }
-    var lastColIndex = GoogleSheetsClone.columnIndex(last.slice(0, i));
-    var lastRowIndex = parseInt(last.slice(i)) - 1;
-
-    if (isNaN(firstColIndex) && isNaN(lastColIndex)) {
-      firstColIndex = 0;
-      lastColIndex = GoogleSheetsClone.spreadsheet.get("width") - 1
-    } else if (isNaN(firstRowIndex) && isNaN(lastRowIndex)) {
-      firstRowIndex = 0;
-      lastRowIndex = GoogleSheetsClone.spreadsheet.get("height") - 1
-    }
-
-    var cells = [];
-    for (var colIndex = firstColIndex; colIndex <= lastColIndex; colIndex++) {
-      for (var rowIndex = firstRowIndex; rowIndex <= lastRowIndex; rowIndex++) {
-        var thisCell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex)
-        cells.push(thisCell);
+    var resultArray = [];
+    var referencedCell, evaluatedReference;
+    for (var col = firstCol; col <= lastCol; col++) {
+      for (var row = firstRow; row <= lastRow; row++) {
+        evaluatedReference = getEvaluatedReference(row, col, cell);
+        if (evaluatedReference !== null) {
+          resultArray.push(evaluatedReference);
+        }
       }
     }
 
-    return cells.map(function (cell) {
-      if (!cell) {
-        return 0;
-      } else if (cell.get("contents_str") && cell.get("contents_str")[0] === "=") {
-        return evaluate(cell.get("contents_str").slice(1));
-      } else if (cell.get("contents_str")) {
+    return resultArray;
+  };
+
+  var getEvaluatedReference = function (row, col, cell) {
+    cell.addDependency([row, col]);
+
+    referencedCell = GoogleSheetsClone.cells.findByPos([row, col]);
+
+    if (referencedCell) {
+      var evaluatedReference;
+      if (referencedCell.evaluation === undefined) {
+        evaluatedReference = evaluate(referencedCell);
+      } else {
+        evaluatedReference = referencedCell.evaluation;
+      }
+
+      if (isNaN(evaluatedReference)) {
         throw "badReference";
       } else {
-        return cell.contents();
+        return evaluatedReference;
       }
-    })
+    } else {
+      return null;
+    }
   };
 
-  var evaluateReference = function (formula, letterPos) {
-    var rowName = "";
-    var lastRowNameIndex;
-    for (var i = letterPos + 1; i < formula.length; i++) {
-      if (formula[i].match(/[0-9]/)) {
-        rowName += formula[i];
-        lastRowNameIndex = i
-      } else {
-        break;
-      }
-    }
+  var evaluateReferences = function (formula, cell) {
+    return formula.replace(
+      /([a-zA-Z]+)(\d+)/g,
+      function (_, colName, rowName) {
+        var col = GoogleSheetsClone.columnIndex(colName);
+        var row = GoogleSheetsClone.rowIndex(rowName);
 
-    if (lastRowNameIndex === undefined) {
+        var evaluatedReference = getEvaluatedReference(row, col, cell);
+
+        if (evaluatedReference === null) {
+          return 0;
+        } else {
+          return evaluatedReference;
+        }
+      }
+    );
+  };
+
+  // is this necessary?
+  var throwErrorIfLettersRemain = function (formula, cell) {
+    if (formula.match(/[a-zA-Z]/) !== null) {
       throw "formulaNotWellFormed";
-    }
-
-    var colName = "";
-    var firstColNameIndex;
-    for (var i = letterPos; i >= 0; i--) {
-      if (formula[i].match(/[a-z]/i)) {
-        colName = formula[i] + colName;
-        firstColNameIndex = i;
-      } else {
-        break;
-      }
-    }
-
-    var colIndex = GoogleSheetsClone.columnIndex(colName);
-    var rowIndex = parseInt(rowName) - 1;
-    var cell = GoogleSheetsClone.cells.findByPos(rowIndex, colIndex);
-
-    if (cell === null) {
-      var evaluatedCellContents = "";
-    } else if (cell.get("contents_str") && cell.get("contents_str")[0] === "=") {
-      var evaluatedCellContents = evaluate(cell.get("contents_str").slice(1));
-    } else if (cell.get("contents_str")) {
-      throw "badReference";
     } else {
-      var evaluatedCellContents = cell.contents();
-    }
-
-    return formula.slice(0, firstColNameIndex) +
-      evaluatedCellContents +
-      formula.slice(lastRowNameIndex + 1);
-  };
-
-  var evaluateSum = function (formula, mPos) {
-    for(var i = mPos + 2; i < formula.length; i++) {
-      if (formula[i] === ")") {
-        break;
-      }
-    }
-
-    var toSum = evaluate(formula.slice(mPos + 2, i));
-
-    if (typeof toSum === "object") {
-      var sum = toSum.reduce(function(x, y) {
-        return x + y;
-      });
-    } else {
-      var sum = toSum;
-    }
-
-    return formula.slice(0, mPos - 2) +
-      sum +
-      formula.slice(i + 1);
-  };
-
-  var evaluateAverage = function (formula, ePos) {
-    for(var i = ePos + 2; i < formula.length; i++) {
-      if (formula[i] === ")") {
-        break;
-      }
-    }
-
-    var toSum = evaluate(formula.slice(ePos + 2, i));
-
-    var result;
-    if (typeof toSum === "object") {
-      result = toSum.reduce(function(x, y) {
-        return x + y;
-      });
-      result = result / toSum.length;
-    } else {
-      result = toSum;
-    }
-
-    return formula.slice(0, ePos - 6) +
-      result +
-      formula.slice(i + 1);
-  };
-
-  var evaluateSimpleOperation = function (formula, operatorPos, operator) {
-    var leftHandSide = GoogleSheetsClone.evaluate(formula.slice(0, operatorPos));
-    var rightHandSide = GoogleSheetsClone.evaluate(formula.slice(operatorPos + 1));
-    if (typeof leftHandSide === "number" && typeof rightHandSide === "number") {
-      switch (operator) {
-        case "+":
-          return leftHandSide + rightHandSide;
-        case "-":
-          return leftHandSide - rightHandSide;
-        case "*":
-          return leftHandSide * rightHandSide;
-        case "/":
-          if (rightHandSide == 0) {
-            throw "divideByZero";
-          }
-          return leftHandSide / rightHandSide;
-        case "^":
-          return Math.pow(leftHandSide, rightHandSide);
-      }
-    } else {
-      throw "formulaNotWellFormed";
+      return formula;
     }
   };
 
-  var evaluateBrackets = function (formula, closingBracketPos) {
-    for(var i = closingBracketPos - 1; i >= 0; i--) {
+  var evaluateParentheses = function (formula, cell, forFunction) {
+    var openingParenPos;
+    var openingMinusClosing = 0;
+    for(var i = 0; i < formula.length; i++) {
       switch (formula[i]) {
-        case ")":
-          closingBracketPos = i;
-          break;
         case "(":
-          return formula.slice(0, i) +
-            evaluate(formula.slice(i + 1, closingBracketPos)) +
-            formula.slice(closingBracketPos + 1);
-      }
+          openingMinusClosing += 1;
+          if (openingParenPos === undefined) {
+            openingParenPos = i;
+          }
+          break;
+        case ")":
+          openingMinusClosing -= 1;
+          if (openingParenPos === undefined) {
+            throw "formulaNotWellFormed";
+          } else if (openingMinusClosing === 0) {
+            var inParentheses = formula.slice(openingParenPos + 1, i);
+            var after = formula.slice(i + 1);
+            var evaluated = evaluateFormula(inParentheses, cell);
+
+            if (forFunction) {
+              return { evaluated: evaluated, after: after };
+            } else {
+              var before = formula.slice(0, openingParenPos);
+              return "" + before + evaluated + after;
+            }
+          }
+        }
     }
 
-    throw "formulaNotWellFormed";
+    if (openingMinusClosing === 0) {
+      return formula;
+    } else {
+      throw "formulaNotWellFormed";
+    }
   };
-};
+
+  var evaluateAddition = function (formula, cell) {
+    return evaluateSimpleOperation("+", formula, cell);
+  };
+
+  var evaluateSubtraction = function (formula, cell) {
+    return evaluateSimpleOperation("-", formula, cell);
+  };
+
+  var evaluateMultiplication = function (formula, cell) {
+    return evaluateSimpleOperation("*", formula, cell);
+  };
+
+  var evaluateDivision = function (formula, cell) {
+    return evaluateSimpleOperation("/", formula, cell);
+  };
+
+  var evaluateExponentiation = function (formula, cell) {
+    return evaluateSimpleOperation("^", formula, cell);
+  };
+
+  var evaluateSimpleOperation = function (operation, formula, cell) {
+    var matchData = formula.match(new RegExp("(^.+)\\" + operation + "(.+$)"));
+    if (matchData === null) {
+      return formula;
+    } else if (operation === "-" && matchData[1].match(/(\+|\-|\*|\/|\^)$/)) {
+      return formula;
+    }
+
+    var leftHandSide = evaluateFormula(matchData[1], cell);
+    var rightHandSide = evaluateFormula(matchData[2], cell);
+
+    switch (operation) {
+      case "+":
+        return leftHandSide + rightHandSide;
+      case "-":
+        return leftHandSide - rightHandSide;
+      case "*":
+        return leftHandSide * rightHandSide;
+      case "/":
+        if (rightHandSide === 0) {
+          throw "divideByZero";
+        }
+        return leftHandSide / rightHandSide;
+      case "^":
+        return Math.pow(leftHandSide, rightHandSide);
+    }
+  };
+})();

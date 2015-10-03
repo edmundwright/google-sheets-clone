@@ -7,6 +7,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
         GoogleSheetsClone.spreadsheet = this.model;
+        GoogleSheetsClone.cells.evaluateAll();
         this.okForSelectAllToBeRendered = true;
         this.render();
         this.lastUpdatedAt = this.model.cells().lastUpdatedAt();
@@ -77,11 +78,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
             $cellLi.trigger("receiveNewModel", model);
           }
         }.bind(this));
-
-        if (response.cells.length > 0) {
-          this.renderAllCells();
-        }
-
       }.bind(this)
     });
 
@@ -214,7 +210,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       var rowContents = [];
 
       for (var col = rangeLimits.leftMostCol; col <= rangeLimits.rightMostCol; col++ ) {
-        var model = this.model.cells().findByPos(row, col);
+        var model = this.model.cells().findByPos([row, col]);
         var contentsToCopy;
         if (model) {
           contentsToCopy = model.contents();
@@ -259,21 +255,17 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.copiedContents[0][0].originalCol
       );
 
-      $originalCellLi.trigger("delete", this.renderAllCells.bind(this));
+      $originalCellLi.trigger("delete");
     }
 
     this.$(".selected-for-operation").each(function () {
       if ($(this).index() !== that.$selectedLi.index()) {
-        $(this).trigger("paste", {
-          newContents: that.copiedContents[0][0],
-          callback: that.renderAllCells.bind(that)
-        });
+        $(this).trigger("paste", { newContents: that.copiedContents[0][0] });
       }
     });
     this.$selectedLi.trigger("paste", {
       newContents: that.copiedContents[0][0],
       callback: function () {
-        this.renderAllCells();
         this.$(".formula-bar-input")
           .val(this.$selectedLi.find(".cell-contents").data("contents"));
       }.bind(this)
@@ -292,7 +284,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
             this.copiedContents[row][col].originalRow,
             this.copiedContents[row][col].originalCol
           );
-          $originalCellLi.trigger("delete", this.renderAllCells.bind(this));
+          $originalCellLi.trigger("delete");
         }
       }
     }
@@ -303,18 +295,18 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         if ($cellLiToPasteInto.length !== 0) {
           var callback;
           if ($cellLiToPasteInto.index() === this.$selectedLi.index()) {
-            callback = function () {
-              this.renderAllCells();
-              this.$(".formula-bar-input")
-                .val(this.$selectedLi.find(".cell-contents").data("contents"));
-            };
+            $cellLiToPasteInto.trigger("paste", {
+              newContents: this.copiedContents[row][col],
+              callback: function () {
+                this.$(".formula-bar-input")
+                  .val(this.$selectedLi.find(".cell-contents").data("contents"));
+              }.bind(this)
+            });
           } else {
-            callback = this.renderAllCells;
+            $cellLiToPasteInto.trigger("paste", {
+              newContents: this.copiedContents[row][col]
+            });
           }
-          $cellLiToPasteInto.trigger("paste", {
-            newContents: this.copiedContents[row][col],
-            callback: callback.bind(this)
-          });
         }
       }
     }
@@ -353,7 +345,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   finishEditing: function () {
     this.currentInputField = null;
-    this.$selectedLi.trigger("finishEditing", this.renderAllCells.bind(this));
+    this.$selectedLi.trigger("finishEditing");
     this.$(".formula-bar-input").blur();
   },
 
@@ -383,10 +375,9 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     if (!this.editing()) {
       e.preventDefault();
       this.$(".formula-bar-input").val("");
-      this.$selectedLi.trigger("delete", this.renderAllCells.bind(this));
-      var that = this;
+      this.$selectedLi.trigger("delete");
       this.$(".selected-for-operation").each(function () {
-        $(this).trigger("delete", that.renderAllCells.bind(that));
+        $(this).trigger("delete");
       });
     } else if (this.inserting) {
       this.finishInserting();
@@ -843,7 +834,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
   },
 
-  // This method is profoundly delicate, don't mess it up!
   selectCell: function ($newLi) {
     if ((!this.$selectedLi) || this.$selectedLi.index() !== $newLi.index()) {
       if (this.$selectedLi) {
@@ -938,7 +928,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       $rowHeader.css("height", height + "px");
       this.updateRowHeaderPadding($rowHeader);
       this.$("li.cell:nth-of-type(n+" +
-        (this.model.get("width") * row_index + 1) + "):nth-of-type(-n+" + 
+        (this.model.get("width") * row_index + 1) + "):nth-of-type(-n+" +
         (this.model.get("width") * (row_index + 1)) + ")")
         .css("height", height + "px");
     }.bind(this));
@@ -1070,12 +1060,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     }
 
     this.selectCell($("li.cell:nth-child(1)"));
-  },
-
-  renderAllCells: function () {
-    this.model.cells().each(function (cell) {
-      cell.trigger("render", true);
-    });
   },
 
   scrollIfOutOfWindow: function ($elToScrollTo) {
