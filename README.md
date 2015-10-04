@@ -21,6 +21,8 @@ A clone of Google Sheets built on Rails and Backbone. Works in Chrome, and works
 - [x] Edit a spreadsheet simultaneously with another user, seeing their edits appear live (currently excluding deletion of cells, and resizing of columns and rows)
 
 ### Features not yet achieved
+- [ ] Copy and paste to and from other applications
+- [ ] Deletion of cells and resizing of columns and rows when editing simultaneously with another user
 - [ ] Make a spreadsheet public so that any other person with the link can access it
-- [ ] Format cells with custom background and/or text colour, and different number formats.
+- [ ] Format cells with custom background and/or text colour, and different number formats
 - [ ] Access spreadsheets through randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
