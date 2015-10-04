@@ -566,7 +566,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.updateInsertedRef(e.ctrlKey || e.metaKey);
       this.renderSelectionForInsertion();
     } else {
-      if (this.editing) {
+      if (this.editing()) {
         this.finishEditing();
       }
       this.selectCell(this.cellLiAtPos(0, 0));
