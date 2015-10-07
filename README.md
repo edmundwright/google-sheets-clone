@@ -10,25 +10,21 @@ A clone of Google Sheets built on Rails and Backbone. Works in Chrome, and works
 
 ## Features
 
-- [x] Create accounts, log in (optionally using OAuth provider), log out, add a user profile photo
-- [x] Create new spreadsheets
-- [x] See a list of their spreadsheets
-- [x] Navigate a spreadsheet with the mouse or keyboard
-- [x] Input a formula into a cell, and see it calculated immediately upon pressing enter
-- [x] See any changes to a cell have an immediate effect on other cells that reference it
-- [x] Select a cell with the mouse or keyboard to insert a reference to it into the formula currently being edited
-- [x] Select multiple cells with the mouse or keyboard to insert a reference to them into the formula currently being edited
-- [x] Have their work be autosaved to the server immediately following any change
-- [x] Drag to resize rows and columns
-- [x] Copy, cut and paste cells
-- [x] Share a spreadsheet with other users
-- [x] Edit a spreadsheet simultaneously with another user, seeing their edits appear live (currently excluding deletion of cells, and resizing of columns and rows)
+- [x] Formulae are evaluated recursively, and cells are updated using dependency graph
+- [x] Edits are autosaved to the server efficiently by treating cells as individual models
+- [x] Users can create accounts (optionally using OAuth provider), and add a user profile photo (stored using AWS)
+- [x] Spreadsheets can be navigated and edited using either mouse or keyboard
+- [x] Users can drag to resize rows and columns (implemented using JQuery UI plugin), with changes saved the server
+- [x] Users can copy, cut and paste cells, with copied formulae translated for their new location
+- [x] Spreadsheets can be shared with other users
+- [x] Users can edit a spreadsheet simultaneously, seeing other edits appear live (currently excluding deletion of cells, and resizing of columns and rows)
 
 ### Features not yet achieved
 - [ ] Copy and paste to and from other applications
 - [ ] Deletion of cells and resizing of columns and rows when editing simultaneously with another user
-- [ ] Make a spreadsheet public so that any other person with the link can access it
-- [ ] Format cells with custom background and/or text colour, and different number formats
-- [ ] Access spreadsheets through randomly generated spreadsheet URLs, to ensure security of publicly shared spreadsheets
+- [ ] Public spreadsheets accessible to any other person with the link
+- [ ] Formating of cells with custom background and/or text colour, and different number formats
+- [ ] Usage of $ in formulae to prevent translation of references.
+- [ ] A thousand other Google Sheets features.
 
 [screenshot]: ./screenshot.jpg
