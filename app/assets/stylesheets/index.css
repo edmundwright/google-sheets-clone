@@ -142,3 +142,9 @@ h2.owner-header {
 h2.updated-header {
   left: 722px;
 }
+
+h1.no-spreadsheets {
+  margin-top: 100px;
+  text-align: center;
+  font-size: 50px;
+}
