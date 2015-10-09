@@ -2,7 +2,7 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
   template: JST["spreadsheets/index"],
 
   initialize: function () {
-    this.listenTo(this.collection, "sync destroy", this.render);
+    this.listenTo(this.collection, "sync destroy", this.render.bind(this, true));
     $(document).on("click", this.click.bind(this));
   },
 
@@ -10,9 +10,10 @@ GoogleSheetsClone.Views.SpreadsheetIndex = Backbone.CompositeView.extend({
     "click .create": "create"
   },
 
-  render: function () {
+  render: function (collectionFetched) {
     this.$el.html(this.template({
-      spreadsheets: this.collection
+      spreadsheets: this.collection,
+      collectionFetched: collectionFetched
     }));
 
     var timePeriod = null;
