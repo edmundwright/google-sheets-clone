@@ -1,8 +1,8 @@
 GoogleSheetsClone.Routers.Router = Backbone.Router.extend({
   initialize: function (options) {
-    this.$rootEl = options.$rootEl,
-    this.$title = options.$title,
-    this.$statusArea = options.$statusArea
+    this.$rootEl = options.$rootEl;
+    this.$title = options.$title;
+    this.$statusArea = options.$statusArea;
   },
 
   routes: {
