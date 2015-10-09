@@ -9,6 +9,7 @@ nav.header {
 
 nav.header img {
   height: 50px;
+  width: 50px;
   padding: 5px;
   display: block;
   float: left;
