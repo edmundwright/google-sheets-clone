@@ -9,11 +9,11 @@ GoogleSheetsClone.Models.Cell = Backbone.Model.extend ({
 
   contents: function () {
     if (this.get("contents_str") !== null) {
-      return this.get("contents_str");
+      return this.escape("contents_str");
     } else if (this.get("contents_int") !== null) {
-      return this.get("contents_int");
+      return this.escape("contents_int");
     } else if (this.get("contents_flo") !== null) {
-      return this.get("contents_flo");
+      return this.escape("contents_flo");
     }
   },
 
