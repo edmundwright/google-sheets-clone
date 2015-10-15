@@ -94,9 +94,9 @@ nav.header .session-header .name {
 
 nav.header .session-header .drop-down {
   width: 150px;
-  right: 0px;
-  top: 50px;
-  display:none;
+  right: 6px;
+  top: 55px;
+  display: none;
   z-index: 4;
   position: fixed;
 }
@@ -118,9 +118,8 @@ nav.header .session-header .drop-down li button {
 }
 
 nav.header .session-header .drop-down li a {
-  padding-left: 20px;
+  padding: 18px 45px 18px 20px;
   width: 100px;
-  padding-right: 30px;
   cursor: pointer;
 }
 
