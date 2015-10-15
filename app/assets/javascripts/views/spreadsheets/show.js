@@ -42,43 +42,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       data: {
         last_fetched_at: this.lastUpdatedAt
       },
-      success: function (response) {
-        this.model.currentEditors().set(response.current_editors);
-        if (this.model.currentEditors().length <= 1) {
-          this.syncInterval = 15000;
-        } else {
-          this.syncInterval = 2000;
-        }
-        this.renderCurrentEditors();
-
-        response.cells.forEach(function (cell) {
-          var thisUpdatedAt = cell.updated_at;
-          if (thisUpdatedAt > this.lastUpdatedAt) {
-            this.lastUpdatedAt = thisUpdatedAt;
-          }
-          var contentsChanged = false;
-          var model = this.model.cells().get(cell.id);
-          if (model) {
-            var oldContents = model.contents();
-            model.set(cell);
-            if (oldContents !== model.contents()) {
-              contentsChanged = true;
-            }
-          } else {
-            model = new GoogleSheetsClone.Models.Cell();
-            model.set(cell);
-            this.model.cells().add(model);
-            contentsChanged = true;
-          }
-          var $cellLi = this.cellLiAtPos(model.get("row_index"), model.get("col_index"));
-          if ($cellLi.index() === this.$selectedLi.index()) {
-            this.handleEscape();
-          }
-          if (contentsChanged) {
-            $cellLi.trigger("receiveNewModel", model);
-          }
-        }.bind(this));
-      }.bind(this)
+      success: this.receiveCurrentEditors.bind(this)
     });
 
     GoogleSheetsClone.currentUser.set({
@@ -95,6 +59,46 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.syncCurrentEditors.bind(this),
       this.syncInterval
     );
+  },
+
+  receiveCurrentEditors: function (response) {
+    this.model.currentEditors().set(response.current_editors);
+    if (this.model.currentEditors().length <= 1) {
+      this.syncInterval = 15000;
+    } else {
+      this.syncInterval = 2000;
+    }
+    this.renderCurrentEditors();
+
+    response.cells.forEach(this.receiveEditedCell.bind(this));
+  },
+
+  receiveEditedCell: function (cell) {
+    var thisUpdatedAt = cell.updated_at;
+    if (thisUpdatedAt > this.lastUpdatedAt) {
+      this.lastUpdatedAt = thisUpdatedAt;
+    }
+    var contentsChanged = false;
+    var model = this.model.cells().get(cell.id);
+    if (model) {
+      var oldContents = model.contents();
+      model.set(cell);
+      if (oldContents !== model.contents()) {
+        contentsChanged = true;
+      }
+    } else {
+      model = new GoogleSheetsClone.Models.Cell();
+      model.set(cell);
+      this.model.cells().add(model);
+      contentsChanged = true;
+    }
+    var $cellLi = this.cellLiAtPos(model.get("row_index"), model.get("col_index"));
+    if ($cellLi.index() === this.$selectedLi.index()) {
+      this.handleEscape();
+    }
+    if (contentsChanged) {
+      $cellLi.trigger("receiveNewModel", model);
+    }
   },
 
   editing: function () {
