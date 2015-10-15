@@ -7,6 +7,8 @@
       name="spreadsheet[title]"
       value="<%= spreadsheet.escape("title") %>">
   </form>
-<% } else { %>
+<% } else if (spreadsheet.get("title")) { %>
   <h1 class="title"><%= spreadsheet.escape("title") %></h1>
+<% } else { %>
+  <h1 class="title">Loading...</h1>
 <% } %>
