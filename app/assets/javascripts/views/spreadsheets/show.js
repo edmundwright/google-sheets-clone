@@ -68,6 +68,10 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   receiveCellDeletion: function (data) {
+    var thisUpdatedAt = data.updated_at;
+    if (thisUpdatedAt > this.lastUpdatedAt) {
+      this.lastUpdatedAt = thisUpdatedAt;
+    }
     var cellLi = this.cellLiAtPos(data.row_index, data.col_index);
     cellLi.trigger("delete", { doNotPersist: true });
   },
