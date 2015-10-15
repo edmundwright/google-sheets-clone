@@ -2,8 +2,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   template: JST["spreadsheets/show"],
 
   initialize: function () {
-    this.syncInterval = 2000;
-
     this.model.fetch({
       success: function () {
         GoogleSheetsClone.cells = this.model.cells();
@@ -14,7 +12,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.lastUpdatedAt = this.model.cells().lastUpdatedAt();
         this.subscribe();
         this.selectCell($("li.cell:nth-child(1)"));
-        this.syncCurrentEditors();
       }.bind(this)
     });
     $(document).on("keypress", this.keyPress.bind(this));
@@ -43,11 +40,12 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       GoogleSheetsClone.pusher.unsubscribe(channel);
     });
 
-    this.channel = GoogleSheetsClone.pusher.subscribe(
+    GoogleSheetsClone.channel = this.channel = GoogleSheetsClone.pusher.subscribe(
       "private-spreadsheet-" + this.model.id
     );
 
     this.channel.bind("client-editor-position", this.receiveEditorPosition.bind(this));
+    this.channel.bind("client-cell-change", this.fetchCellChanges.bind(this));
   },
 
   receiveEditorPosition: function (data) {
@@ -69,29 +67,23 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderCurrentEditors();
   },
 
-  syncCurrentEditors: function () {
+  receiveCellDeletion: function (data) {
+    var cellLi = this.cellLiAtPos(data.row_index, data.col_index);
+    cellLi.trigger("delete", { doNotPersist: true });
+  },
+
+  fetchCellChanges: function () {
     $.ajax({
       url: "/api/spreadsheets/" + this.model.id + "/current_editors",
       type: "GET",
       data: {
         last_fetched_at: this.lastUpdatedAt
       },
-      success: this.receiveCurrentEditors.bind(this)
+      success: this.receiveCellChanges.bind(this)
     });
-
-    window.setTimeout(
-      this.syncCurrentEditors.bind(this),
-      this.syncInterval
-    );
   },
 
-  receiveCurrentEditors: function (response) {
-    if (this.model.currentEditors().length < 1) {
-      this.syncInterval = 15000;
-    } else {
-      this.syncInterval = 2000;
-    }
-
+  receiveCellChanges: function (response) {
     response.cells.forEach(this.receiveEditedCell.bind(this));
   },
 

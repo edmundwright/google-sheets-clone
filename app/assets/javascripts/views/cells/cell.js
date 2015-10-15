@@ -54,7 +54,9 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
 
   paste: function (e, options) {
     if (options.newContents.contents === "") {
-      this.destroyModel(null, options.callback);
+      this.destroyModel(null, {
+        callback: options.callback
+      });
     } else {
       var newContents;
       if (typeof options.newContents.contents === "string" &&
@@ -91,19 +93,33 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
     this.render();
   },
 
-  destroyModel: function (e, callback) {
+  destroyModel: function (e, options) {
     if (this.model) {
       var pos = this.model.pos();
       this.model.removeDependencies();
-      GoogleSheetsClone.statusAreaView.displaySaving();
-      this.model.destroy({
-        success: function () {
-          GoogleSheetsClone.statusAreaView.finishSaving();
-          if (callback) {
-            callback();
-          }
+
+      if (options && options.doNotPersist) {
+        GoogleSheetsClone.cells.remove(this.model);
+        if (options && options.callback) {
+          callback();
         }
-      });
+      } else {
+        GoogleSheetsClone.statusAreaView.displaySaving();
+
+        this.model.destroy({
+          success: function () {
+            GoogleSheetsClone.statusAreaView.finishSaving();
+            if (options && options.callback) {
+              callback();
+            }
+
+            if (GoogleSheetsClone.channel.subscribed) {
+              GoogleSheetsClone.channel.trigger("client-cell-change", {});
+            }
+          }.bind(this)
+        });
+      }
+
       GoogleSheetsClone.evaluateDependents(pos);
       this.model = null;
     }
@@ -173,6 +189,10 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
           GoogleSheetsClone.statusAreaView.finishSaving();
           if (callback) {
             callback();
+          }
+
+          if (GoogleSheetsClone.channel.subscribed) {
+            GoogleSheetsClone.channel.trigger("client-cell-change", {});
           }
         }
       });
