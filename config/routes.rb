@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   get "/auth/facebook/callback", to: "sessions#omniauth"
 
+  post "/pusher/auth", to: "pusher#auth"
+
   namespace :api, defaults: { format: :json } do
     resources :spreadsheets, only: [:create, :show, :index, :update, :destroy] do
       resources :cells, only: [:create, :show, :update, :destroy]

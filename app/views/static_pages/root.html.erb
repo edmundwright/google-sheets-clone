@@ -1,5 +1,19 @@
 <div id="for-backbone"></div>
 <script>
+  GoogleSheetsClone.pusher = new Pusher("<%= ENV["PUSHER_KEY"] %>", {
+    authEndpoint: '/pusher/auth',
+    auth: {
+      headers: {
+        'X-CSRF-Token': '<%= form_authenticity_token %>'
+      }
+    }
+  });
+
+  GoogleSheetsClone.pusher.log = function(message) {
+    if (window.console && window.console.log) {
+      window.console.log(message);
+    }
+  };
   GoogleSheetsClone.createIcon = "<%= asset_path('create-icon.png') %>";
   GoogleSheetsClone.logo = "<%= asset_path('cells-logo.png') %>";
   GoogleSheetsClone.formulaIcon = "<%= asset_path('formula-icon.png') %>";

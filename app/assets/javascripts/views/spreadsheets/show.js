@@ -13,6 +13,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
         this.render();
         this.lastUpdatedAt = this.model.cells().lastUpdatedAt();
         this.subscribe();
+        this.selectCell($("li.cell:nth-child(1)"));
         this.syncCurrentEditors();
       }.bind(this)
     });
@@ -43,14 +44,29 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     });
 
     this.channel = GoogleSheetsClone.pusher.subscribe(
-      "spreadsheet-" + this.model.id
+      "private-spreadsheet-" + this.model.id
     );
 
-    this.channel.bind("editor-position", this.receiveEditorPosition);
+    this.channel.bind("client-editor-position", this.receiveEditorPosition.bind(this));
   },
 
   receiveEditorPosition: function (data) {
-    console.log(data);
+    var editor = this.model.currentEditors().get(data.editor_id);
+    if (!editor) {
+      editor = new GoogleSheetsClone.Models.User({
+        id: data.editor_id,
+        name: data.editor_name
+      });
+
+      this.model.currentEditors().add(editor);
+    }
+
+    editor.set({
+      current_row_index: data.current_row_index,
+      current_col_index: data.current_col_index
+    });
+
+    this.renderCurrentEditors();
   },
 
   syncCurrentEditors: function () {
@@ -63,16 +79,6 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       success: this.receiveCurrentEditors.bind(this)
     });
 
-    GoogleSheetsClone.currentUser.set({
-      current_spreadsheet_id: this.model.id,
-      current_row_index: this.cellRow(this.$selectedLi),
-      current_col_index: this.cellCol(this.$selectedLi)
-    });
-
-    GoogleSheetsClone.currentUser.save({}, {
-      type: 'put'
-    });
-
     window.setTimeout(
       this.syncCurrentEditors.bind(this),
       this.syncInterval
@@ -80,13 +86,11 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
   },
 
   receiveCurrentEditors: function (response) {
-    this.model.currentEditors().set(response.current_editors);
-    if (this.model.currentEditors().length <= 1) {
+    if (this.model.currentEditors().length < 1) {
       this.syncInterval = 15000;
     } else {
       this.syncInterval = 2000;
     }
-    this.renderCurrentEditors();
 
     response.cells.forEach(this.receiveEditedCell.bind(this));
   },
@@ -864,8 +868,19 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       this.$(".formula-bar-input").blur();
       this.$selectedLi = $newLi;
       this.$lastLiForCopy = $newLi;
+
       this.$selectedLi.focus();
       this.$selectedLi.trigger("select");
+
+      if (this.channel.subscribed) {
+        this.channel.trigger("client-editor-position", {
+          editor_id: GoogleSheetsClone.currentUser.id,
+          editor_name: GoogleSheetsClone.currentUser.get("name"),
+          current_row_index: this.cellRow(this.$selectedLi),
+          current_col_index: this.cellCol(this.$selectedLi)
+        });
+      }
+
       this.$(".formula-bar-input").val(this.$selectedLi.find(".cell-contents").data("contents"));
       this.scrollIfOutOfWindow(this.$selectedLi);
     }
@@ -897,7 +912,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
     this.renderColumnHeaders();
     this.renderRowHeaders();
     this.renderCells();
-    this.renderCurrentEditors();
+    // this.renderCurrentEditors();
 
     this.applyColumnWidths();
     this.applyRowHeights();
@@ -1081,7 +1096,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
       }
     }
 
-    this.selectCell($("li.cell:nth-child(1)"));
+    // this.selectCell($("li.cell:nth-child(1)"));
   },
 
   scrollIfOutOfWindow: function ($elToScrollTo) {
