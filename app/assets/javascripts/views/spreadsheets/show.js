@@ -85,6 +85,7 @@ GoogleSheetsClone.Views.SpreadsheetShow = Backbone.CompositeView.extend({
 
   receiveCellChanges: function (response) {
     response.cells.forEach(this.receiveEditedCell.bind(this));
+    response.deletions.forEach(this.receiveCellDeletion.bind(this));
   },
 
   receiveEditedCell: function (cell) {

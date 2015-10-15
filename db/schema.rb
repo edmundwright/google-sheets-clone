@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150925045002) do
+ActiveRecord::Schema.define(version: 20151015204923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,20 @@ ActiveRecord::Schema.define(version: 20150925045002) do
 
   add_index "columns", ["spreadsheet_id", "col_index"], name: "index_columns_on_spreadsheet_id_and_col_index", unique: true, using: :btree
   add_index "columns", ["spreadsheet_id"], name: "index_columns_on_spreadsheet_id", using: :btree
+
+  create_table "deletions", force: :cascade do |t|
+    t.integer  "spreadsheet_id", null: false
+    t.integer  "row_index",      null: false
+    t.integer  "col_index",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "deletor_id"
+  end
+
+  add_index "deletions", ["deletor_id"], name: "index_deletions_on_deletor_id", using: :btree
+  add_index "deletions", ["spreadsheet_id", "deletor_id", "updated_at"], name: "index_deletions_on_spreadsheet_id_and_deletor_id_and_updated_at", using: :btree
+  add_index "deletions", ["spreadsheet_id", "updated_at"], name: "index_deletions_on_spreadsheet_id_and_updated_at", using: :btree
+  add_index "deletions", ["spreadsheet_id"], name: "index_deletions_on_spreadsheet_id", using: :btree
 
   create_table "rows", force: :cascade do |t|
     t.integer  "row_index",      null: false

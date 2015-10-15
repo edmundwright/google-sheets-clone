@@ -13,6 +13,7 @@ class Spreadsheet < ActiveRecord::Base
   has_many :cells, dependent: :destroy
   has_many :columns, dependent: :destroy
   has_many :rows, dependent: :destroy
+  has_many :deletions, dependent: :destroy
 
   has_many :editors,
     class_name: "User",

@@ -34,7 +34,15 @@ class Api::CellsController < ApplicationController
   def destroy
     spreadsheet = current_user.all_spreadsheets.find(params[:spreadsheet_id])
     @cell = spreadsheet.cells.find(params[:id])
+
+    spreadsheet.deletions.create!(
+      row_index: @cell.row_index,
+      col_index: @cell.col_index,
+      deletor_id: current_user.id
+    )
+
     @cell.destroy!
+
     spreadsheet.touch
     render :show
   end

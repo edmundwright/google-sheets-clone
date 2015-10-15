@@ -12,3 +12,9 @@ json.cells do
     json.partial! 'api/cells/cell', cell: cell, with_updated_at: true
   end
 end
+
+json.deletions do
+  json.array! @deletions do |deletion|
+    json.partial! 'api/cells/deletion', deletion: deletion
+  end
+end
