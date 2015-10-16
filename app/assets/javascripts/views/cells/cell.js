@@ -101,7 +101,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
       if (options && options.doNotPersist) {
         GoogleSheetsClone.cells.remove(this.model);
         if (options && options.callback) {
-          callback();
+          options.callback();
         }
       } else {
         GoogleSheetsClone.statusAreaView.displaySaving();
@@ -110,7 +110,7 @@ GoogleSheetsClone.Views.Cell = Backbone.View.extend({
           success: function () {
             GoogleSheetsClone.statusAreaView.finishSaving();
             if (options && options.callback) {
-              callback();
+              options.callback();
             }
 
             if (GoogleSheetsClone.channel.subscribed) {
