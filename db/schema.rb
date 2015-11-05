@@ -11,26 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015204923) do
+ActiveRecord::Schema.define(version: 20151105154347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "cells", force: :cascade do |t|
-    t.integer  "spreadsheet_id",   null: false
-    t.integer  "row_index",        null: false
-    t.integer  "col_index",        null: false
+    t.integer  "spreadsheet_id", null: false
+    t.integer  "row_index",      null: false
+    t.integer  "col_index",      null: false
     t.string   "contents_str"
     t.integer  "contents_int"
     t.float    "contents_flo"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "last_editor_id"
-    t.boolean  "bold"
-    t.boolean  "italic"
-    t.boolean  "underlined"
-    t.string   "color"
-    t.string   "background_color"
   end
 
   add_index "cells", ["last_editor_id", "updated_at"], name: "index_cells_on_last_editor_id_and_updated_at", using: :btree
